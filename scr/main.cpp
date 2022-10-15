@@ -35,3 +35,9 @@ int WinMain() {
     glfwTerminate();
     return 0;
 }
+
+#ifdef __linux__
+int main(){
+    WinMain();
+}
+#endif
