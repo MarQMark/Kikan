@@ -13,7 +13,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-set(SOURCE_FILES scr/main.cpp scr/glew.c)
+set(SOURCE_FILES scr/main.cpp scr/glew/glew.c scr/Engine.cpp scr/Engine.h scr/ecs/Scene.cpp scr/ecs/Scene.h scr/ecs/Entity.cpp scr/ecs/Entity.h scr/opengl/Renderer.cpp scr/opengl/Renderer.h)
 
 add_executable(Kikan ${SOURCE_FILES})
 

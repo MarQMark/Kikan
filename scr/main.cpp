@@ -1,26 +1,12 @@
 #include "GL/glew.h"
 #include <GLFW/glfw3.h>
+#include "Engine.h"
 
 int WinMain() {
-    GLFWwindow *window;
+    Engine engine;
+    GLFWwindow* window = engine.getRenderer()->getWindow();
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        return -1;
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-
-    glewInit();
-
-    /* Loop until the user closes the window */
+    /* Loop until the user closes the _window */
     while (!glfwWindowShouldClose(window)) {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
@@ -32,7 +18,6 @@ int WinMain() {
         glfwPollEvents();
     }
 
-    glfwTerminate();
     return 0;
 }
 
