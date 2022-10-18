@@ -16,6 +16,8 @@ public:
 
     GLFWwindow* getWindow();
 
+    void render(double dt);
+
 private:
     GLFWwindow *_window = nullptr;
 

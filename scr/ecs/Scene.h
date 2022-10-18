@@ -5,6 +5,7 @@
 #include <vector>
 #include "string"
 #include "Entity.h"
+#include "systems/ISystem.h"
 
 class Scene {
 public:
@@ -15,6 +16,9 @@ public:
     ~Scene(){
         for(Entity* entity : _entities)
             delete entity;
+
+        for(ISystem* system : _systems)
+            delete system;
     }
 
     std::string getName();
@@ -22,11 +26,13 @@ public:
     void update(double dt);
 
     void addEntity(Entity* entity);
+    void addSystem(ISystem* entity);
 
 private:
     const std::string _name;
 
     std::vector<Entity*> _entities;
+    std::vector<ISystem*> _systems;
 };
 
 

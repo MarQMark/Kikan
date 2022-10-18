@@ -15,13 +15,16 @@ public:
         delete _renderer;
     }
 
+    bool shouldRun();
+
     void update(double dt);
     Scene* getScene(const std::string&);
     Renderer* getRenderer();
 
 private:
-    Renderer* _renderer;
+    bool _should_run = true;
 
+    Renderer* _renderer;
     std::vector<Scene*> _scenes;
 };
 

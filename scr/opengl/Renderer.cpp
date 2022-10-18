@@ -27,3 +27,13 @@ void Renderer::cleanup_openGL() {
 GLFWwindow *Renderer::getWindow() {
     return _window;
 }
+
+void Renderer::render(double dt) {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    /* Swap front and back buffers */
+    glfwSwapBuffers(_window);
+
+    /* Poll for and process events */
+    glfwPollEvents();
+}

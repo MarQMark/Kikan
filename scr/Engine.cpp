@@ -1,5 +1,9 @@
 #include "Engine.h"
 
+bool Engine::shouldRun() {
+    return _should_run;
+}
+
 Scene *Engine::getScene(const std::string& name) {
 
     //if no scene exists create default scene
@@ -20,9 +24,16 @@ Scene *Engine::getScene(const std::string& name) {
 }
 
 void Engine::update(double dt) {
+    if(glfwWindowShouldClose(_renderer->getWindow())){
+        _should_run = false;
+        return;
+    }
+
     for (Scene* scene : _scenes) {
         scene->update(dt);
     }
+
+    _renderer->render(dt);
 }
 
 Renderer *Engine::getRenderer() {
