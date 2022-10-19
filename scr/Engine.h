@@ -15,10 +15,10 @@ public:
         delete _renderer;
     }
 
-    bool shouldRun();
+    bool shouldRun() const;
 
     void update(double dt);
-    Scene* getScene(const std::string&);
+    Scene* getScene(const std::string& = "default");
     Renderer* getRenderer();
 
 private:

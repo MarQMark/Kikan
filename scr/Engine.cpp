@@ -1,6 +1,6 @@
 #include "Engine.h"
 
-bool Engine::shouldRun() {
+bool Engine::shouldRun() const {
     return _should_run;
 }
 

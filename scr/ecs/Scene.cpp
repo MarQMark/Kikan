@@ -4,8 +4,30 @@ std::string Scene::getName() {
     return _name;
 }
 
+bool isSubset(std::vector<unsigned int> &systemSignature, std::vector<unsigned int> &entitySignature){
+    return std::includes(entitySignature.begin(), entitySignature.end(), systemSignature.begin(), systemSignature.end());
+}
+
 void Scene::addEntity(Entity* entity) {
     _entities.push_back(entity);
+
+
+    std::vector<unsigned int> entitySignature = entity->getSignatures();
+    std::sort(entitySignature.begin(), entitySignature.end());
+
+    for (ISystem *system : _systems) {
+        bool containsAll = false;
+
+        for(auto systemSignature : system->getSignatures()){
+            if(isSubset(*systemSignature, entitySignature)){
+                containsAll = true;
+                break;
+            }
+        }
+
+        if(containsAll)
+            system->addEntity(entity);
+    }
 }
 
 void Scene::addSystem(ISystem *system) {

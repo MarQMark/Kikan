@@ -1,16 +1,18 @@
 #ifndef KIKAN_ISYSTEM_H
 #define KIKAN_ISYSTEM_H
 
-#define includeANDStart includeSignatures(new std::vector<std::string>({
+#define includeANDStart includeSignatures(new std::vector<unsigned int>({
 #define includeANDEnd }))
 
-#include "typeinfo"
-#include "string"
+#include <algorithm>
 #include "vector"
+#include "../TypeRegistry.h"
 #include "../Entity.h"
 
 class ISystem{
 public:
+    ISystem()= default;
+
     ~ISystem(){
         for (auto signatures : _signatures) {
             delete signatures;
@@ -32,19 +34,25 @@ public:
         }
     }
 
-protected:
-    template<class T>
-    std::string signature(){
-        return typeid(T).name();
+    std::vector<std::vector<unsigned int>*>& getSignatures(){
+        return _signatures;
     }
 
-    void includeSignatures(std::vector<std::string>* signatures){
+protected:
+    template<class T>
+    unsigned int signature(){
+        return TypeRegistry::getSignature<T>();
+    }
+
+    void includeSignatures(std::vector<unsigned int>* signatures){
+        std::sort(signatures->begin(), signatures->end());
         _signatures.push_back(signatures);
     }
 
-private:
     std::vector<Entity*> _entities;
-    std::vector<std::vector<std::string>*> _signatures;
+
+private:
+    std::vector<std::vector<unsigned int>*> _signatures;
 };
 
 #endif //KIKAN_ISYSTEM_H

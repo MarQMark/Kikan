@@ -1,5 +1,8 @@
 #include "Engine.h"
 
+#include "ecs/systems/PhysicsSystem.h"
+#include "ecs/Entity.h"
+
 int WinMain() {
     Engine engine;
 

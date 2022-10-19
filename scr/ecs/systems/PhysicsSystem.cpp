@@ -1,5 +1,6 @@
 #include "PhysicsSystem.h"
 
-void PhysicsSystem::update(double dt) {
+#include "iostream"
 
+void PhysicsSystem::update(double dt) {
 }

@@ -4,7 +4,7 @@
 #include "ISystem.h"
 #include "../components/Physics.h"
 
-class PhysicsSystem : ISystem{
+class PhysicsSystem : public ISystem{
 public:
     PhysicsSystem(){
         includeANDStart
