@@ -6,6 +6,12 @@
 int WinMain() {
     Engine engine;
 
+    engine.getScene()->addSystem(new PhysicsSystem());
+    Entity* entity = new Entity();
+    entity->addComponent(new Physics);
+
+    engine.getScene()->addEntity(entity);
+
     while (engine.shouldRun()) {
         engine.update(0);
     }

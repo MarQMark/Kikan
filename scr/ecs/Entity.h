@@ -2,6 +2,7 @@
 #define KIKAN_ENTITY_H
 
 #include "vector"
+#include "map"
 #include "string"
 #include "typeinfo"
 #include "TypeRegistry.h"
@@ -16,15 +17,26 @@ public:
     }
 
     ~Entity(){
-        for(IComponent* component : _components)
-            delete component;
+        for(auto & _component : _components)
+            delete _component.second;
     }
 
     template<class T>
     void addComponent(T* component){
-        _components.push_back(component);
-        _signatures.push_back(TypeRegistry::getSignature<T>());
+        unsigned int signature = TypeRegistry::getSignature<T>();
+        _components[signature] = component;
 
+        for(unsigned int sig : _signatures){
+            if(sig == signature)
+                return;
+        }
+
+        _signatures.push_back(signature);
+    }
+
+    template<class T>
+    T* getComponent(){
+        return (T*)_components[TypeRegistry::getSignature<T>()];
     }
 
     std::vector<unsigned int> getSignatures() const{
@@ -32,7 +44,7 @@ public:
     }
 
 private:
-    std::vector<IComponent*> _components;
+    std::map<unsigned int, IComponent*> _components;
     std::vector<unsigned int> _signatures;
 };
 
