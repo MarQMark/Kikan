@@ -2591,7 +2591,7 @@ GLFWAPI void glfwWindowHintString(int hint, const char* value);
  *  This must be greater than zero.
  *  @param[in] height The desired height, in screen coordinates, of the _window.
  *  This must be greater than zero.
- *  @param[in] title The initial, UTF-8 encoded _window title.
+ *  @param[in] title The initial, UTF-8 encoded _window _title.
  *  @param[in] monitor The monitor to use for full screen mode, or `NULL` for
  *  windowed mode.
  *  @param[in] share The _window whose context to share resources with, or `NULL`
@@ -2658,9 +2658,9 @@ GLFWAPI void glfwWindowHintString(int hint, const char* value);
  *  creation.
  *
  *  @remark @x11 The class part of the `WM_CLASS` _window property will by
- *  default be set to the _window title passed to this function.  The instance
+ *  default be set to the _window _title passed to this function.  The instance
  *  part will use the contents of the `RESOURCE_NAME` environment variable, if
- *  present and not empty, or fall back to the _window title.  Set the
+ *  present and not empty, or fall back to the _window _title.  Set the
  *  [GLFW_X11_CLASS_NAME](@ref GLFW_X11_CLASS_NAME_hint) and
  *  [GLFW_X11_INSTANCE_NAME](@ref GLFW_X11_INSTANCE_NAME_hint) _window hints to
  *  override this.
@@ -2761,18 +2761,18 @@ GLFWAPI int glfwWindowShouldClose(GLFWwindow* window);
  */
 GLFWAPI void glfwSetWindowShouldClose(GLFWwindow* window, int value);
 
-/*! @brief Sets the title of the specified _window.
+/*! @brief Sets the _title of the specified _window.
  *
- *  This function sets the _window title, encoded as UTF-8, of the specified
+ *  This function sets the _window _title, encoded as UTF-8, of the specified
  *  _window.
  *
- *  @param[in] window The _window whose title to change.
- *  @param[in] title The UTF-8 encoded _window title.
+ *  @param[in] window The _window whose _title to change.
+ *  @param[in] title The UTF-8 encoded _window _title.
  *
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
  *  GLFW_PLATFORM_ERROR.
  *
- *  @remark @macos The _window title will not be updated until the next time you
+ *  @remark @macos The _window _title will not be updated until the next time you
  *  process events.
  *
  *  @thread_safety This function must only be called from the main thread.
@@ -3089,7 +3089,7 @@ GLFWAPI void glfwGetFramebufferSize(GLFWwindow* window, int* width, int* height)
 /*! @brief Retrieves the size of the frame of the _window.
  *
  *  This function retrieves the size, in screen coordinates, of each edge of the
- *  frame of the specified _window.  This size includes the title bar, if the
+ *  frame of the specified _window.  This size includes the _title bar, if the
  *  _window has one.  The size of the frame may vary depending on the
  *  [window-related hints](@ref window_hints_wnd) used to create it.
  *
@@ -3682,7 +3682,7 @@ GLFWAPI GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, GLFWwind
  *
  *  This function sets the close callback of the specified _window, which is
  *  called when the user attempts to close the _window, for example by clicking
- *  the close widget in the title bar.
+ *  the close widget in the _title bar.
  *
  *  The close flag is set before this callback is called, but you can modify it
  *  at any time with @ref glfwSetWindowShouldClose.

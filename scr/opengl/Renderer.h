@@ -11,7 +11,7 @@ public:
     }
 
     ~Renderer(){
-        cleanup_openGL();
+        glfwTerminate();
     }
 
     GLFWwindow* getWindow();
@@ -22,7 +22,6 @@ private:
     GLFWwindow *_window = nullptr;
 
     void setup_openGl();
-    void cleanup_openGL();
 };
 
 

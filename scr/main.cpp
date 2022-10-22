@@ -13,7 +13,7 @@ int WinMain() {
     engine.getScene()->addEntity(entity);
 
     while (engine.shouldRun()) {
-        engine.update(0);
+        engine.update();
     }
 
     return 0;

@@ -11,7 +11,6 @@ bool isSubset(std::vector<unsigned int> &systemSignature, std::vector<unsigned i
 void Scene::addEntity(Entity* entity) {
     _entities.push_back(entity);
 
-
     std::vector<unsigned int> entitySignature = entity->getSignatures();
     std::sort(entitySignature.begin(), entitySignature.end());
 
@@ -28,6 +27,37 @@ void Scene::addEntity(Entity* entity) {
         if(containsAll)
             system->addEntity(entity);
     }
+}
+
+void Scene::removeEntity(Entity *entity) {
+    std::vector<unsigned int> entitySignature = entity->getSignatures();
+    std::sort(entitySignature.begin(), entitySignature.end());
+
+    for (ISystem *system : _systems) {
+        bool containsAll = false;
+
+        for(auto systemSignature : system->getSignatures()){
+            if(isSubset(*systemSignature, entitySignature)){
+                containsAll = true;
+                break;
+            }
+        }
+
+        if(containsAll)
+            system->removeEntity(entity);
+    }
+
+    for (int i = 0; i < _entities.size(); ++i) {
+        if(_entities.at(i) == entity){
+            _entities.erase(_entities.begin() + i);
+            return;
+        }
+    }
+}
+
+void Scene::deleteEntity(Entity* entity){
+    removeEntity(entity);
+    delete entity;
 }
 
 void Scene::addSystem(ISystem *system) {

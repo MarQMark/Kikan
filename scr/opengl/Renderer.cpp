@@ -16,12 +16,11 @@ void Renderer::setup_openGl() {
     /* Make the _window's context current */
     glfwMakeContextCurrent(_window);
 
+    //disable VSYNC
+    glfwSwapInterval(0);
+
     if(glewInit() != GLEW_OK)
         std::cout << "ERROR: Could not initialize GLEW" << std::endl;
-}
-
-void Renderer::cleanup_openGL() {
-    glfwTerminate();
 }
 
 GLFWwindow *Renderer::getWindow() {
