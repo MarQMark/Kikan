@@ -21,6 +21,8 @@ void Renderer::setup_openGl() {
 
     if(glewInit() != GLEW_OK)
         std::cout << "ERROR: Could not initialize GLEW" << std::endl;
+
+    _shaders["default"] = new Shader("shaders/default.vert", "shaders/default.frag");
 }
 
 GLFWwindow *Renderer::getWindow() {
@@ -29,6 +31,9 @@ GLFWwindow *Renderer::getWindow() {
 
 void Renderer::render(double dt) {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    for (auto batch : _batches)
+        batch.second->render();
 
     /* Swap front and back buffers */
     glfwSwapBuffers(_window);

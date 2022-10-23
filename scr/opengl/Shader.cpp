@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "Shader.h"
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) {
@@ -13,12 +16,22 @@ Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) {
 }
 
 std::string Shader::loadShaderSource(const std::string& path) {
-    return "";
+    std::stringstream ss;
+    std::string line;
+    std::ifstream source(path);
+
+    while(std::getline(source, line))
+        ss << line << std::endl;
+
+    source.close();
+
+    return ss.str();
 }
 
 int Shader::compileShader(GLenum type, const std::string& source) {
     int id = glCreateShader(type);
-    glShaderSource(id, 1, reinterpret_cast<const GLchar *const *>(source.c_str()), nullptr);
+    const char *c_str = source.c_str();
+    glShaderSource(id, 1, &c_str, nullptr);
     glCompileShader(id);
 
     return id;

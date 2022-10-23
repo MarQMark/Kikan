@@ -1,8 +1,10 @@
 #ifndef KIKAN_RENDERER_H
 #define KIKAN_RENDERER_H
 
-#include "GL/glew.h"
-#include <GLFW/glfw3.h>
+#include <map>
+#include <string>
+#include "Shader.h"
+#include "Batch.h"
 
 class Renderer {
 public:
@@ -20,6 +22,9 @@ public:
 
 private:
     GLFWwindow *_window = nullptr;
+
+    std::map<std::string, Shader*> _shaders;
+    std::map<unsigned int, Batch*> _batches;
 
     void setup_openGl();
 };
