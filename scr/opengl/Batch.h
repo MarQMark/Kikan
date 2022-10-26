@@ -3,19 +3,23 @@
 
 #include "VertexBuffer.h"
 
+enum BatchType{
+    SQUARE,
+    TRIANGLE
+};
+
 class Batch {
 public:
+    Batch(BatchType type) : _type(type) {}
 
-    void addVertices();
-    void updateVertices();
-    void removeVertices();
+    virtual void bind() = 0;
+    static void unbind();
 
-    void bind();
-    void unbind();
-
-    void render();
-private:
+    virtual void render();
+protected:
     GLsizei _last_vertex = 0;
+
+    BatchType _type;
 };
 
 

@@ -35,6 +35,13 @@ void Renderer::render(double dt) {
     for (auto batch : _batches)
         batch.second->render();
 
+    //handle Auto Batches
+    for (AutoBatch* batch : _auto_batches) {
+        batch->render();
+        delete batch;
+    }
+    _auto_batches.clear();
+
     /* Swap front and back buffers */
     glfwSwapBuffers(_window);
 

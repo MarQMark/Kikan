@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include "Shader.h"
-#include "Batch.h"
+#include "AutoBatch.h"
 
 class Renderer {
 public:
@@ -25,6 +25,8 @@ private:
 
     std::map<std::string, Shader*> _shaders;
     std::map<unsigned int, Batch*> _batches;
+
+    std::vector<AutoBatch*> _auto_batches;
 
     void setup_openGl();
 };

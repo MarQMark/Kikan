@@ -15,7 +15,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-set(SOURCE_FILES scr/main.cpp scr/glew/glew.c scr/Engine.cpp scr/Engine.h scr/ecs/Scene.cpp scr/ecs/Scene.h scr/ecs/Entity.cpp scr/ecs/Entity.h scr/opengl/Renderer.cpp scr/opengl/Renderer.h scr/ecs/components/Physics.h scr/ecs/components/Transform.h scr/ecs/systems/ISystem.h scr/ecs/components/IComponent.h scr/ecs/systems/PhysicsSystem.cpp scr/ecs/systems/PhysicsSystem.h scr/ecs/TypeRegistry.h scr/ecs/TypeRegistry.cpp scr/opengl/Shader.cpp scr/opengl/Shader.h scr/opengl/Batch.cpp scr/opengl/Batch.h scr/opengl/VertexBuffer.cpp scr/opengl/VertexBuffer.h)
+set(SOURCE_FILES scr/main.cpp scr/glew/glew.c scr/Engine.cpp scr/Engine.h scr/ecs/Scene.cpp scr/ecs/Scene.h scr/ecs/Entity.cpp scr/ecs/Entity.h scr/opengl/Renderer.cpp scr/opengl/Renderer.h scr/ecs/components/Physics.h scr/ecs/components/Transform.h scr/ecs/systems/ISystem.h scr/ecs/components/IComponent.h scr/ecs/systems/PhysicsSystem.cpp scr/ecs/systems/PhysicsSystem.h scr/ecs/TypeRegistry.h scr/ecs/TypeRegistry.cpp scr/opengl/Shader.cpp scr/opengl/Shader.h scr/opengl/Batch.cpp scr/opengl/Batch.h scr/opengl/VertexBuffer.cpp scr/opengl/VertexBuffer.h scr/opengl/IVertex.h scr/opengl/AutoBatch.cpp scr/opengl/AutoBatch.h scr/opengl/ManuelBatch.cpp scr/opengl/ManuelBatch.h)
 
 add_executable(Kikan ${SOURCE_FILES})
 
