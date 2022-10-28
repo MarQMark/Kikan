@@ -3,14 +3,14 @@
 
 #include <vector>
 #include "GL/glew.h"
-#include <GLFW/glfw3.h>
-#include "IVertex.h"
+#include "GLFW/glfw3.h"
+#include "../Vertices/IVertex.h"
 
 class VertexBuffer {
 public:
     explicit VertexBuffer(GLsizei size);
 
-    void addVertices(std::vector<IVertex*>& vertices);
+    void addVertices(std::vector<IVertex>& vertices);
 
     void bind();
 

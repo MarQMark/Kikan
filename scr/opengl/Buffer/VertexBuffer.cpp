@@ -14,7 +14,8 @@ void VertexBuffer::addVertices(std::vector<IVertex>& vertices) {
 void VertexBuffer::bind() {
     //load layout
 
+
+
     //glEnableVertexAttribArray
     //glVertexAttribPointer
 }
-

@@ -2,6 +2,7 @@
 #define KIKAN_IVERTEX_H
 
 #include "GL/glew.h"
+#include "../Buffer/VertexBufferLayout.h"
 
 struct IVertex {
 public:
@@ -9,7 +10,11 @@ public:
      * When auto-batching you set the textureSlot as the texture ID.
      * That ID gets translated into a textureSlot
      */
-    GLuint texture;
+    int texture{};
+
+    virtual VertexBufferLayout* getLayout() {
+        return nullptr;
+    };
 };
 
 #endif //KIKAN_IVERTEX_H

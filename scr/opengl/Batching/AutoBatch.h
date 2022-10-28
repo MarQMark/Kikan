@@ -5,11 +5,10 @@
 
 class AutoBatch : Batch{
 public:
-     explicit AutoBatch(BatchType type);
+     explicit AutoBatch(VertexBufferLayout* vbl, GLuint vertexSize);
     ~AutoBatch();
 
-    template<class T>
-    int addVertices(std::vector<IVertex> vertices);
+    int addVertices(std::vector<IVertex>& vertices);
 
     void bind() override;
     void render() override;
@@ -17,10 +16,12 @@ public:
 private:
     int _max_texture_units = 4;
     GLuint* _texture_slots;
-    unsigned int _last_slot = 0;
+    int _last_slot = 0;
     int find_texture(GLuint texture);
 
-    std::vector<IVertex*> _vertices;
+    VertexBufferLayout* _vbl;
+    std::vector<IVertex> _vertices;
+    GLuint _vertex_size;
 };
 
 
