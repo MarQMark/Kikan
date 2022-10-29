@@ -34,6 +34,12 @@ int Shader::compileShader(GLenum type, const std::string& source) {
     glShaderSource(id, 1, &c_str, nullptr);
     glCompileShader(id);
 
+    GLint status;
+    glGetShaderiv(id, GL_COMPILE_STATUS, &status);
+    std::cout << "[SHADER COMPILE] "
+            << ((type == GL_VERTEX_SHADER) ? "VertexShader" : "FragmentShader")
+            << "  Status " << status << std::endl;
+
     return id;
 }
 

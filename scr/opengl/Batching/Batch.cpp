@@ -1,7 +1,8 @@
 #include "Batch.h"
 
 void Batch::render() {
-    glDrawElements(GL_TRIANGLES, _last_vertex, GL_UNSIGNED_SHORT, 0);
+    //glDrawElements(GL_TRIANGLES, _last_vertex, GL_UNSIGNED_SHORT, );
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void Batch::unbind() {

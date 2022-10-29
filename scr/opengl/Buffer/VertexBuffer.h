@@ -2,20 +2,27 @@
 #define KIKAN_VERTEX_BUFFER_H
 
 #include <vector>
+#include <memory>
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "../Vertices/IVertex.h"
 
 class VertexBuffer {
 public:
-    explicit VertexBuffer(GLsizei size);
+    explicit VertexBuffer(VertexBufferLayout* vbl, unsigned int vertexSize);
+    ~VertexBuffer();
 
-    void addVertices(std::vector<IVertex>& vertices);
+    void addVertices(std::vector<std::shared_ptr<IVertex>>& vertices) const;
 
     void bind();
 
 private:
     GLuint _id = 0;
+    VertexBufferLayout* _vbl;
+
+    unsigned int _vertex_size;
+
+    GLint _offset = 0;
 };
 
 

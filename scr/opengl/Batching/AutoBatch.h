@@ -8,7 +8,7 @@ public:
      explicit AutoBatch(VertexBufferLayout* vbl, GLuint vertexSize);
     ~AutoBatch();
 
-    int addVertices(std::vector<IVertex>& vertices);
+    int addVertices(std::vector<std::shared_ptr<IVertex>>& vertices);
 
     void bind() override;
     void render() override;
@@ -20,7 +20,7 @@ private:
     int find_texture(GLuint texture);
 
     VertexBufferLayout* _vbl;
-    std::vector<IVertex> _vertices;
+    std::vector<std::shared_ptr<IVertex>> _vertices;
     GLuint _vertex_size;
 };
 

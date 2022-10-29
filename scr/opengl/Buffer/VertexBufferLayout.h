@@ -6,47 +6,79 @@
 
 struct VertexBufferElement{
     unsigned int type;
-    unsigned int count;
-    bool normalized;
+    GLint count;
+    unsigned char normalized;
+
+    static GLsizei getTypeSize(unsigned int type){
+        switch (type) {
+            case GL_FLOAT:
+            case GL_UNSIGNED_INT:
+                return 4;
+            case GL_UNSIGNED_BYTE:
+                return 1;
+            default:
+                return 0;
+        }
+    }
 };
 
 template<typename T>
 struct always_false : std::false_type
 { };
 
+template<typename T>
+struct identity { typedef T type; };
+
 class VertexBufferLayout{
 public:
     VertexBufferLayout() = default;
 
     template<typename T>
-    void add(unsigned int count){
-        static_assert(always_false<T>::value);
+    void add(GLint count){
+        add(count, identity<T>());
+    }
+
+    /*template<>
+    void add<float>(GLint count){
+        _elements.push_back({GL_FLOAT, count, GL_FALSE});
+        _stride += VertexBufferElement::getTypeSize(GL_FLOAT);
     }
 
     template<>
-    void add<float>(unsigned int count){
-        _elements.push_back({GL_FLOAT, count, false});
-        _stride += sizeof(GLfloat);
+    void add<unsigned int>(GLint count){
+        _elements.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
+        _stride += VertexBufferElement::getTypeSize(GL_UNSIGNED_INT);
     }
 
     template<>
-    void add<unsigned int>(unsigned int count){
-        _elements.push_back({GL_UNSIGNED_INT, count, false});
-        _stride += sizeof(GLuint);
-    }
+    void add<unsigned char>(GLint count){
+        _elements.push_back({GL_UNSIGNED_BYTE, count, GL_TRUE});
+        _stride += VertexBufferElement::getTypeSize(GL_UNSIGNED_BYTE);
+    }*/
 
-    template<>
-    void add<unsigned char>(unsigned int count){
-        _elements.push_back({GL_UNSIGNED_BYTE, count, true});
-        _stride += sizeof(GLbyte);
-    }
-
-    inline unsigned int getStride() const {return _stride;}
+    inline GLsizei getStride() const {return _stride;}
     inline std::vector<VertexBufferElement> getElements() const& {return _elements;}
 
 private:
+    template<typename T>
+    void add(GLint count, identity<T>){
+        static_assert(always_false<T>::value);
+    }
+    void add(GLint count, identity<float>){
+        _elements.push_back({GL_FLOAT, count, GL_FALSE});
+        _stride += count * VertexBufferElement::getTypeSize(GL_FLOAT);
+    }
+    void add(GLint count, identity<unsigned int>){
+        _elements.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
+        _stride += count * VertexBufferElement::getTypeSize(GL_UNSIGNED_INT);
+    };
+    void add(GLint count, identity<unsigned char>){
+        _elements.push_back({GL_UNSIGNED_BYTE, count, GL_TRUE});
+        _stride += count * VertexBufferElement::getTypeSize(GL_UNSIGNED_BYTE);
+    };
+
     std::vector<VertexBufferElement> _elements;
-    unsigned int _stride;
+    GLsizei _stride = 0;
 };
 
 #endif //KIKAN_VERTEX_BUFFER_LAYOUT_H

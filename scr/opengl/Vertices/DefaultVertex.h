@@ -9,8 +9,8 @@ struct DefaultVertex : IVertex{
     glm::vec2 textureCoords;
     glm::vec4 color;
 
-    VertexBufferLayout* getLayout() override {
-        auto* layout = new VertexBufferLayout();
+    static VertexBufferLayout* getLayout(){
+        auto layout = new VertexBufferLayout;
 
         layout->add<float>(1);
         layout->add<float>(3);

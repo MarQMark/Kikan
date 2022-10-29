@@ -10,11 +10,7 @@ public:
      * When auto-batching you set the textureSlot as the texture ID.
      * That ID gets translated into a textureSlot
      */
-    int texture{};
-
-    virtual VertexBufferLayout* getLayout() {
-        return nullptr;
-    };
+    float texture{};
 };
 
 #endif //KIKAN_IVERTEX_H

@@ -4,6 +4,7 @@
 #include "map"
 #include "string"
 #include "typeinfo"
+#include "../Buffer/VertexBufferLayout.h"
 
 class VertexRegistry {
 public:
@@ -19,8 +20,24 @@ public:
         return _last_signature - 1;
     }
 
+    template<class T>
+    static void addLayout(VertexBufferLayout* vbl){
+        unsigned int signature = getSignature<T>();
+
+        if(_vertex_layouts[signature] != nullptr)
+            delete _vertex_layouts[signature];
+
+        _vertex_layouts[signature] = vbl;
+    }
+
+    template<class T>
+    static VertexBufferLayout* getLayout(){
+        return _vertex_layouts[getSignature<T>()];
+    }
+
 private:
     static std::map<std::string, unsigned int> _vertex_signatures;
+    static std::map<unsigned int, VertexBufferLayout*> _vertex_layouts;
     static int _last_signature;
 };
 
