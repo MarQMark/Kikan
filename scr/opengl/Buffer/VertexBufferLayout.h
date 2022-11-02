@@ -38,24 +38,6 @@ public:
         add(count, identity<T>());
     }
 
-    /*template<>
-    void add<float>(GLint count){
-        _elements.push_back({GL_FLOAT, count, GL_FALSE});
-        _stride += VertexBufferElement::getTypeSize(GL_FLOAT);
-    }
-
-    template<>
-    void add<unsigned int>(GLint count){
-        _elements.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
-        _stride += VertexBufferElement::getTypeSize(GL_UNSIGNED_INT);
-    }
-
-    template<>
-    void add<unsigned char>(GLint count){
-        _elements.push_back({GL_UNSIGNED_BYTE, count, GL_TRUE});
-        _stride += VertexBufferElement::getTypeSize(GL_UNSIGNED_BYTE);
-    }*/
-
     inline GLsizei getStride() const {return _stride;}
     inline std::vector<VertexBufferElement> getElements() const& {return _elements;}
 

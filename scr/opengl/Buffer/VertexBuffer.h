@@ -12,7 +12,7 @@ public:
     explicit VertexBuffer(VertexBufferLayout* vbl, unsigned int vertexSize);
     ~VertexBuffer();
 
-    void addVertices(std::vector<std::shared_ptr<IVertex>>& vertices) const;
+    void addVertices(char* vertices, unsigned int count) const;
 
     void bind();
 

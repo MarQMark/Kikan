@@ -2,7 +2,7 @@
 
 void Batch::render() {
     //glDrawElements(GL_TRIANGLES, _last_vertex, GL_UNSIGNED_SHORT, );
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void Batch::unbind() {

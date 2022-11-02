@@ -23,9 +23,10 @@ public:
 
 
     void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color);
+    void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color);
 
     template <class T>
-    void autoBatch(std::vector<std::shared_ptr<IVertex>>  vertices);
+    void autoBatch(std::vector<IVertex*> vertices);
 
     void render(double dt);
 

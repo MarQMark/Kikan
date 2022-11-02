@@ -1,6 +1,4 @@
-#include <iostream>
 #include "VertexBuffer.h"
-#include "../Vertices/DefaultVertex.h"
 
 VertexBuffer::VertexBuffer(VertexBufferLayout* vbl, unsigned int vertexSize) {
     _vbl = vbl;
@@ -13,17 +11,9 @@ VertexBuffer::~VertexBuffer() {
     glDeleteBuffers(1, &_id);
 }
 
-void VertexBuffer::addVertices(std::vector<std::shared_ptr<IVertex>>& vertices) const {
-    unsigned int size = _vertex_size * vertices.size();
-
-    char* data = static_cast<char *>(malloc(size));
-    for (int i = 0; i < vertices.size(); ++i)
-        memcpy((data + i * _vertex_size), vertices[i].get(), _vertex_size);
-
+void VertexBuffer::addVertices(char* vertices, unsigned int count) const {
     glBindBuffer(GL_ARRAY_BUFFER, _id);
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-
-    free(data);
+    glBufferData(GL_ARRAY_BUFFER, _vertex_size * count, vertices, GL_STATIC_DRAW);
 }
 
 void VertexBuffer::bind() {

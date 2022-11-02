@@ -19,7 +19,7 @@ void Renderer::setup_openGl() {
     glfwMakeContextCurrent(_window);
 
     //disable VSYNC
-    //glfwSwapInterval(0);
+    glfwSwapInterval(0);
 
     if(glewInit() != GLEW_OK)
         std::cout << "ERROR: Could not initialize GLEW" << std::endl;
@@ -35,40 +35,17 @@ GLFWwindow *Renderer::getWindow() {
 void Renderer::render(double dt) {
     glClear(GL_COLOR_BUFFER_BIT);
 
+    _shaders["default"]->bind();
+
     for (auto batch : _batches)
         batch.second->render();
 
-    renderTriangle(glm::vec2(0.5, 0), glm::vec2(-0.5, 0), glm::vec2(0.0, 0.5), glm::vec4(0.5));
+    glm::vec4 color = glm::vec4(0.3, 0.4, 0.8, 1.0);
+    renderTriangle(glm::vec2(0.5, 0), glm::vec2(-0.5, 0), glm::vec2(0.0, 0.5), color);
 
     while(GLenum err = glGetError() != GL_NO_ERROR){
         std::cout << "ERROR: " << err << std::endl;
     }
-
-    /*struct test2{
-        float a;
-
-        virtual void test(){};
-    };
-
-    struct test : test2{
-        glm::vec3 position;
-        glm::vec2 textureCoords;
-        glm::vec4 color;
-
-        VertexBufferLayout* getLayout(){
-            auto* layout = new VertexBufferLayout();
-
-            layout->add<float>(1);
-            layout->add<float>(3);
-            layout->add<float>(2);
-            layout->add<float>(4);
-
-            return layout;
-        }
-    };
-    std::cout << sizeof(test) << std::endl;*/
-
-    _shaders["default"]->bind();
 
     //handle Auto Batches
     for (const auto& batches : _auto_batches) {
@@ -88,34 +65,47 @@ void Renderer::render(double dt) {
 }
 
 void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color) {
-    std::vector<std::shared_ptr<IVertex>> vertices(3);
+    std::vector<IVertex*> vertices(3);
 
-    auto v1 = std::make_shared<DefaultVertex>();
-    v1->position = glm::vec3(p1.x, p1.y, 0.0f);
-    v1->textureCoords = glm::vec2(0.0);
-    v1->color = color;
-    v1->texture = -1;
-    vertices[0] = v1;
+    DefaultVertex v1;
+    v1.position = glm::vec3(p1.x, p1.y, 0.0f);
+    v1.textureCoords = glm::vec2(0.0);
+    v1.color = color;
+    v1.texture = -1;
+    vertices[0] = &v1;
 
-    auto v2 = std::make_shared<DefaultVertex>();
-    v2->position = glm::vec3(p2.x, p2.y, 0.0f);
-    v2->textureCoords = glm::vec2(0.0);
-    v2->color = color;
-    v2->texture = -1;
-    vertices[1] = v2;
+    DefaultVertex v2;
+    v2.position = glm::vec3(p2.x, p2.y, 0.0f);
+    v2.textureCoords = glm::vec2(0.0);
+    v2.color = color;
+    v2.texture = -1;
+    vertices[1] = &v2;
 
-    auto v3 = std::make_shared<DefaultVertex>();
-    v3->position = glm::vec3(p3.x, p3.y, 0.0f);
-    v3->textureCoords = glm::vec2(0.0);
-    v3->color = color;
-    v3->texture = -1;
-    vertices[2] = v3;
+    DefaultVertex v3;
+    v3.position = glm::vec3(p3.x, p3.y, 0.0f);
+    v3.textureCoords = glm::vec2(0.0);
+    v3.color = color;
+    v3.texture = -1;
+    vertices[2] = &v3;
 
     autoBatch<DefaultVertex>(vertices);
 }
 
+void Renderer::renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color) {
+    std::vector<IVertex*> vertices(points.size());
+    std::vector<DefaultVertex> data(points.size());
+    for (int i = 0; i < points.size(); ++i) {
+        data[i].position = glm::vec3(points[i].x, points[i].y, 0.0f);
+        data[i].textureCoords = glm::vec2(0.0);
+        data[i].color = color;
+        data[i].texture = -1;
+        vertices[i] = &data[i];
+    }
+    autoBatch<DefaultVertex>(vertices);
+}
+
 template <class T>
-void Renderer::autoBatch(std::vector<std::shared_ptr<IVertex>> vertices) {
+void Renderer::autoBatch(std::vector<IVertex*> vertices) {
 
     if(_auto_batches.empty()){
         _auto_batches[signature(T)].push_back(new AutoBatch(VertexRegistry::getLayout<T>(), sizeof(T)));
@@ -124,7 +114,7 @@ void Renderer::autoBatch(std::vector<std::shared_ptr<IVertex>> vertices) {
     int result = _auto_batches[signature(T)].back()->addVertices(vertices);
     while (result != 0) {
         _auto_batches[signature(T)].push_back(new AutoBatch(VertexRegistry::getLayout<T>(), sizeof(T)));
-        std::vector<std::shared_ptr<IVertex>> remainingVertices(vertices.begin() + result, vertices.end());
+        std::vector<IVertex*> remainingVertices(vertices.begin() + result, vertices.end());
         result = _auto_batches[signature(T)].back()->addVertices(remainingVertices);
     }
 }

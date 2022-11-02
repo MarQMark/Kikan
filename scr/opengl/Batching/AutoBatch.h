@@ -3,25 +3,31 @@
 
 #include "Batch.h"
 
-class AutoBatch : Batch{
+class AutoBatch{
 public:
      explicit AutoBatch(VertexBufferLayout* vbl, GLuint vertexSize);
     ~AutoBatch();
 
-    int addVertices(std::vector<std::shared_ptr<IVertex>>& vertices);
+    int addVertices(std::vector<IVertex*>& vertices);
 
-    void bind() override;
-    void render() override;
+    void bind();
+    void render();
 
 private:
+
+    struct VertexSpace {
+        char* data = nullptr;
+        unsigned int count = 0;
+        GLuint size = 0;
+    };
+
     int _max_texture_units = 4;
-    GLuint* _texture_slots;
+    float* _texture_slots;
     int _last_slot = 0;
-    int find_texture(GLuint texture);
+    int find_texture(float texture);
 
     VertexBufferLayout* _vbl;
-    std::vector<std::shared_ptr<IVertex>> _vertices;
-    GLuint _vertex_size;
+    VertexSpace _vertex_space;
 };
 
 
