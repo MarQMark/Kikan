@@ -5,8 +5,9 @@
 #include "IComponent.h"
 
 struct TriangleSprite : IComponent{
-    glm::vec3 points[3];
+    glm::vec2 points[3];
     glm::vec4 color;
+    int layer;
 };
 
 #endif //KIKAN_TRIANGLE_SPRITE_H

@@ -1,8 +1,9 @@
 #ifndef KIKAN_ISYSTEM_H
 #define KIKAN_ISYSTEM_H
 
-#define includeANDStart includeSignatures(new std::vector<unsigned int>({
-#define includeANDEnd }))
+#define sig(x) signature<x>()
+#define singleInclude(x) includeSignatures(new std::vector<unsigned int>({ sig(x) }))
+#define includeAnd(args...) includeSignatures(new std::vector<unsigned int>({ args }))
 
 #include <algorithm>
 #include "vector"

@@ -1,9 +1,8 @@
 #include "PhysicsSystem.h"
+#include "../components/Physics.h"
 
 PhysicsSystem::PhysicsSystem() {
-    includeANDStart
-        signature<Physics>()
-    includeANDEnd;
+    singleInclude(Physics);
 }
 
 void PhysicsSystem::update(double dt) {

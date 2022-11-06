@@ -2,7 +2,6 @@
 #define KIKAN_PHYSICS_SYSTEM_H
 
 #include "ISystem.h"
-#include "../components/Physics.h"
 
 class PhysicsSystem : public ISystem{
 public:
