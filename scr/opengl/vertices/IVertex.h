@@ -2,7 +2,7 @@
 #define KIKAN_IVERTEX_H
 
 #include "GL/glew.h"
-#include "../Buffer/VertexBufferLayout.h"
+#include "../buffers/VertexBufferLayout.h"
 
 struct IVertex {
 public:

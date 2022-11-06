@@ -4,7 +4,7 @@
 #include "map"
 #include "string"
 #include "typeinfo"
-#include "../Buffer/VertexBufferLayout.h"
+#include "../buffers/VertexBufferLayout.h"
 
 class VertexRegistry {
 public:

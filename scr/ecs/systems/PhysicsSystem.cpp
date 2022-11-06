@@ -1,6 +1,12 @@
 #include "PhysicsSystem.h"
 
-#include "iostream"
+PhysicsSystem::PhysicsSystem() {
+    includeANDStart
+        signature<Physics>()
+    includeANDEnd;
+}
 
 void PhysicsSystem::update(double dt) {
 }
+
+

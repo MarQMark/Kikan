@@ -1,7 +1,7 @@
 #ifndef KIKAN_BATCH_H
 #define KIKAN_BATCH_H
 
-#include "../Buffer/VertexBuffer.h"
+#include "../buffers/VertexBuffer.h"
 
 class Batch {
 public:

@@ -1,6 +1,7 @@
 #include "AutoBatch.h"
 #include <algorithm>
 #include <iostream>
+#include "../buffers/IndexBuffer.h"
 
 AutoBatch::AutoBatch(VertexBufferLayout* vbl, GLuint vertexSize) {
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_max_texture_units);
@@ -25,6 +26,33 @@ int AutoBatch::find_texture(float texture){
 }
 
 int AutoBatch::addVertices(std::vector<IVertex*>& vertices) {
+    int n = add_vertices(vertices);
+
+    for (int i = 0; i < (n != 0 ? n : vertices.size()); ++i)
+        _indices.push_back(_next_index++);
+
+    return n;
+}
+
+int AutoBatch::addVertices(std::vector<IVertex *> &vertices, std::vector<GLuint> &indices) {
+    int n = add_vertices(vertices);
+
+    //return error
+    if(n > 0)
+        return -1;
+
+    //get max index from new indices
+    GLuint maxIndex = 0;
+    for (GLuint index : indices){
+        maxIndex = std::max(maxIndex, index);
+        _indices.push_back(_next_index + index);
+    }
+    _next_index += maxIndex + 1;
+
+    return 0;
+}
+
+int AutoBatch::add_vertices(std::vector<IVertex *> &vertices) {
     // Add all textures;
     int i;
     for (i = 0; i < vertices.size(); i++) {
@@ -64,19 +92,23 @@ int AutoBatch::addVertices(std::vector<IVertex*>& vertices) {
     return i == vertices.size() ? 0 : i;
 }
 
-void AutoBatch::bind() {
+void AutoBatch::render() {
+    //Vertex buffers
+    VertexBuffer vb(_vbl, _vertex_space.size);
+    vb.addVertices(_vertex_space.data, _vertex_space.count);
+    vb.bind();
+
+    //Index buffers
+    IndexBuffer ib(_indices);
+    ib.bind();
+
+    //bind all textures
     for (int i = 0; i < _last_slot; ++i) {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, (unsigned int)_texture_slots[i]);
     }
+
+    //draw
+    glDrawElements(GL_TRIANGLES, (GLsizei)_indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
-void AutoBatch::render() {
-    VertexBuffer vb(_vbl, _vertex_space.size);
-    vb.bind();
-    vb.addVertices(_vertex_space.data, _vertex_space.count);
-
-    bind();
-
-    glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_vertex_space.size);
-}

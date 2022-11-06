@@ -2,6 +2,15 @@
 #include <sstream>
 #include "Engine.h"
 
+Engine* Engine::_engine = nullptr;
+
+Engine *Engine::get() {
+    if(_engine == nullptr)
+        _engine = new Engine();
+
+    return _engine;
+}
+
 bool Engine::shouldRun() const {
     return _should_run;
 }

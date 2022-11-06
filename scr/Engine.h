@@ -8,6 +8,8 @@
 
 class Engine {
 public:
+    static Engine* get();
+
     Engine(){
         _renderer = new Renderer();
     }
@@ -28,6 +30,8 @@ public:
     void (*preRender)(double) = nullptr;
     void (*postRender)(double) = nullptr;
 private:
+    static Engine* _engine;
+
     bool _should_run = true;
 
     std::chrono::high_resolution_clock::time_point _last_time;

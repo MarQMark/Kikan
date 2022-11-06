@@ -9,11 +9,12 @@ public:
     ~AutoBatch();
 
     int addVertices(std::vector<IVertex*>& vertices);
+    int addVertices(std::vector<IVertex*>& vertices, std::vector<GLuint>& indices);
 
-    void bind();
     void render();
 
 private:
+    int add_vertices(std::vector<IVertex*>& vertices);
 
     struct VertexSpace {
         char* data = nullptr;
@@ -28,6 +29,9 @@ private:
 
     VertexBufferLayout* _vbl;
     VertexSpace _vertex_space;
+
+    GLuint _next_index = 0;
+    std::vector<GLuint> _indices;
 };
 
 

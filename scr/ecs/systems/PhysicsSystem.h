@@ -6,11 +6,7 @@
 
 class PhysicsSystem : public ISystem{
 public:
-    PhysicsSystem(){
-        includeANDStart
-            signature<Physics>()
-        includeANDEnd;
-    }
+    PhysicsSystem();
 
     void update(double dt) override;
 };

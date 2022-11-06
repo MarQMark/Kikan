@@ -1,19 +1,24 @@
 #include "Engine.h"
 
-#include "ecs/systems/PhysicsSystem.h"
+#include "ecs/systems/SpriteRenderSystem.h"
+#include "ecs/components/TriangleSprite.h"
 #include "ecs/Entity.h"
 
 int WinMain() {
-    Engine engine;
+    Engine* engine = Engine::get();
+    engine->getScene()->addSystem(new SpriteRenderSystem());
 
-    engine.getScene()->addSystem(new PhysicsSystem());
-    Entity* entity = new Entity();
-    entity->addComponent(new Physics);
+    auto* entity = new Entity();
+    auto* sprite = new TriangleSprite;
+    sprite->points[0] = glm::vec3(0.5, 0, 0);
+    sprite->points[1] = glm::vec3(-0.5, 0, 0);
+    sprite->points[2] = glm::vec3(0.0, 0.5, 0);
+    sprite->color = glm::vec4(0.3, 0.4, 0.8, 1.0);
+    entity->addComponent(sprite);
+    engine->getScene()->addEntity(entity);
 
-    engine.getScene()->addEntity(entity);
-
-    while (engine.shouldRun()) {
-        engine.update();
+    while (engine->shouldRun()) {
+        engine->update();
     }
 
     return 0;

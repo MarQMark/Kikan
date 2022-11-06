@@ -40,9 +40,6 @@ void Renderer::render(double dt) {
     for (auto batch : _batches)
         batch.second->render();
 
-    glm::vec4 color = glm::vec4(0.3, 0.4, 0.8, 1.0);
-    renderTriangle(glm::vec2(0.5, 0), glm::vec2(-0.5, 0), glm::vec2(0.0, 0.5), color);
-
     while(GLenum err = glGetError() != GL_NO_ERROR){
         std::cout << "ERROR: " << err << std::endl;
     }
@@ -64,6 +61,9 @@ void Renderer::render(double dt) {
     glfwPollEvents();
 }
 
+/*
+ *  Uses Auto-batching with DefaultVertex.
+ */
 void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color) {
     std::vector<IVertex*> vertices(3);
 
@@ -91,6 +91,13 @@ void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec
     autoBatch<DefaultVertex>(vertices);
 }
 
+/*
+ *  Uses Auto-batching with DefaultVertex.
+ *
+ *  Uses Ear-Clipping-Algorithm to divide into Triangles.
+ *  This means Polygons cannot intersect with themselves, cannot have holes and
+ *  three or more vertices cannot form a line
+ */
 void Renderer::renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color) {
     std::vector<IVertex*> vertices(points.size());
     std::vector<DefaultVertex> data(points.size());
