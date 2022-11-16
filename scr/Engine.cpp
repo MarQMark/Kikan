@@ -39,6 +39,10 @@ void Engine::updateFPS(){
     _dt = ((std::chrono::duration<double, std::milli>)(std::chrono::high_resolution_clock::now() - _last_time)).count();
     _last_time = std::chrono::high_resolution_clock::now();
 
+    //if dt is higher than a day -> error -> set to 0
+    if(_dt > 1e5)
+        _dt = 0;
+
     _frames_last_second++;
 
     // set window title

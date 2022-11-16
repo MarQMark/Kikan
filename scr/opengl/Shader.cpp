@@ -51,4 +51,28 @@ void Shader::unbind() {
     glUseProgram(0);
 }
 
+int Shader::uniform_location(const std::string& name) {
+    if(_uniforms.count(name))
+        return _uniforms[name];
+
+    GLint loc = glGetUniformLocation(_id, name.c_str());
+    _uniforms[name] = loc;
+    if(loc == -1)
+        std::cout << "[ERROR] Uniform " << name << " not found" << std::endl;
+
+    return loc;
+}
+
+void Shader::uniform1li(const std::string &name, int x) {
+    GLint loc = uniform_location(name);
+    if(loc != -1)
+        glUniform1i(loc, x);
+}
+
+void Shader::uniform1lf(const std::string &name, float x) {
+    GLint loc = uniform_location(name);
+    if(loc != -1)
+        glUniform1f(loc, x);
+}
+
 
