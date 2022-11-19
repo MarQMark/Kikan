@@ -3,11 +3,12 @@
 
 #include <map>
 #include <string>
+#include <cstring>
 #include <glm/glm.hpp>
 #include "Shader.h"
-#include "Batching/AutoBatch.h"
-#include "Vertices/DefaultVertex.h"
-#include "Vertices/VertexRegistry.h"
+#include "batching/AutoBatch.h"
+#include "vertices/DefaultVertex.h"
+#include "vertices/VertexRegistry.h"
 
 class Renderer {
 public:

@@ -1,6 +1,7 @@
 #include "AutoBatch.h"
 #include <algorithm>
 #include <iostream>
+#include <cstring>
 #include "../buffers/IndexBuffer.h"
 
 AutoBatch::AutoBatch(VertexBufferLayout* vbl, GLuint vertexSize) {
