@@ -2,15 +2,6 @@
 #include <sstream>
 #include "Engine.h"
 
-Engine* Engine::_engine = nullptr;
-
-Engine *Engine::get() {
-    if(_engine == nullptr)
-        _engine = new Engine();
-
-    return _engine;
-}
-
 bool Engine::shouldRun() const {
     return _should_run;
 }
@@ -19,7 +10,7 @@ Scene *Engine::getScene(const std::string& name) {
 
     //if no scene exists create default scene
     if(_scenes.capacity() == 0){
-        Scene* defaultScene = new Scene("default");
+        Scene* defaultScene = new Scene("default", _renderer);
         _scenes.push_back(defaultScene);
         return defaultScene;
     }
@@ -32,6 +23,11 @@ Scene *Engine::getScene(const std::string& name) {
 
     //return default if no scene found
     return _scenes.at(0);
+}
+
+
+void Engine::addScene(const std::string& name) {
+    //TODO implement function
 }
 
 void Engine::updateFPS(){
@@ -85,3 +81,4 @@ void Engine::update() {
 Renderer *Engine::getRenderer() {
     return _renderer;
 }
+

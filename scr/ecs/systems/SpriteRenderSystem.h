@@ -1,9 +1,9 @@
 #ifndef KIKAN_SPRITE_RENDER_SYSTEM_H
 #define KIKAN_SPRITE_RENDER_SYSTEM_H
 
-#include "ISystem.h"
+#include "IRenderSystem.h"
 
-class SpriteRenderSystem : public ISystem{
+class SpriteRenderSystem : public IRenderSystem{
 public:
     SpriteRenderSystem();
 

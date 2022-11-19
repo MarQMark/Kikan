@@ -24,6 +24,7 @@ public:
 
 
     void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, int layer);
+    void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, int layer);
     void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, int layer);
 
     template <class T>

@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "../ecs/systems/IRenderSystem.h"
 
 std::string Scene::getName() {
     return _name;
@@ -61,6 +62,9 @@ void Scene::deleteEntity(Entity* entity){
 }
 
 void Scene::addSystem(ISystem *system) {
+    if(auto* rSystem = dynamic_cast<IRenderSystem*>(system))
+        rSystem->setRenderer(_renderer);
+
     _systems.push_back(system);
 }
 

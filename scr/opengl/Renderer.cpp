@@ -94,6 +94,39 @@ void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec
 
 /*
  *  Uses Auto-batching with DefaultVertex.
+ */
+void Renderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, int layer) {
+    std::vector<IVertex*> vertices(4);
+
+    DefaultVertex v1;
+    v1.position = glm::vec3(p1.x, p1.y, layer);
+    vertices[0] = &v1;
+
+    DefaultVertex v2;
+    v2.position = glm::vec3(p2.x, p2.y, layer);
+    vertices[1] = &v2;
+
+    DefaultVertex v3;
+    v3.position = glm::vec3(p3.x, p3.y, layer);
+    vertices[2] = &v3;
+
+    DefaultVertex v4;
+    v4.position = glm::vec3(p4.x, p4.y, layer);
+    vertices[3] = &v4;
+
+    for (auto* v : vertices) {
+        ((DefaultVertex*)v)->textureCoords = glm::vec2(0.0);
+        ((DefaultVertex*)v)->color = color;
+        v->texture = -1;
+    }
+
+    std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
+
+    autoBatch<DefaultVertex>(vertices, indices);
+}
+
+/*
+ *  Uses Auto-batching with DefaultVertex.
  *
  *  Uses Ear-Clipping-Algorithm to divide into Triangles.
  *  This means Polygons cannot intersect with themselves, cannot have holes and
@@ -140,3 +173,4 @@ void Renderer::autoBatch(std::vector<IVertex *> vertices, std::vector<GLuint> &i
     if(result == -1)
         std::cout << "[ERROR] cannot auto-batch specified vertices with custom indices" << std::endl;
 }
+
