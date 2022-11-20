@@ -22,6 +22,10 @@ void Renderer::setup_openGl() {
     //disable VSYNC
     glfwSwapInterval(0);
 
+    glEnable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+
     if(glewInit() != GLEW_OK)
         std::cout << "ERROR: Could not initialize GLEW" << std::endl;
 
@@ -34,7 +38,7 @@ GLFWwindow *Renderer::getWindow() {
 }
 
 void Renderer::render(double dt) {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _shaders["default"]->bind();
 
@@ -65,7 +69,7 @@ void Renderer::render(double dt) {
 /*
  *  Uses Auto-batching with DefaultVertex.
  */
-void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, int layer) {
+void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer) {
     std::vector<IVertex*> vertices(3);
 
     DefaultVertex v1;
@@ -95,7 +99,7 @@ void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec
 /*
  *  Uses Auto-batching with DefaultVertex.
  */
-void Renderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, int layer) {
+void Renderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer) {
     std::vector<IVertex*> vertices(4);
 
     DefaultVertex v1;
@@ -132,7 +136,7 @@ void Renderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4
  *  This means Polygons cannot intersect with themselves, cannot have holes and
  *  three or more vertices cannot form a line
  */
-void Renderer::renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, int layer) {
+void Renderer::renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer) {
     std::vector<IVertex*> vertices(points.size());
     std::vector<DefaultVertex> data(points.size());
     for (int i = 0; i < points.size(); ++i) {

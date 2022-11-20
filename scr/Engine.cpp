@@ -63,19 +63,19 @@ void Engine::update() {
         return;
     }
 
-    if(preUpdate) preUpdate(_dt);
+    if(preUpdate) preUpdate(this);
 
     // UPDATE
     for (Scene* scene : _scenes)
         scene->update(_dt);
 
-    if(postUpdate) postUpdate(_dt);
-    if(preRender) preRender(_dt);
+    if(postUpdate) postUpdate(this);
+    if(preRender) preRender(this);
 
     // RENDER
     _renderer->render(_dt);
 
-    if(postRender != nullptr) postRender(_dt);
+    if(postRender != nullptr) postRender(this);
 }
 
 Renderer *Engine::getRenderer() {

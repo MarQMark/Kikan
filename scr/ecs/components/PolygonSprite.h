@@ -8,7 +8,7 @@
 struct PolygonSprite : IComponent {
     std::vector<glm::vec2> points;
     glm::vec4 color;
-    int layer;
+    float layer;
 };
 
 #endif //KIKAN_POLYGON_SPRITE_H

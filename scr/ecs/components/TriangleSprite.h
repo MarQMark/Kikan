@@ -7,7 +7,7 @@
 struct TriangleSprite : IComponent{
     glm::vec2 points[3];
     glm::vec4 color;
-    int layer;
+    float layer;
 };
 
 #endif //KIKAN_TRIANGLE_SPRITE_H

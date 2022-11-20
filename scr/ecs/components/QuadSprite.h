@@ -7,7 +7,7 @@
 struct QuadSprite : IComponent{
     glm::vec2 points[4];
     glm::vec4 color;
-    int layer;
+    float layer;
 };
 
 #endif //KIKAN_QUAD_SPRITE_H

@@ -24,10 +24,10 @@ public:
     Renderer* getRenderer();
 
     // custom methods
-    void (*preUpdate)(double) = nullptr;
-    void (*postUpdate)(double) = nullptr;
-    void (*preRender)(double) = nullptr;
-    void (*postRender)(double) = nullptr;
+    void (*preUpdate)(Engine*) = nullptr;
+    void (*postUpdate)(Engine*) = nullptr;
+    void (*preRender)(Engine*) = nullptr;
+    void (*postRender)(Engine*) = nullptr;
 private:
     bool _should_run = true;
 
