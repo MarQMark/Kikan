@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include "../ecs/systems/IRenderSystem.h"
 
-std::string Scene::getName() {
+std::string Scene::name() {
     return _name;
 }
 
@@ -69,6 +69,12 @@ void Scene::addSystem(ISystem *system) {
 }
 
 void Scene::update(double dt) {
+    _renderer->mvp = _camera->matrix();
+
     for(ISystem* system : _systems)
         system->update(dt);
+}
+
+Camera *Scene::camera() {
+    return _camera;
 }

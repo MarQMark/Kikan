@@ -17,7 +17,7 @@ Scene *Engine::getScene(const std::string& name) {
 
     //look for specified scene
     for (Scene* scene : _scenes) {
-        if (scene->getName() == name)
+        if (scene->name() == name)
             return scene;
     }
 
@@ -66,8 +66,7 @@ void Engine::update() {
     if(preUpdate) preUpdate(this);
 
     // UPDATE
-    for (Scene* scene : _scenes)
-        scene->update(_dt);
+    _curr_scene->update(_dt);
 
     if(postUpdate) postUpdate(this);
     if(preRender) preRender(this);
@@ -80,5 +79,9 @@ void Engine::update() {
 
 Renderer *Engine::getRenderer() {
     return _renderer;
+}
+
+void Engine::setCurrScene(const std::string& name) {
+    _curr_scene = getScene(name);
 }
 

@@ -5,10 +5,25 @@
 #include "ecs/components/PolygonSprite.h"
 #include "ecs/Entity.h"
 
+double tt = 0;
+
+void preRender(Renderer* renderer, double dt){
+    tt += dt;
+    int width, height;
+    glfwGetWindowSize(renderer->getWindow(), &width, &height);
+
+    Shader shader("shaders/default.vert", "E:/Temp/test.frag");
+    shader.bind();
+    shader.uniformM4fv("u_mvp", renderer->mvp);
+    shader.uniform2fv("u_resolution", glm::vec2(width, height));
+    shader.uniform1lf("u_time", tt / 1000.0);
+}
 
 int WinMain() {
     Engine engine;
     engine.getScene()->addSystem(new SpriteRenderSystem());
+
+    engine.getRenderer()->preRender = preRender;
 
     auto* entity = new Entity();
     auto* sprite = new QuadSprite;

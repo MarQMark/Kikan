@@ -22,6 +22,7 @@ public:
 
     GLFWwindow* getWindow();
 
+    glm::mat4x4 mvp;
 
     void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer);
     void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer);
@@ -33,6 +34,8 @@ public:
     void autoBatch(std::vector<IVertex*> vertices, std::vector<GLuint>& indices);
 
     void render(double dt);
+    void (*preRender)(Renderer* renderer, double dt) = nullptr;
+    void (*postRender)(Renderer* renderer, double dt) = nullptr;
 
 private:
     GLFWwindow *_window = nullptr;

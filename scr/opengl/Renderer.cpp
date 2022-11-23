@@ -4,6 +4,10 @@
 
 #define signature(x) VertexRegistry::getSignature<x>()
 
+void window_size_callback(GLFWwindow* window, int width, int height){
+    glViewport(0, 0, width, height);
+}
+
 void Renderer::setup_openGl() {
     /* Initialize the library */
     if (!glfwInit())
@@ -20,16 +24,22 @@ void Renderer::setup_openGl() {
     glfwMakeContextCurrent(_window);
 
     //disable VSYNC
-    glfwSwapInterval(0);
+    //glfwSwapInterval(0);
 
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
 
+    //set window resize event
+    glfwSetWindowSizeCallback(_window, window_size_callback);
+
     if(glewInit() != GLEW_OK)
         std::cout << "ERROR: Could not initialize GLEW" << std::endl;
 
+    //load default shader
     _shaders["default"] = new Shader("shaders/default.vert", "shaders/default.frag");
+
+    //load default vertex layout
     VertexRegistry::addLayout<DefaultVertex>(DefaultVertex::getLayout());
 }
 
@@ -41,13 +51,16 @@ void Renderer::render(double dt) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _shaders["default"]->bind();
+    _shaders["default"]->uniformM4fv("u_mvp", mvp);
+
+    if(preRender) preRender(this, dt);
 
     for (auto batch : _batches)
         batch.second->render();
 
-    while(GLenum err = glGetError() != GL_NO_ERROR){
+    /*while(GLenum err = glGetError() != GL_NO_ERROR){
         std::cout << "ERROR: " << err << std::endl;
-    }
+    }*/
 
     //handle Auto Batches
     for (const auto& batches : _auto_batches) {
@@ -58,6 +71,8 @@ void Renderer::render(double dt) {
         }
     }
     _auto_batches.clear();
+
+    if(postRender) postRender(this, dt);
 
     /* Swap front and back buffers */
     glfwSwapBuffers(_window);

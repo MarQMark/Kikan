@@ -36,9 +36,17 @@ int Shader::compileShader(GLenum type, const std::string& source) {
 
     GLint status;
     glGetShaderiv(id, GL_COMPILE_STATUS, &status);
-    std::cout << "[SHADER COMPILE] "
-            << ((type == GL_VERTEX_SHADER) ? "VertexShader" : "FragmentShader")
-            << "  Status " << status << std::endl;
+
+    if(status != 1){
+        std::cout << "[SHADER COMPILE] "
+                  << ((type == GL_VERTEX_SHADER) ? "VertexShader" : "FragmentShader")
+                  << "  Status " << status << std::endl;
+
+        GLsizei logLength = 0;
+        GLchar log[1024];
+        glGetShaderInfoLog(id, 1024, &logLength, log);
+        std::cout << log << std::endl;
+    }
 
     return id;
 }
@@ -75,4 +83,27 @@ void Shader::uniform1lf(const std::string &name, float x) {
         glUniform1f(loc, x);
 }
 
+void Shader::uniformM4fv(const std::string &name, glm::mat4x4 mvp) {
+    GLint loc = uniform_location(name);
+    if(loc != -1)
+        glUniformMatrix4fv(loc, 1, GL_FALSE, &mvp[0][0]);
+}
+
+void Shader::uniform2fv(const std::string &name, glm::vec2 v) {
+    GLint loc = uniform_location(name);
+    if(loc != -1)
+        glUniform2fv(loc, 1, &v[0]);
+}
+
+void Shader::uniform3fv(const std::string &name, glm::vec3 v) {
+    GLint loc = uniform_location(name);
+    if(loc != -1)
+        glUniform3fv(loc, 1, &v[0]);
+}
+
+void Shader::uniform4fv(const std::string &name, glm::vec4 v) {
+    GLint loc = uniform_location(name);
+    if(loc != -1)
+        glUniform4fv(loc, 1, &v[0]);
+}
 

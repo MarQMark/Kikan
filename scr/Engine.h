@@ -10,6 +10,7 @@ class Engine {
 public:
     Engine(){
         _renderer = new Renderer();
+        setCurrScene();
     }
 
     ~Engine(){
@@ -21,6 +22,7 @@ public:
     void update();
     Scene* getScene(const std::string& = "default");
     void addScene(const std::string& name);
+    void setCurrScene(const std::string& name = "default");
     Renderer* getRenderer();
 
     // custom methods
@@ -38,6 +40,7 @@ private:
 
     Renderer* _renderer;
     std::vector<Scene*> _scenes;
+    Scene* _curr_scene;
 
     void updateFPS();
 };
