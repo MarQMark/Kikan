@@ -8,9 +8,15 @@ Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) {
     std::string fragmentSource = loadShaderSource(fragmentPath);
 
     _id = glCreateProgram();
-    glAttachShader(_id, compileShader(GL_VERTEX_SHADER, vertexSource));
-    glAttachShader(_id, compileShader(GL_FRAGMENT_SHADER, fragmentSource));
+    int vs = compileShader(GL_VERTEX_SHADER, vertexSource);
+    int fs = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
+
+    glAttachShader(_id, vs);
+    glAttachShader(_id, fs);
     glLinkProgram(_id);
+
+    glDeleteShader(vs);
+    glDeleteShader(fs);
 
     bind();
 }
@@ -26,6 +32,10 @@ std::string Shader::loadShaderSource(const std::string& path) {
     source.close();
 
     return ss.str();
+}
+
+Shader::~Shader() {
+    glDeleteProgram(_id);
 }
 
 int Shader::compileShader(GLenum type, const std::string& source) {
