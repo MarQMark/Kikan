@@ -10,43 +10,44 @@
 #include "vertices/DefaultVertex.h"
 #include "vertices/VertexRegistry.h"
 
+namespace Kikan {
 class Renderer {
-public:
-    Renderer(){
-        setup_openGl();
-    }
+    public:
+        Renderer(){
+            setup_openGl();
+        }
 
-    ~Renderer(){
-        glfwTerminate();
-    }
+        ~Renderer(){
+            glfwTerminate();
+        }
 
-    GLFWwindow* getWindow();
+        GLFWwindow* getWindow();
 
-    glm::mat4x4 mvp;
+        glm::mat4x4 mvp;
 
-    void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer);
-    void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer);
-    void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer);
+        void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer);
+        void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer);
+        void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer);
 
-    template <class T>
-    void autoBatch(std::vector<IVertex*> vertices);
-    template <class T>
-    void autoBatch(std::vector<IVertex*> vertices, std::vector<GLuint>& indices);
+        template <class T>
+        void autoBatch(std::vector<IVertex*> vertices);
+        template <class T>
+        void autoBatch(std::vector<IVertex*> vertices, std::vector<GLuint>& indices);
 
-    void render(double dt);
-    void (*preRender)(Renderer* renderer, double dt) = nullptr;
-    void (*postRender)(Renderer* renderer, double dt) = nullptr;
+        void render(double dt);
+        void (*preRender)(Renderer* renderer, double dt) = nullptr;
+        void (*postRender)(Renderer* renderer, double dt) = nullptr;
 
-private:
-    GLFWwindow *_window = nullptr;
+    private:
+        GLFWwindow *_window = nullptr;
 
-    std::map<std::string, Shader*> _shaders;
-    std::map<unsigned int, Batch*> _batches;
+        std::map<std::string, Shader*> _shaders;
+        std::map<unsigned int, Batch*> _batches;
 
-    std::map<unsigned int, std::vector<AutoBatch*>> _auto_batches;
+        std::map<unsigned int, std::vector<AutoBatch*>> _auto_batches;
 
-    void setup_openGl();
-};
-
+        void setup_openGl();
+    };
+}
 
 #endif //KIKAN_RENDERER_H

@@ -3,13 +3,14 @@
 
 #include "Batch.h"
 
-class ManuelBatch : Batch{
-public:
-    void addVertices();
-    void updateVertices();
-    void removeVertices();
+namespace Kikan {
+    class ManuelBatch : Batch{
+    public:
+        void addVertices();
+        void updateVertices();
+        void removeVertices();
 
-};
-
+    };
+}
 
 #endif //KIKAN_MANUEL_BATCH_H

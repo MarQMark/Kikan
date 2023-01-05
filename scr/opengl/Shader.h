@@ -6,30 +6,39 @@
 #include "GL/glew.h"
 #include "glm/glm.hpp"
 
-class Shader {
-public:
-    Shader(const std::string& vertexPath, const std::string& fragmentPath);
-    ~Shader();
+namespace Kikan {
+    class Shader {
+    public:
+        Shader(const std::string &vertexPath, const std::string &fragmentPath);
 
-    void bind() const;
-    static void unbind();
+        ~Shader();
 
-    void uniform1li(const std::string& name, int x);
-    void uniform1lf(const std::string& name, float x);
-    void uniform2fv(const std::string& name, glm::vec2 v);
-    void uniform3fv(const std::string& name, glm::vec3 v);
-    void uniform4fv(const std::string& name, glm::vec4 v);
-    void uniformM4fv(const std::string& name, glm::mat4x4 mvp);
+        void bind() const;
 
-private:
-    static std::string loadShaderSource(const std::string& path);
-    static int compileShader(GLenum type, const std::string& source);
+        static void unbind();
 
-    int uniform_location(const std::string& name);
+        void uniform1li(const std::string &name, int x);
 
-    GLuint _id;
-    std::map<std::string, GLint> _uniforms;
-};
+        void uniform1lf(const std::string &name, float x);
 
+        void uniform2fv(const std::string &name, glm::vec2 v);
+
+        void uniform3fv(const std::string &name, glm::vec3 v);
+
+        void uniform4fv(const std::string &name, glm::vec4 v);
+
+        void uniformM4fv(const std::string &name, glm::mat4x4 mvp);
+
+    private:
+        static std::string loadShaderSource(const std::string &path);
+
+        static int compileShader(GLenum type, const std::string &source);
+
+        int uniform_location(const std::string &name);
+
+        GLuint _id;
+        std::map<std::string, GLint> _uniforms;
+    };
+}
 
 #endif //KIKAN_SHADER_H

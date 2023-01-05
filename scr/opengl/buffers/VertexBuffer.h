@@ -7,23 +7,24 @@
 #include "GLFW/glfw3.h"
 #include "../vertices/IVertex.h"
 
-class VertexBuffer {
-public:
-    explicit VertexBuffer(VertexBufferLayout* vbl, unsigned int vertexSize);
-    ~VertexBuffer();
+namespace Kikan {
+    class VertexBuffer {
+    public:
+        explicit VertexBuffer(VertexBufferLayout* vbl, unsigned int vertexSize);
+        ~VertexBuffer();
 
-    void addVertices(char* vertices, unsigned int count) const;
+        void addVertices(char* vertices, unsigned int count) const;
 
-    void bind();
+        void bind();
 
-private:
-    GLuint _id = 0;
-    VertexBufferLayout* _vbl;
+    private:
+        GLuint _id = 0;
+        VertexBufferLayout* _vbl;
 
-    unsigned int _vertex_size;
+        unsigned int _vertex_size;
 
-    GLint _offset = 0;
-};
-
+        GLint _offset = 0;
+    };
+}
 
 #endif //KIKAN_VERTEX_BUFFER_H

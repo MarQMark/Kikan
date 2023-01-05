@@ -4,10 +4,12 @@
 #include "glm/glm.hpp"
 #include "IComponent.h"
 
-struct TriangleSprite : IComponent{
-    glm::vec2 points[3];
-    glm::vec4 color;
-    float layer;
-};
+namespace Kikan {
+    struct TriangleSprite : IComponent {
+        glm::vec2 points[3];
+        glm::vec4 color;
+        float layer;
+    };
+}
 
 #endif //KIKAN_TRIANGLE_SPRITE_H

@@ -4,9 +4,11 @@
 #include "glm/glm.hpp"
 #include "IComponent.h"
 
-struct Physics : IComponent{
-    glm::vec2 _velocity;
-    glm::vec2 _acceleration;
-};
+namespace Kikan {
+    struct Physics : IComponent {
+        glm::vec2 _velocity;
+        glm::vec2 _acceleration;
+    };
+}
 
 #endif //KIKAN_PHYSICS_H

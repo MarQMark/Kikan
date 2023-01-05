@@ -3,11 +3,13 @@
 
 #include "ISystem.h"
 
-class PhysicsSystem : public ISystem{
-public:
-    PhysicsSystem();
+namespace Kikan {
+    class PhysicsSystem : public ISystem {
+    public:
+        PhysicsSystem();
 
-    void update(double dt) override;
-};
+        void update(double dt) override;
+    };
+}
 
 #endif //KIKAN_PHYSICS_SYSTEM_H

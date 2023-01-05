@@ -7,12 +7,12 @@
 
 double tt = 0;
 
-void preRender(Renderer* renderer, double dt){
+void preRender(Kikan::Renderer* renderer, double dt){
     tt += dt;
     int width, height;
     glfwGetWindowSize(renderer->getWindow(), &width, &height);
 
-    Shader shader("shaders/default.vert", "E:/Temp/test.frag");
+    Kikan::Shader shader("shaders/default.vert", "E:/Temp/ray.frag");
     shader.bind();
     shader.uniformM4fv("u_mvp", renderer->mvp);
     shader.uniform2fv("u_resolution", glm::vec2(width, height));
@@ -20,13 +20,13 @@ void preRender(Renderer* renderer, double dt){
 }
 
 int WinMain() {
-    Engine engine;
-    engine.getScene()->addSystem(new SpriteRenderSystem());
+    Kikan::Engine engine;
+    engine.getScene()->addSystem(new Kikan::SpriteRenderSystem());
 
     engine.getRenderer()->preRender = preRender;
 
-    auto* entity = new Entity();
-    auto* sprite = new QuadSprite;
+    auto* entity = new Kikan::Entity();
+    auto* sprite = new Kikan::QuadSprite;
     sprite->points[0] = glm::vec2(-1, 1);
     sprite->points[1] = glm::vec2(1, 1);
     sprite->points[2] = glm::vec2(1, -1);

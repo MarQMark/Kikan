@@ -1,8 +1,10 @@
 #ifndef KIKAN_ICOMPONENT_H
 #define KIKAN_ICOMPONENT_H
 
-struct IComponent{
+namespace Kikan {
+    struct IComponent {
 
-};
+    };
+}
 
 #endif //KIKAN_ICOMPONENT_H

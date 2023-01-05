@@ -1,11 +1,12 @@
 #include "PhysicsSystem.h"
 #include "../components/Physics.h"
 
-PhysicsSystem::PhysicsSystem() {
-    singleInclude(Physics);
-}
+namespace Kikan {
+    PhysicsSystem::PhysicsSystem() {
+        singleInclude(Physics);
+    }
 
-void PhysicsSystem::update(double dt) {
+    void PhysicsSystem::update(double dt) {
+    }
 }
-
 

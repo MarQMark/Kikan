@@ -5,10 +5,12 @@
 #include "glm/glm.hpp"
 #include "IComponent.h"
 
-struct PolygonSprite : IComponent {
-    std::vector<glm::vec2> points;
-    glm::vec4 color;
-    float layer;
-};
+namespace Kikan {
+    struct PolygonSprite : IComponent {
+        std::vector<glm::vec2> points;
+        glm::vec4 color;
+        float layer;
+    };
+}
 
 #endif //KIKAN_POLYGON_SPRITE_H

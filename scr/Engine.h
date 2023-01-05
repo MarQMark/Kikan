@@ -6,44 +6,45 @@
 #include "ecs/Scene.h"
 #include "opengl/Renderer.h"
 
-class Engine {
-public:
-    Engine(){
-        _renderer = new Renderer();
-        setCurrScene();
-    }
+namespace Kikan {
+    class Engine {
+    public:
+        Engine(){
+            _renderer = new Renderer();
+            setCurrScene();
+        }
 
-    ~Engine(){
-        delete _renderer;
-    }
+        ~Engine(){
+            delete _renderer;
+        }
 
-    bool shouldRun() const;
+        bool shouldRun() const;
 
-    void update();
-    Scene* getScene(const std::string& = "default");
-    void addScene(const std::string& name);
-    void setCurrScene(const std::string& name = "default");
-    Renderer* getRenderer();
+        void update();
+        Scene* getScene(const std::string& = "default");
+        void addScene(const std::string& name);
+        void setCurrScene(const std::string& name = "default");
+        Renderer* getRenderer();
 
-    // custom methods
-    void (*preUpdate)(Engine*) = nullptr;
-    void (*postUpdate)(Engine*) = nullptr;
-    void (*preRender)(Engine*) = nullptr;
-    void (*postRender)(Engine*) = nullptr;
-private:
-    bool _should_run = true;
+        // custom methods
+        void (*preUpdate)(Engine*) = nullptr;
+        void (*postUpdate)(Engine*) = nullptr;
+        void (*preRender)(Engine*) = nullptr;
+        void (*postRender)(Engine*) = nullptr;
+    private:
+        bool _should_run = true;
 
-    std::chrono::high_resolution_clock::time_point _last_time;
-    double _dt = 0;
-    double _time_last_second = 0;
-    unsigned int _frames_last_second = 0;
+        std::chrono::high_resolution_clock::time_point _last_time;
+        double _dt = 0;
+        double _time_last_second = 0;
+        unsigned int _frames_last_second = 0;
 
-    Renderer* _renderer;
-    std::vector<Scene*> _scenes;
-    Scene* _curr_scene;
+        Renderer* _renderer;
+        std::vector<Scene*> _scenes;
+        Scene* _curr_scene;
 
-    void updateFPS();
-};
-
+        void updateFPS();
+    };
+}
 
 #endif //KIKAN_ENGINE_H

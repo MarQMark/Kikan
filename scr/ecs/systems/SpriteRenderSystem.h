@@ -3,12 +3,13 @@
 
 #include "IRenderSystem.h"
 
-class SpriteRenderSystem : public IRenderSystem{
-public:
-    SpriteRenderSystem();
+namespace Kikan {
+    class SpriteRenderSystem : public IRenderSystem {
+    public:
+        SpriteRenderSystem();
 
-    void update(double dt) override;
-};
-
+        void update(double dt) override;
+    };
+}
 
 #endif //KIKAN_SPRITE_RENDER_SYSTEM_H
