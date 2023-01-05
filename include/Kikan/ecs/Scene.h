@@ -4,10 +4,10 @@
 #include <utility>
 #include <vector>
 #include "string"
-#include "ecs/Entity.h"
-#include "ecs/systems/ISystem.h"
-#include "opengl/Renderer.h"
-#include "opengl/Camera.h"
+#include "Kikan/ecs/Entity.h"
+#include "Kikan/ecs/systems/ISystem.h"
+#include "Kikan/opengl/Renderer.h"
+#include "Kikan/opengl/Camera.h"
 
 namespace Kikan {
     class Scene {

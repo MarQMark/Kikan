@@ -1,8 +1,8 @@
-#include "ecs/systems/SpriteRenderSystem.h"
+#include "Kikan/ecs/systems/SpriteRenderSystem.h"
 
-#include "ecs/components/TriangleSprite.h"
-#include "ecs/components/QuadSprite.h"
-#include "ecs/components/PolygonSprite.h"
+#include "Kikan/ecs/components/TriangleSprite.h"
+#include "Kikan/ecs/components/QuadSprite.h"
+#include "Kikan/ecs/components/PolygonSprite.h"
 
 namespace Kikan {
     SpriteRenderSystem::SpriteRenderSystem() {

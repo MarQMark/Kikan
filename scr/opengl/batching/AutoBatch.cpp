@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cstring>
-#include "opengl/buffers/IndexBuffer.h"
+#include "Kikan/opengl/buffers/IndexBuffer.h"
 
 namespace Kikan {
     AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize) {

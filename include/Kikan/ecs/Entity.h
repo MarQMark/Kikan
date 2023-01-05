@@ -6,8 +6,8 @@
 #include "string"
 #include "typeinfo"
 #include "TypeRegistry.h"
-#include "ecs/components/IComponent.h"
-#include "ecs/components/Transform.h"
+#include "Kikan/ecs/components/IComponent.h"
+#include "Kikan/ecs/components/Transform.h"
 
 namespace Kikan {
     class Entity {

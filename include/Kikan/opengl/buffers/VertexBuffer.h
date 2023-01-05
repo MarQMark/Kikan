@@ -5,7 +5,7 @@
 #include <memory>
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "opengl/vertices/IVertex.h"
+#include "Kikan/opengl/vertices/IVertex.h"
 
 namespace Kikan {
     class VertexBuffer {

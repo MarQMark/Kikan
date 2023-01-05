@@ -1,7 +1,7 @@
 #ifndef KIKAN_BATCH_H
 #define KIKAN_BATCH_H
 
-#include "opengl/buffers/VertexBuffer.h"
+#include "Kikan/opengl/buffers/VertexBuffer.h"
 
 namespace Kikan {
     class Batch {

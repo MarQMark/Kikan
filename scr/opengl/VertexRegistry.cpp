@@ -1,4 +1,4 @@
-#include "opengl/vertices/VertexRegistry.h"
+#include "Kikan/opengl/vertices/VertexRegistry.h"
 
 namespace Kikan {
     int VertexRegistry::_last_signature = 0;

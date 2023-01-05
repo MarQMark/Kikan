@@ -6,9 +6,9 @@
 #include <cstring>
 #include "glm/glm.hpp"
 #include "Shader.h"
-#include "opengl/batching/AutoBatch.h"
-#include "opengl/vertices/DefaultVertex.h"
-#include "opengl/vertices/VertexRegistry.h"
+#include "Kikan/opengl/batching/AutoBatch.h"
+#include "Kikan/opengl/vertices/DefaultVertex.h"
+#include "Kikan/opengl/vertices/VertexRegistry.h"
 
 namespace Kikan {
 class Renderer {

@@ -4,7 +4,7 @@
 #include "map"
 #include "string"
 #include "typeinfo"
-#include "opengl/buffers/VertexBufferLayout.h"
+#include "Kikan/opengl/buffers/VertexBufferLayout.h"
 
 namespace Kikan {
     class VertexRegistry {

@@ -1,9 +1,9 @@
-#include "Engine.h"
+#include "Kikan/Engine.h"
 
-#include "ecs/systems/SpriteRenderSystem.h"
-#include "ecs/components/QuadSprite.h"
-#include "ecs/components/PolygonSprite.h"
-#include "ecs/Entity.h"
+#include "Kikan/ecs/systems/SpriteRenderSystem.h"
+#include "Kikan/ecs/components/QuadSprite.h"
+#include "Kikan/ecs/components/PolygonSprite.h"
+#include "Kikan/ecs/Entity.h"
 
 double tt = 0;
 

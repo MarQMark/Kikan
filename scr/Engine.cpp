@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include "Engine.h"
+#include "Kikan/Engine.h"
 
 namespace Kikan {
     bool Engine::shouldRun() const {

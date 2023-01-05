@@ -13,15 +13,12 @@ endif(WIN32)
 
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
-#include external libraries
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
 #add all source and header files
 set(SOURCE_FILES scr/main.cpp scr/glew/glew.c scr/Engine.cpp include/Kikan/Engine.h scr/ecs/Scene.cpp include/Kikan/ecs/Scene.h scr/ecs/Entity.cpp include/Kikan/ecs/Entity.h scr/opengl/Renderer.cpp include/Kikan/opengl/Renderer.h include/Kikan/ecs/components/Physics.h include/Kikan/ecs/components/Transform.h include/Kikan/ecs/systems/ISystem.h include/Kikan/ecs/components/IComponent.h scr/ecs/systems/PhysicsSystem.cpp include/Kikan/ecs/systems/PhysicsSystem.h include/Kikan/ecs/TypeRegistry.h scr/ecs/TypeRegistry.cpp scr/opengl/Shader.cpp include/Kikan/opengl/Shader.h scr/opengl/batching/Batch.cpp include/Kikan/opengl/batching/Batch.h scr/opengl/buffers/VertexBuffer.cpp include/Kikan/opengl/buffers/VertexBuffer.h include/Kikan/opengl/vertices/IVertex.h scr/opengl/batching/AutoBatch.cpp include/Kikan/opengl/batching/AutoBatch.h scr/opengl/batching/ManuelBatch.cpp include/Kikan/opengl/batching/ManuelBatch.h include/Kikan/opengl/vertices/DefaultVertex.h include/Kikan/opengl/buffers/VertexBufferLayout.h scr/opengl/VertexRegistry.cpp include/Kikan/opengl/vertices/VertexRegistry.h scr/opengl/buffers/IndexBuffer.cpp include/Kikan/opengl/buffers/IndexBuffer.h scr/ecs/systems/SpriteRenderSystem.cpp include/Kikan/ecs/systems/SpriteRenderSystem.h include/Kikan/ecs/components/TriangleSprite.h include/Kikan/util/EarClipping.h include/Kikan/ecs/components/PolygonSprite.h include/Kikan/ecs/components/QuadSprite.h include/Kikan/ecs/systems/IRenderSystem.h scr/opengl/Camera.cpp include/Kikan/opengl/Camera.h)
 
 add_executable(Kikan ${SOURCE_FILES})
 
-target_include_directories(Kikan PUBLIC ${PROJECT_SOURCE_DIR}/include/Kikan)
+target_include_directories(Kikan PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 
 #copy shaders to target folder

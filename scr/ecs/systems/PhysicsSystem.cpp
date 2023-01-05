@@ -1,5 +1,5 @@
-#include "ecs/systems/PhysicsSystem.h"
-#include "ecs/components/Physics.h"
+#include "Kikan/ecs/systems/PhysicsSystem.h"
+#include "Kikan/ecs/components/Physics.h"
 
 namespace Kikan {
     PhysicsSystem::PhysicsSystem() {
