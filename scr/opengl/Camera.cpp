@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "Kikan/opengl/Camera.h"
 
 namespace Kikan {
     glm::mat4x4 Camera::matrix() {

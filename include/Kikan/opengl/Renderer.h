@@ -4,11 +4,11 @@
 #include <map>
 #include <string>
 #include <cstring>
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 #include "Shader.h"
-#include "batching/AutoBatch.h"
-#include "vertices/DefaultVertex.h"
-#include "vertices/VertexRegistry.h"
+#include "opengl/batching/AutoBatch.h"
+#include "opengl/vertices/DefaultVertex.h"
+#include "opengl/vertices/VertexRegistry.h"
 
 namespace Kikan {
 class Renderer {

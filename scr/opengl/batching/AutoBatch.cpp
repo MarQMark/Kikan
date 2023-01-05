@@ -1,8 +1,8 @@
-#include "AutoBatch.h"
+#include "Kikan/opengl/batching/AutoBatch.h"
 #include <algorithm>
 #include <iostream>
 #include <cstring>
-#include "../buffers/IndexBuffer.h"
+#include "opengl/buffers/IndexBuffer.h"
 
 namespace Kikan {
     AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize) {

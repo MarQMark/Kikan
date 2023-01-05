@@ -1,4 +1,4 @@
-#include "TypeRegistry.h"
+#include "Kikan/ecs/TypeRegistry.h"
 
 namespace Kikan {
     int TypeRegistry::_last_signature = 0;

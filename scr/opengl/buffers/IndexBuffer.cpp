@@ -1,4 +1,4 @@
-#include "IndexBuffer.h"
+#include "opengl/buffers/IndexBuffer.h"
 
 namespace Kikan {
     IndexBuffer::IndexBuffer(std::vector<GLuint> &indices) {

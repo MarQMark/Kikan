@@ -3,8 +3,8 @@
 
 #include <chrono>
 #include "vector"
-#include "ecs/Scene.h"
-#include "opengl/Renderer.h"
+#include "Kikan/ecs/Scene.h"
+#include "Kikan/opengl/Renderer.h"
 
 namespace Kikan {
     class Engine {

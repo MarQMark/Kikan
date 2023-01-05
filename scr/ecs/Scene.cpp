@@ -1,5 +1,5 @@
-#include "Scene.h"
-#include "../ecs/systems/IRenderSystem.h"
+#include "ecs/Scene.h"
+#include "ecs/systems/IRenderSystem.h"
 
 namespace Kikan {
     std::string Scene::name() {

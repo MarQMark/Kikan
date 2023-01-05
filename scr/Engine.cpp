@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "Engine.h"
+
 namespace Kikan {
     bool Engine::shouldRun() const {
         return _should_run;

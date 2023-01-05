@@ -1,6 +1,6 @@
-#include "Renderer.h"
+#include "opengl/Renderer.h"
 #include <iostream>
-#include "../util/EarClipping.h"
+#include "util/EarClipping.h"
 
 namespace Kikan {
 

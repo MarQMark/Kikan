@@ -3,8 +3,8 @@
 
 #include <algorithm>
 #include "vector"
-#include "../TypeRegistry.h"
-#include "../Entity.h"
+#include "Kikan/ecs/TypeRegistry.h"
+#include "Kikan/ecs/Entity.h"
 
 namespace Kikan {
 

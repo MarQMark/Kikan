@@ -2,7 +2,7 @@
 #define KIKAN_EAR_CLIPPING_H
 
 #include <vector>
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 namespace Kikan {
     float cross2d(glm::vec2 a, glm::vec2 b){

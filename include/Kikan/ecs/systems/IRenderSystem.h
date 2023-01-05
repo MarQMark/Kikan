@@ -2,7 +2,7 @@
 #define KIKAN_I_RENDER_SYSTEM_H
 
 #include "ISystem.h"
-#include "../../opengl/Renderer.h"
+#include "Kikan/opengl/Renderer.h"
 
 namespace Kikan {
     class IRenderSystem : public ISystem {

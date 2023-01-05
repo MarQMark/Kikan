@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "Shader.h"
+#include "Kikan/opengl/Shader.h"
 
 namespace Kikan {
     Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) {

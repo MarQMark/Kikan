@@ -1,4 +1,4 @@
-#include "VertexBuffer.h"
+#include "opengl/buffers/VertexBuffer.h"
 
 namespace Kikan {
     VertexBuffer::VertexBuffer(VertexBufferLayout *vbl, unsigned int vertexSize) {
