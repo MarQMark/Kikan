@@ -1,6 +1,6 @@
 project("Kikan")
 
-#add all source and header files
+#add all source files
 set(SOURCE_FILES
         glew/glew.c
         Engine.cpp

@@ -12,6 +12,6 @@ endif(WIN32)
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 add_subdirectory("include")
-add_subdirectory("scr")
+add_subdirectory("src")
 
 add_subdirectory("examples")
