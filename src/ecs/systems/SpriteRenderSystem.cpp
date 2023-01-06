@@ -3,12 +3,14 @@
 #include "Kikan/ecs/components/TriangleSprite.h"
 #include "Kikan/ecs/components/QuadSprite.h"
 #include "Kikan/ecs/components/PolygonSprite.h"
+#include "Kikan/ecs/components/Texture2DSprite.h"
 
 namespace Kikan {
     SpriteRenderSystem::SpriteRenderSystem() {
         singleInclude(TriangleSprite);
         singleInclude(QuadSprite);
         singleInclude(PolygonSprite);
+        singleInclude(Texture2DSprite);
     }
 
     void SpriteRenderSystem::update(double dt) {
@@ -40,6 +42,18 @@ namespace Kikan {
                         polygonSprite->points,
                         polygonSprite->color,
                         polygonSprite->layer);
+            }
+
+            auto *texture2DSprite = e->getComponent<Texture2DSprite>();
+            if (texture2DSprite) {
+                _renderer->renderTexture2D(
+                        texture2DSprite->points[0],
+                        texture2DSprite->points[1],
+                        texture2DSprite->points[2],
+                        texture2DSprite->points[3],
+                        texture2DSprite->textureID,
+                        texture2DSprite->color,
+                        texture2DSprite->layer);
             }
         }
     }

@@ -24,7 +24,7 @@ namespace Kikan {
         };
 
         int _max_texture_units = 4;
-        float* _texture_slots;
+        float* _texture_ids;
         int _last_slot = 0;
         int find_texture(float texture);
 

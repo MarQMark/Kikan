@@ -7,19 +7,21 @@
 namespace Kikan {
     AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize) {
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_max_texture_units);
-        _texture_slots = new float[_max_texture_units];
+        _texture_ids = new float[_max_texture_units];
+        for (int i = 0; i < _max_texture_units; ++i)
+            _texture_ids[i] = -1.f;
         _vertex_space.size = vertexSize;
         _vbl = vbl;
     }
 
     AutoBatch::~AutoBatch() {
-        delete _texture_slots;
+        delete _texture_ids;
         free(_vertex_space.data);
     }
 
     int AutoBatch::find_texture(float texture) {
         for (int i = 0; i < _max_texture_units; ++i) {
-            if (_texture_slots[i] == texture)
+            if (_texture_ids[i] == texture)
                 return i;
         }
 
@@ -65,10 +67,10 @@ namespace Kikan {
                     vertices[i]->texture = (float) pos;
                 } else {
                     // no more space in Batch
-                    if (!(bool) _texture_slots[_max_texture_units - 1]) {
+                    if (_texture_ids[_max_texture_units - 1] != -1) {
                         break;
                     } else {
-                        _texture_slots[_last_slot] = vertices[i]->texture;
+                        _texture_ids[_last_slot] = vertices[i]->texture;
                         vertices[i]->texture = (float) _last_slot;
                         _last_slot++;
                     }
@@ -106,7 +108,7 @@ namespace Kikan {
         //bind all textures
         for (int i = 0; i < _last_slot; ++i) {
             glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, (unsigned int) _texture_slots[i]);
+            glBindTexture(GL_TEXTURE_2D, (unsigned int) _texture_ids[i]);
         }
 
         //draw

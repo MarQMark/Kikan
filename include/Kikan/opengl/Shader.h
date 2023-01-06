@@ -18,15 +18,11 @@ namespace Kikan {
         static void unbind();
 
         void uniform1li(const std::string &name, int x);
-
+        void uniform1iv(const std::string &name, GLsizei count, const GLint* value);
         void uniform1lf(const std::string &name, float x);
-
         void uniform2fv(const std::string &name, glm::vec2 v);
-
         void uniform3fv(const std::string &name, glm::vec3 v);
-
         void uniform4fv(const std::string &name, glm::vec4 v);
-
         void uniformM4fv(const std::string &name, glm::mat4x4 mvp);
 
     private:

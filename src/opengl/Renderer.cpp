@@ -26,7 +26,7 @@ namespace Kikan {
         glfwMakeContextCurrent(_window);
 
         //disable VSYNC
-        //glfwSwapInterval(0);
+        glfwSwapInterval(0);
 
         glEnable(GL_DEPTH_TEST);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -40,6 +40,13 @@ namespace Kikan {
 
         //load default shader
         _shaders["default"] = new Shader("shaders/default.vert", "shaders/default.frag");
+
+        //load max texture units in sampler in default frag shader
+        GLint maxTextureUnits;
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+        GLint textures[maxTextureUnits];
+        for(int i = 0; i < maxTextureUnits; i++) textures[i] = i;
+        _shaders["default"]->uniform1iv("u_texture", 8, textures);
 
         //load default vertex layout
         VertexRegistry::addLayout<DefaultVertex>(DefaultVertex::getLayout());
@@ -60,9 +67,9 @@ namespace Kikan {
         for (auto batch: _batches)
             batch.second->render();
 
-        /*while(GLenum err = glGetError() != GL_NO_ERROR){
+        while(GLenum err = glGetError() != GL_NO_ERROR){
             std::cout << "ERROR: " << err << std::endl;
-        }*/
+        }
 
         //handle Auto Batches
         for (const auto &batches: _auto_batches) {
@@ -167,6 +174,48 @@ namespace Kikan {
         int result = triangulate(points, indices);
         if (result < 0)
             std::cout << "[ERROR] Could not triangulate Polygon" << std::endl;
+
+        autoBatch<DefaultVertex>(vertices, indices);
+    }
+
+    /*
+     * Uses Auto-batching with DefaultVertex.
+     *
+     * Order of Points is:
+     *      1 ------ 2
+     *      |        |
+     *      |        |
+     *      4 ------ 3
+     */
+    void Renderer::renderTexture2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, GLuint textureId, glm::vec4 color, float layer){
+        std::vector<IVertex *> vertices(4);
+
+        DefaultVertex v1;
+        v1.position = glm::vec3(p1.x, p1.y, layer);
+        v1.textureCoords = glm::vec2(1, 0);
+        vertices[0] = &v1;
+
+        DefaultVertex v2;
+        v2.position = glm::vec3(p2.x, p2.y, layer);
+        v2.textureCoords = glm::vec2(1, 1);
+        vertices[1] = &v2;
+
+        DefaultVertex v3;
+        v3.position = glm::vec3(p3.x, p3.y, layer);
+        v3.textureCoords = glm::vec2(0, 1);
+        vertices[2] = &v3;
+
+        DefaultVertex v4;
+        v4.position = glm::vec3(p4.x, p4.y, layer);
+        v4.textureCoords = glm::vec2(0, 0);
+        vertices[3] = &v4;
+
+        for (auto *v: vertices) {
+            ((DefaultVertex *) v)->color = color;
+            v->texture = (float)textureId;
+        }
+
+        std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
         autoBatch<DefaultVertex>(vertices, indices);
     }

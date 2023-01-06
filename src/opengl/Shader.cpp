@@ -117,4 +117,10 @@ namespace Kikan {
         if (loc != -1)
             glUniform4fv(loc, 1, &v[0]);
     }
+
+    void Shader::uniform1iv(const std::string &name, GLsizei count, const GLint *value) {
+        GLint loc = uniform_location(name);
+        if (loc != -1)
+            glUniform1iv(loc, count, value);
+    }
 }

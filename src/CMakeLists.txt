@@ -16,6 +16,7 @@ set(SOURCE_FILES
         opengl/batching/ManuelBatch.cpp
         opengl/VertexRegistry.cpp
         opengl/buffers/IndexBuffer.cpp
+        opengl/buffers/Texture2D.cpp
         ecs/systems/SpriteRenderSystem.cpp
         opengl/Camera.cpp)
 

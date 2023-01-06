@@ -28,6 +28,7 @@ class Renderer {
         void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer);
         void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer);
         void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer);
+        void renderTexture2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0);
 
         template <class T>
         void autoBatch(std::vector<IVertex*> vertices);
