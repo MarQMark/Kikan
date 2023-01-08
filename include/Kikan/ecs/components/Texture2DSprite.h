@@ -2,6 +2,7 @@
 #define KIKAN_TEXTURE2D_SPRITE_H
 
 #include "glm/glm.hpp"
+#include "GL/glew.h"
 #include "IComponent.h"
 
 namespace Kikan {

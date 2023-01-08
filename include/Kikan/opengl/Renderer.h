@@ -39,6 +39,7 @@ class Renderer {
         void (*preRender)(Renderer* renderer, double dt) = nullptr;
         void (*postRender)(Renderer* renderer, double dt) = nullptr;
 
+        Shader* shader(const std::string& name = "default");
     private:
         GLFWwindow *_window = nullptr;
 

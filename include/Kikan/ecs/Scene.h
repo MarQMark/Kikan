@@ -5,15 +5,15 @@
 #include <vector>
 #include "string"
 #include "Kikan/ecs/Entity.h"
-#include "Kikan/ecs/systems/ISystem.h"
 #include "Kikan/opengl/Renderer.h"
+#include "Kikan/ecs/systems/ISystem.h"
 #include "Kikan/opengl/Camera.h"
 
 namespace Kikan {
     class Scene {
     public:
-        Scene(std::string name, Renderer* renderer)
-            : _name(std::move(name)), _renderer(renderer){
+        Scene(std::string name, Renderer* renderer, Input* input)
+            : _name(std::move(name)), _renderer(renderer), _input(input){
 
             int width, height;
             glfwGetWindowSize(renderer->getWindow(), &width, &height);
@@ -46,6 +46,7 @@ namespace Kikan {
         const std::string _name;
         Renderer* _renderer;
         Camera* _camera;
+        Input* _input;
 
         std::vector<Entity*> _entities;
         std::vector<ISystem*> _systems;

@@ -11,10 +11,12 @@ namespace Kikan {
     public:
         Engine(){
             _renderer = new Renderer();
+            _input = new Input(_renderer->getWindow());
             setCurrScene();
         }
 
         ~Engine(){
+            delete _input;
             delete _renderer;
         }
 
@@ -42,6 +44,8 @@ namespace Kikan {
         Renderer* _renderer;
         std::vector<Scene*> _scenes;
         Scene* _curr_scene;
+
+        Input* _input;
 
         void updateFPS();
     };

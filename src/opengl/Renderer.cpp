@@ -242,4 +242,8 @@ namespace Kikan {
         if (result == -1)
             std::cout << "[ERROR] cannot auto-batch specified vertices with custom indices" << std::endl;
     }
+
+    Shader *Renderer::shader(const std::string& name) {
+        return _shaders[name];
+    }
 }

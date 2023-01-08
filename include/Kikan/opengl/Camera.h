@@ -8,18 +8,21 @@ namespace Kikan {
     class Camera {
     public:
         Camera() {
-            calc_matrix();
+            reset();
         }
 
         glm::mat4x4 matrix();
 
         void scale(float w, float h);
+        void scale(glm::vec2 s);
 
+        void translate(float x, float y);
+        void translate(glm::vec2 p);
+
+        void rotate(float d);
+
+        void reset();
     private:
-        float _width = 1;
-        float _height = 1;
-
-        void calc_matrix();
 
         glm::mat4x4 _matrix{};
     };

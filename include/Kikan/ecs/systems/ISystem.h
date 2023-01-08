@@ -5,6 +5,7 @@
 #include "vector"
 #include "Kikan/ecs/TypeRegistry.h"
 #include "Kikan/ecs/Entity.h"
+#include "Kikan/input/Input.h"
 
 namespace Kikan {
 
@@ -22,13 +23,17 @@ namespace Kikan {
             }
         }
 
+        void setInput(Input* input){
+            _input = input;
+        }
+
         virtual void update(double dt) = 0;
 
-        void addEntity(Entity* entity){
+        void virtual addEntity(Entity* entity){
             _entities.push_back(entity);
         }
 
-        void removeEntity(Entity* entity){
+        void virtual removeEntity(Entity* entity){
             for (int i = 0; i < _entities.size(); ++i) {
                 if(_entities.at(i) == entity){
                     _entities.erase(_entities.begin() + i);
@@ -42,6 +47,8 @@ namespace Kikan {
         }
 
     protected:
+        Input* _input;
+
         template<class T>
         unsigned int signature(){
             return TypeRegistry::getSignature<T>();

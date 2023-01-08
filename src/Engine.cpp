@@ -11,7 +11,7 @@ namespace Kikan {
 
         //if no scene exists create default scene
         if(_scenes.capacity() == 0){
-            Scene* defaultScene = new Scene("default", _renderer);
+            Scene* defaultScene = new Scene("default", _renderer, _input);
             _scenes.push_back(defaultScene);
             return defaultScene;
         }
@@ -37,8 +37,8 @@ namespace Kikan {
         _last_time = std::chrono::high_resolution_clock::now();
 
         //if dt is higher than a day -> error -> set to 0
-        if(_dt > 1e5)
-            _dt = 0;
+        if(_dt > 1e7)
+            _dt = 1e-7;
 
         _frames_last_second++;
 

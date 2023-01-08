@@ -13,5 +13,5 @@ void main() {
 
     color = mix(color, texture(u_texture[int(v_textureSlot)], v_texCoords), step(0., v_textureSlot));
 
-    fragColor = color;//v_color;
+    fragColor = color;
 }
