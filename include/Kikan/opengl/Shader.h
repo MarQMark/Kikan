@@ -16,8 +16,9 @@ namespace Kikan {
         void bind() const;
         static void unbind();
 
-        void changeVs(const std::string& path);
-        void changeFs(const std::string& path);
+        static std::string loadShaderSource(const std::string &path);
+        void changeVs(const std::string& src);
+        void changeFs(const std::string& src);
 
         void uniform1li(const std::string &name, int x);
         void uniform1iv(const std::string &name, GLsizei count, const GLint* value);
@@ -26,9 +27,7 @@ namespace Kikan {
         void uniform3fv(const std::string &name, glm::vec3 v);
         void uniform4fv(const std::string &name, glm::vec4 v);
         void uniformM4fv(const std::string &name, glm::mat4x4 mvp);
-
     private:
-        static std::string loadShaderSource(const std::string &path);
         static int compileShader(GLenum type, const std::string &source);
         void create_program(GLuint vs, GLuint fs);
 

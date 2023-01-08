@@ -21,6 +21,7 @@ namespace Kikan {
     }
 
     void Shader::create_program(GLuint vs, GLuint fs) {
+        glDeleteProgram(_id);
         _id = glCreateProgram();
 
         glAttachShader(_id, vs);
@@ -69,15 +70,15 @@ namespace Kikan {
         return id;
     }
 
-    void Shader::changeVs(const std::string& path) {
+    void Shader::changeVs(const std::string& src) {
         glDeleteShader(_vs);
-        int vs = compileShader(GL_VERTEX_SHADER, path);
+        int vs = compileShader(GL_VERTEX_SHADER, src);
         create_program(vs, _fs);
     }
 
-    void Shader::changeFs(const std::string& path) {
+    void Shader::changeFs(const std::string& src) {
         glDeleteShader(_fs);
-        int fs = compileShader(GL_FRAGMENT_SHADER, path);
+        int fs = compileShader(GL_FRAGMENT_SHADER, src);
         create_program(_vs, fs);
     }
 
