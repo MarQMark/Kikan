@@ -8,16 +8,27 @@ namespace Kikan {
         std::string vertexSource = loadShaderSource(vertexPath);
         std::string fragmentSource = loadShaderSource(fragmentPath);
 
-        _id = glCreateProgram();
         int vs = compileShader(GL_VERTEX_SHADER, vertexSource);
         int fs = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
+
+        create_program(vs, fs);
+    }
+
+    Shader::~Shader() {
+        glDeleteShader(_vs);
+        glDeleteShader(_fs);
+        glDeleteProgram(_id);
+    }
+
+    void Shader::create_program(GLuint vs, GLuint fs) {
+        _id = glCreateProgram();
 
         glAttachShader(_id, vs);
         glAttachShader(_id, fs);
         glLinkProgram(_id);
 
-        glDeleteShader(vs);
-        glDeleteShader(fs);
+        _vs = vs;
+        _fs = fs;
 
         bind();
     }
@@ -33,10 +44,6 @@ namespace Kikan {
         source.close();
 
         return ss.str();
-    }
-
-    Shader::~Shader() {
-        glDeleteProgram(_id);
     }
 
     int Shader::compileShader(GLenum type, const std::string &source) {
@@ -60,6 +67,18 @@ namespace Kikan {
         }
 
         return id;
+    }
+
+    void Shader::changeVs(const std::string& path) {
+        glDeleteShader(_vs);
+        int vs = compileShader(GL_VERTEX_SHADER, path);
+        create_program(vs, _fs);
+    }
+
+    void Shader::changeFs(const std::string& path) {
+        glDeleteShader(_fs);
+        int fs = compileShader(GL_FRAGMENT_SHADER, path);
+        create_program(_vs, fs);
     }
 
     void Shader::bind() const {
