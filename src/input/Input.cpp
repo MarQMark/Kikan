@@ -3,6 +3,14 @@
 namespace Kikan {
     Input::Input(GLFWwindow* window) {
 
+        // init maps
+        for (int i = -1; i < Key::LAST; ++i) {
+            _keys[i] = false;
+        }
+        for (int i = 0; i < Mouse::BUTTON_LAST; ++i) {
+            _m_keys[i] = false;
+        }
+
         // setup Mouse Button callback
         auto mouse_btn = [](GLFWwindow* w, int b, int a, int m){
             static_cast<Input*>(glfwGetWindowUserPointer(w))->mouse_btn_callback( b, a, m);
@@ -24,11 +32,36 @@ namespace Kikan {
     }
 
     void Input::mouse_btn_callback(int btn, int action, int mods) {
+        _m_keys[btn] = (action == GLFW_PRESS);
     }
 
     void Input::mouse_pos_callback(double x, double y) {
+        _mouse_x = x;
+        _mouse_y = y;
     }
 
     void Input::key_callback(int key, int scancode, int action, int mods) {
+        _keys[key] = (action == GLFW_PRESS);
+    }
+
+    bool Input::keyPressed(Key k) {
+        return _keys[k];
+    }
+
+    double Input::mouseX() const {
+        return _mouse_x;
+    }
+
+    double Input::mouseY() const {
+        return _mouse_y;
+    }
+
+    void Input::mouseP(glm::vec2 &pos) const {
+        pos.x = (float)_mouse_x;
+        pos.y = (float)_mouse_y;
+    }
+
+    bool Input::mousePressed(Mouse m) {
+        return _m_keys[m];
     }
 }
