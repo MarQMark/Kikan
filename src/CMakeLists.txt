@@ -41,7 +41,7 @@ add_compile_definitions(GLEW_STATIC)
 #link GLFW
 find_library(LIB_GLFW
         NAMES libglfw3
-        PATHS ${PROJECT_SOURCE_DIR}/lib)
+        PATHS ${PROJECT_SOURCE_DIR}/../lib)
 target_link_libraries(Kikan ${LIB_GLFW})
 
 #link all necessary libraries for opengl

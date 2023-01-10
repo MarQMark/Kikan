@@ -1,15 +1,10 @@
 #include "Kikan/input/Input.h"
 
 namespace Kikan {
-    Input::Input(GLFWwindow* window) {
+     Input *Input::create(GLFWwindow* window) {
+        auto* input = new Input(window);
 
-        // init maps
-        for (int i = -1; i < Key::LAST; ++i) {
-            _keys[i] = false;
-        }
-        for (int i = 0; i < Mouse::BUTTON_LAST; ++i) {
-            _m_keys[i] = false;
-        }
+        glfwSetWindowUserPointer(window, input);
 
         // setup Mouse Button callback
         auto mouse_btn = [](GLFWwindow* w, int b, int a, int m){
@@ -29,6 +24,17 @@ namespace Kikan {
         };
         glfwSetKeyCallback(window, key);
 
+        return input;
+    }
+
+    Input::Input(GLFWwindow* window) {
+        // init maps
+        for (int i = -1; i < Key::LAST; ++i) {
+            _keys[i] = false;
+        }
+        for (int i = 0; i < Mouse::BUTTON_LAST; ++i) {
+            _m_keys[i] = false;
+        }
     }
 
     void Input::mouse_btn_callback(int btn, int action, int mods) {
@@ -64,4 +70,6 @@ namespace Kikan {
     bool Input::mousePressed(Mouse m) {
         return _m_keys[m];
     }
+
+
 }

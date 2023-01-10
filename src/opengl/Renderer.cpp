@@ -162,7 +162,7 @@ namespace Kikan {
     void Renderer::renderPolygon(std::vector<glm::vec2> &points, glm::vec4 color, float layer) {
         std::vector<IVertex *> vertices(points.size());
         std::vector<DefaultVertex> data(points.size());
-        for (int i = 0; i < points.size(); ++i) {
+        for (int i = 0; i < (int)points.size(); ++i) {
             data[i].position = glm::vec3(points[i].x, points[i].y, 0.0f);
             data[i].textureCoords = glm::vec2(0.0);
             data[i].color = color;

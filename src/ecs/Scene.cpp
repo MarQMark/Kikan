@@ -50,7 +50,7 @@ namespace Kikan {
                 system->removeEntity(entity);
         }
 
-        for (int i = 0; i < _entities.size(); ++i) {
+        for (int i = 0; i < (int)_entities.size(); ++i) {
             if (_entities.at(i) == entity) {
                 _entities.erase(_entities.begin() + i);
                 return;
@@ -67,6 +67,7 @@ namespace Kikan {
         if (auto *rSystem = dynamic_cast<IRenderSystem *>(system))
             rSystem->setRenderer(_renderer);
 
+        system->setInput(_input);
         _systems.push_back(system);
     }
 

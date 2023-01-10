@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.23)
 project(Kikan)
 
+set(CMAKE_CXX_FLAGS_RELEASE  "-O3")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -Wno-unused-parameter")
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 ")
 endif(UNIX)

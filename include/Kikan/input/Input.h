@@ -4,6 +4,7 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
+#include <map>
 
 namespace Kikan {
 
@@ -148,7 +149,7 @@ namespace Kikan {
 
     class Input {
     public:
-        explicit Input(GLFWwindow* window);
+        static Input* create(GLFWwindow* window);
 
         bool keyPressed(Key k);
         bool mousePressed(Mouse m);
@@ -157,14 +158,16 @@ namespace Kikan {
         void mouseP(glm::vec2& pos) const;
 
     private:
-       void mouse_btn_callback(int btn, int action, int mods);
-       void mouse_pos_callback(double x, double y);
-       void key_callback(int key, int scancode, int action, int mods);
+        explicit Input(GLFWwindow* window);
+
+        void mouse_btn_callback(int btn, int action, int mods);
+        void mouse_pos_callback(double x, double y);
+        void key_callback(int key, int scancode, int action, int mods);
 
         std::map<int, bool> _keys{};
         std::map<int, bool> _m_keys{};
-        double _mouse_x;
-        double _mouse_y;
+        double _mouse_x = 0;
+        double _mouse_y = 0;
     };
 }
 
