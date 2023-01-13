@@ -14,7 +14,7 @@ void preRender(Kikan::Renderer* renderer, double dt){
     int width, height;
     glfwGetWindowSize(renderer->getWindow(), &width, &height);
 
-    Kikan::Shader shader("shaders/default.vert", "E:/Temp/ray.frag");
+    Kikan::Shader shader("shaders/default.vert", "/home/mark/Documents/shader/ray.frag");
     shader.bind();
     shader.uniformM4fv("u_mvp", renderer->mvp);
     shader.uniform2fv("u_resolution", glm::vec2(width, height));

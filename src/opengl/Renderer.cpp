@@ -1,6 +1,8 @@
 #include "Kikan/opengl/Renderer.h"
 #include <iostream>
+#include <sstream>
 #include "Kikan/util/EarClipping.h"
+
 
 namespace Kikan {
 
@@ -26,7 +28,7 @@ namespace Kikan {
         glfwMakeContextCurrent(_window);
 
         //disable VSYNC
-        glfwSwapInterval(0);
+        //glfwSwapInterval(0);
 
         glEnable(GL_DEPTH_TEST);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -46,10 +48,12 @@ namespace Kikan {
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
         GLint textures[maxTextureUnits];
         for(int i = 0; i < maxTextureUnits; i++) textures[i] = i;
-        _shaders["default"]->uniform1iv("u_texture", 8, textures);
+        _shaders["default"]->uniform1iv("u_texture", maxTextureUnits, textures);
 
         //load default vertex layout
         VertexRegistry::addLayout<DefaultVertex>(DefaultVertex::getLayout());
+
+        query_errors("Setup");
     }
 
     GLFWwindow *Renderer::getWindow() {
@@ -67,9 +71,7 @@ namespace Kikan {
         for (auto batch: _batches)
             batch.second->render();
 
-        while(GLenum err = glGetError() != GL_NO_ERROR){
-            std::cout << "ERROR: " << err << std::endl;
-        }
+        query_errors("Update");
 
         //handle Auto Batches
         for (const auto &batches: _auto_batches) {
@@ -245,5 +247,16 @@ namespace Kikan {
 
     Shader *Renderer::shader(const std::string& name) {
         return _shaders[name];
+    }
+
+    void Renderer::query_errors(const std::string& tag) {
+        GLenum err = glGetError();
+        while(err != GL_NO_ERROR){
+            std::stringstream ss;
+            ss<< std::hex << err; // int decimal_value
+            std::string res ( ss.str() );
+            std::cout << "[OPENGL ERROR] in " << tag << ": " << res << std::endl;
+            err = glGetError();
+        }
     }
 }

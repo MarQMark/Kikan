@@ -22,7 +22,7 @@ add_compile_definitions(GLEW_STATIC)
 
 #link GLFW
 find_library(LIB_GLFW
-        NAMES libglfw3
+        NAMES libglfw3.a
         PATHS ${PROJECT_SOURCE_DIR}/lib)
 target_link_libraries(example ${LIB_GLFW})
 
