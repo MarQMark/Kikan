@@ -194,7 +194,7 @@ namespace Kikan {
 
         DefaultVertex v1;
         v1.position = glm::vec3(p1.x, p1.y, layer);
-        v1.textureCoords = glm::vec2(1, 0);
+        v1.textureCoords = glm::vec2(0, 1);
         vertices[0] = &v1;
 
         DefaultVertex v2;
@@ -204,7 +204,7 @@ namespace Kikan {
 
         DefaultVertex v3;
         v3.position = glm::vec3(p3.x, p3.y, layer);
-        v3.textureCoords = glm::vec2(0, 1);
+        v3.textureCoords = glm::vec2(1, 0);
         vertices[2] = &v3;
 
         DefaultVertex v4;
