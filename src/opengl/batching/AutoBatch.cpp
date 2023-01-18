@@ -5,31 +5,17 @@
 #include "Kikan/opengl/buffers/IndexBuffer.h"
 
 namespace Kikan {
-    AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize) {
-        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_max_texture_units);
-        _texture_ids = new float[_max_texture_units];
-        for (int i = 0; i < _max_texture_units; ++i)
-            _texture_ids[i] = -1.f;
+    AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize, float textureID) : _textureID(textureID) {
         _vertex_space.size = vertexSize;
         _vbl = vbl;
     }
 
     AutoBatch::~AutoBatch() {
-        delete _texture_ids;
         free(_vertex_space.data);
     }
 
-    int AutoBatch::find_texture(float texture) {
-        for (int i = 0; i < _max_texture_units; ++i) {
-            if (_texture_ids[i] == texture)
-                return i;
-        }
-
-        return -1;
-    }
-
-    int AutoBatch::addVertices(std::vector<IVertex *> &vertices) {
-        int n = add_vertices(vertices);
+    int AutoBatch::addVertices(std::vector<IVertex *> &vertices, int start, int stop) {
+        int n = add_vertices(vertices, start, stop);
 
         for (int i = 0; i < (n != 0 ? n : vertices.size()); ++i)
             _indices.push_back(_next_index++);
@@ -37,11 +23,11 @@ namespace Kikan {
         return n;
     }
 
-    int AutoBatch::addVertices(std::vector<IVertex *> &vertices, std::vector<GLuint> &indices) {
-        int n = add_vertices(vertices);
+    int AutoBatch::addVertices(std::vector<IVertex *> &vertices, std::vector<GLuint> &indices, int start, int stop) {
+        int n = add_vertices(vertices, start, stop);
 
         //return error
-        if (n > 0)
+        if (n == -1)
             return -1;
 
         //get max index from new indices
@@ -55,44 +41,26 @@ namespace Kikan {
         return 0;
     }
 
-    int AutoBatch::add_vertices(std::vector<IVertex *> &vertices) {
-        // Add all textures;
-        int i;
-        for (i = 0; i < vertices.size(); i++) {
-            if (vertices[i]->texture >= 0) {
-                int pos = find_texture(vertices[i]->texture);
-
-                //texture already there
-                if (pos != -1) {
-                    vertices[i]->texture = (float) pos;
-                } else {
-                    // no more space in Batch
-                    if (_texture_ids[_max_texture_units - 1] != -1) {
-                        break;
-                    } else {
-                        _texture_ids[_last_slot] = vertices[i]->texture;
-                        vertices[i]->texture = (float) _last_slot;
-                        _last_slot++;
-                    }
-                }
-            }
-        }
+    int AutoBatch::add_vertices(std::vector<IVertex *> &vertices, int start, int stop) {
+        int count = stop - start + 1;
 
         //allocate enough space for all new vertices
-        char *data = static_cast<char *>(malloc(_vertex_space.size * (_vertex_space.count + i)));
+        char *data = static_cast<char *>(malloc(_vertex_space.size * (_vertex_space.count + count)));
+        if(data == nullptr)
+            return -1;
 
         //handle old data
         memcpy(data, _vertex_space.data, _vertex_space.size * _vertex_space.count);
         free(_vertex_space.data);
 
         //copy new data
-        for (int j = 0; j < i; ++j)
-            memcpy(data + (j + _vertex_space.count) * _vertex_space.size, vertices[j], _vertex_space.size);
+        for (int i = 0; i < count; ++i)
+            memcpy(data + (i + _vertex_space.count) * _vertex_space.size, vertices[i], _vertex_space.size);
 
-        _vertex_space.count += i;
+        _vertex_space.count += count;
         _vertex_space.data = data;
 
-        return i == vertices.size() ? 0 : i;
+        return 0;
     }
 
     void AutoBatch::render() {
@@ -106,10 +74,8 @@ namespace Kikan {
         ib.bind();
 
         //bind all textures
-        for (int i = 0; i < _last_slot; ++i) {
-            glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, (unsigned int) _texture_ids[i]);
-        }
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, (unsigned int) _textureID);
 
         //draw
         glDrawElements(GL_TRIANGLES, (GLsizei) _indices.size(), GL_UNSIGNED_INT, nullptr);

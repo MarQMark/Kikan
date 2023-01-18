@@ -9,7 +9,7 @@
 
 double tt = 0;
 
-void preRender(Kikan::Renderer* renderer, double dt){
+void preRender(void* o, Kikan::Renderer* renderer, double dt){
     tt += dt;
     int width, height;
     glfwGetWindowSize(renderer->getWindow(), &width, &height);
@@ -25,7 +25,7 @@ int WinMain() {
     Kikan::Engine engine;
     engine.getScene()->addSystem(new Kikan::SpriteRenderSystem());
 
-    //engine.getRenderer()->preRender = preRender;
+    //engine.getRenderer()->addPreRender(preRender, nullptr);
 
     std::vector<float> data(500 * 500 * 4);
     for (int x = 0; x < 500; ++x) {

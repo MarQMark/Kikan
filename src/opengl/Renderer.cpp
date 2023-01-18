@@ -43,12 +43,8 @@ namespace Kikan {
         //load default shader
         _shaders["default"] = new Shader("shaders/default.vert", "shaders/default.frag");
 
-        //load max texture units in sampler in default frag shader
-        GLint maxTextureUnits;
-        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
-        GLint textures[maxTextureUnits];
-        for(int i = 0; i < maxTextureUnits; i++) textures[i] = i;
-        _shaders["default"]->uniform1iv("u_texture", maxTextureUnits, textures);
+        //load texture slot in sampler in default frag shader
+        _shaders["default"]->uniform1li("u_sampler", 0);
 
         //load default vertex layout
         VertexRegistry::addLayout<DefaultVertex>(DefaultVertex::getLayout());
@@ -66,7 +62,8 @@ namespace Kikan {
         _shaders["default"]->bind();
         _shaders["default"]->uniformM4fv("u_mvp", mvp);
 
-        if (preRender) preRender(this, dt);
+        if (preRender) preRender(_o_pre_render, this, dt);
+        if (_override_render) _override_render->preRender(this, dt);
 
         for (auto batch: _batches)
             batch.second->render();
@@ -74,15 +71,14 @@ namespace Kikan {
         query_errors("Update");
 
         //handle Auto Batches
-        for (const auto &batches: _auto_batches) {
-            for (AutoBatch *batch: batches.second) {
-                batch->render();
-                delete batch;
-            }
+        for (const auto &batch: _auto_batches) {
+            batch.second->render();
+            delete batch.second;
         }
         _auto_batches.clear();
 
-        if (postRender) postRender(this, dt);
+        if (postRender) postRender(_o_post_render, this, dt);
+        if (_override_render) _override_render->postRender(this, dt);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(_window);
@@ -151,7 +147,7 @@ namespace Kikan {
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
-        autoBatch<DefaultVertex>(vertices, indices);
+        autoBatch<DefaultVertex>(vertices, &indices);
     }
 
 /*
@@ -177,7 +173,7 @@ namespace Kikan {
         if (result < 0)
             std::cout << "[ERROR] Could not triangulate Polygon" << std::endl;
 
-        autoBatch<DefaultVertex>(vertices, indices);
+        autoBatch<DefaultVertex>(vertices, &indices);
     }
 
     /*
@@ -219,30 +215,43 @@ namespace Kikan {
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
-        autoBatch<DefaultVertex>(vertices, indices);
+        autoBatch<DefaultVertex>(vertices, &indices);
     }
 
+    /*
+     *  Each Auto-Batch gets an unique ID: 4 Bytes Vertex Signature + 4 Bytes Texture ID
+     */
     template<class T>
-    void Renderer::autoBatch(std::vector<IVertex *> vertices) {
-        if (_auto_batches.empty())
-            _auto_batches[signature(T)].push_back(new AutoBatch(VertexRegistry::getLayout<T>(), sizeof(T)));
+    void Renderer::autoBatch(std::vector<IVertex *> vertices, std::vector<GLuint> *indices) {
+        if(vertices.empty())
+            return;
 
-        int result = _auto_batches[signature(T)].back()->addVertices(vertices);
-        while (result != 0) {
-            _auto_batches[signature(T)].push_back(new AutoBatch(VertexRegistry::getLayout<T>(), sizeof(T)));
-            std::vector<IVertex *> remainingVertices(vertices.begin() + result, vertices.end());
-            result = _auto_batches[signature(T)].back()->addVertices(remainingVertices);
+        int start = 0;
+        int stop = 0;
+        float textureID = vertices[0]->texture;
+
+        for (IVertex* v : vertices) {
+            if(v->texture != textureID || v == vertices.back()){
+                // get ID
+                uint64_t id = auto_batch_id(signature(T), textureID);
+
+                // Create Batch if none with ID exist
+                if(!_auto_batches.count(id))
+                    _auto_batches[id] = new AutoBatch(VertexRegistry::getLayout<T>(), sizeof(T), textureID);
+
+                // Send vertices to batch
+                if(indices == nullptr)
+                    _auto_batches[id]->addVertices(vertices, start, stop);
+                else
+                    _auto_batches[id]->addVertices(vertices, *indices, start, stop);
+
+                // Update start and position
+                start = stop + 1;
+                textureID = v->texture;
+            }
+
+            stop++;
         }
-    }
-
-    template<class T>
-    void Renderer::autoBatch(std::vector<IVertex *> vertices, std::vector<GLuint> &indices) {
-        if (_auto_batches.empty())
-            _auto_batches[signature(T)].push_back(new AutoBatch(VertexRegistry::getLayout<T>(), sizeof(T)));
-
-        int result = _auto_batches[signature(T)].back()->addVertices(vertices, indices);
-        if (result == -1)
-            std::cout << "[ERROR] cannot auto-batch specified vertices with custom indices" << std::endl;
     }
 
     Shader *Renderer::shader(const std::string& name) {
@@ -258,5 +267,23 @@ namespace Kikan {
             std::cout << "[OPENGL ERROR] in " << tag << ": " << res << std::endl;
             err = glGetError();
         }
+    }
+
+    void Renderer::addPreRender(void (*func)(void *, Renderer *, double), void *o) {
+        preRender = func;
+        _o_pre_render = o;
+    }
+
+    void Renderer::addPostRender(void (*func)(void *, Renderer *, double), void *o) {
+        postRender = func;
+        _o_post_render = o;
+    }
+
+    void Renderer::overrideRender(Override* ovr) {
+        _override_render = ovr;
+    }
+
+    uint64_t Renderer::auto_batch_id(uint32_t signature, float textureID) {
+        return (uint64_t) signature << 32 | (uint32_t)textureID;
     }
 }
