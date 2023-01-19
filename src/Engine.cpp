@@ -31,7 +31,7 @@ namespace Kikan {
         //TODO implement function
     }
 
-    void Engine::updateFPS(){
+    void Engine::update_fps(){
         //get delta time
         _dt = ((std::chrono::duration<double, std::milli>)(std::chrono::high_resolution_clock::now() - _last_time)).count();
         _last_time = std::chrono::high_resolution_clock::now();
@@ -45,19 +45,20 @@ namespace Kikan {
         // set window title
         if(_time_last_second >= 500.0)
         {
-            std::stringstream ss;
-            ss << "KIKAN - FPS: " << _frames_last_second * 2;
-            glfwSetWindowTitle(_renderer->getWindow(), ss.str().c_str());
-
+            time.fps = _frames_last_second * 2;
             _time_last_second = 0;
             _frames_last_second = 0;
         }
 
         _time_last_second += _dt;
+
+        time.dt = _dt;
+        time.tt += _dt;
     }
 
     void Engine::update() {
-        updateFPS();
+        update_fps();
+        update_title();
 
         if(glfwWindowShouldClose(_renderer->getWindow())){
             _should_run = false;
@@ -84,6 +85,29 @@ namespace Kikan {
 
     void Engine::setCurrScene(const std::string& name) {
         _curr_scene = getScene(name);
+    }
+
+    Input *Engine::getInput() {
+        return _input;
+    }
+
+    void Engine::setTitle(std::string &title) {
+        _title = title;
+    }
+
+    std::string Engine::getTitle() {
+        return _title;
+    }
+
+    void Engine::update_title() {
+        if(_title.empty()){
+            std::stringstream ss;
+            ss << "KIKAN - FPS: " << time.fps;
+            glfwSetWindowTitle(_renderer->getWindow(), ss.str().c_str());
+        }
+        else {
+            glfwSetWindowTitle(_renderer->getWindow(), _title.c_str());
+        }
     }
 
 }
