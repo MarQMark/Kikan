@@ -10,8 +10,8 @@
 namespace Kikan {
     class Engine {
     public:
-        Engine(){
-            _renderer = new Renderer();
+        Engine(int width = 1280, int height = 720){
+            _renderer = new Renderer(width, height);
             _input = Input::create(_renderer->getWindow());
             setCurrScene();
         }

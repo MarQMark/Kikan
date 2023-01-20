@@ -18,7 +18,7 @@ namespace Kikan {
             std::cout << "ERROR: Could not initialize GLFW" << std::endl;
 
         /* Create a windowed mode _window and its OpenGL context */
-        _window = glfwCreateWindow(1280, 720, "Kikan", nullptr, nullptr);
+        _window = glfwCreateWindow(_width, _height, "Kikan", nullptr, nullptr);
         if (!_window) {
             glfwTerminate();
             std::cout << "ERROR: Could create Window" << std::endl;
@@ -285,5 +285,24 @@ namespace Kikan {
 
     uint64_t Renderer::auto_batch_id(uint32_t signature, float textureID) {
         return (uint64_t) signature << 32 | (uint32_t)textureID;
+    }
+
+
+    void Renderer::setWidth(int width) {
+        glfwSetWindowSize(_window, width, _height);
+    }
+
+    int Renderer::getWidth() {
+        glfwGetWindowSize(_window, &_width, &_height);
+        return _width;
+    }
+
+    void Renderer::setHeight(int height) {
+        glfwSetWindowSize(_window, _width, height);
+    }
+
+    int Renderer::getHeight() {
+        glfwGetWindowSize(_window, &_width, &_height);
+        return _height;
     }
 }
