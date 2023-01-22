@@ -49,7 +49,7 @@ namespace Kikan {
         //load default vertex layout
         VertexRegistry::addLayout<DefaultVertex>(DefaultVertex::getLayout());
 
-        query_errors("Setup");
+        queryErrors("Setup");
     }
 
     GLFWwindow *Renderer::getWindow() {
@@ -68,7 +68,7 @@ namespace Kikan {
         for (auto batch: _batches)
             batch.second->render();
 
-        query_errors("Update");
+        queryErrors("Update");
 
         //handle Auto Batches
         for (const auto &batch: _auto_batches) {
