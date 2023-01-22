@@ -258,7 +258,7 @@ namespace Kikan {
         return _shaders[name];
     }
 
-    void Renderer::query_errors(const std::string& tag) {
+    void Renderer::queryErrors(const std::string& tag) {
         GLenum err = glGetError();
         while(err != GL_NO_ERROR){
             std::stringstream ss;
