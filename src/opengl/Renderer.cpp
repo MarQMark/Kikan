@@ -258,6 +258,10 @@ namespace Kikan {
         return _shaders[name];
     }
 
+    void Renderer::shader(Shader* shader, const std::string &name) {
+        _shaders[name] = shader;
+    }
+
     void Renderer::queryErrors(const std::string& tag) {
         GLenum err = glGetError();
         while(err != GL_NO_ERROR){
