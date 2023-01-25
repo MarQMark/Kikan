@@ -65,9 +65,6 @@ namespace Kikan {
         if (preRender) preRender(_o_pre_render, this, dt);
         if (_override_render) _override_render->preRender(this, dt);
 
-        for (auto batch: _batches)
-            batch.second->render();
-
         queryErrors("Update");
 
         //handle Auto Batches
@@ -87,9 +84,6 @@ namespace Kikan {
         glfwPollEvents();
     }
 
-/*
- *  Uses Auto-batching with DefaultVertex.
- */
     void Renderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer) {
         std::vector<IVertex *> vertices(3);
 
@@ -117,9 +111,6 @@ namespace Kikan {
         autoBatch<DefaultVertex>(vertices);
     }
 
-/*
- *  Uses Auto-batching with DefaultVertex.
- */
     void Renderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer) {
         std::vector<IVertex *> vertices(4);
 
@@ -150,13 +141,6 @@ namespace Kikan {
         autoBatch<DefaultVertex>(vertices, &indices);
     }
 
-/*
- *  Uses Auto-batching with DefaultVertex.
- *
- *  Uses Ear-Clipping-Algorithm to divide into Triangles.
- *  This means Polygons cannot intersect with themselves, cannot have holes and
- *  three or more vertices cannot form a line
- */
     void Renderer::renderPolygon(std::vector<glm::vec2> &points, glm::vec4 color, float layer) {
         std::vector<IVertex *> vertices(points.size());
         std::vector<DefaultVertex> data(points.size());
@@ -176,15 +160,6 @@ namespace Kikan {
         autoBatch<DefaultVertex>(vertices, &indices);
     }
 
-    /*
-     * Uses Auto-batching with DefaultVertex.
-     *
-     * Order of Points is:
-     *      1 ------ 2
-     *      |        |
-     *      |        |
-     *      4 ------ 3
-     */
     void Renderer::renderTexture2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, GLuint textureId, glm::vec4 color, float layer){
         std::vector<IVertex *> vertices(4);
 
@@ -218,9 +193,6 @@ namespace Kikan {
         autoBatch<DefaultVertex>(vertices, &indices);
     }
 
-    /*
-     *  Each Auto-Batch gets an unique ID: 4 Bytes Vertex Signature + 4 Bytes Texture ID
-     */
     template<class T>
     void Renderer::autoBatch(std::vector<IVertex *> vertices, std::vector<GLuint> *indices) {
         if(vertices.empty())
@@ -308,5 +280,13 @@ namespace Kikan {
     int Renderer::getHeight() {
         glfwGetWindowSize(_window, &_width, &_height);
         return _height;
+    }
+
+    void Renderer::addBatch(ManuelBatch *batch, unsigned int key) {
+        _batches[key] = batch;
+    }
+
+    ManuelBatch *Renderer::getBatch(unsigned int key) {
+        return _batches[key];
     }
 }

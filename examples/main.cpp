@@ -6,6 +6,7 @@
 #include "Kikan/ecs/components/PolygonSprite.h"
 #include "Kikan/ecs/Entity.h"
 #include "Kikan/opengl/buffers/Texture2D.h"
+#include "Kikan/opengl/vertices/VertexRegistry.h"
 
 double tt = 0;
 
@@ -26,6 +27,9 @@ int WinMain() {
     engine.getScene()->addSystem(new Kikan::SpriteRenderSystem());
 
     //engine.getRenderer()->addPreRender(preRender, nullptr);
+
+    auto* batch = new Kikan::ManuelBatch(Kikan::VertexRegistry::getLayout<Kikan::DefaultVertex>(), sizeof(Kikan::DefaultVertex));
+    engine.getRenderer()->addBatch(batch, 0);
 
     std::vector<float> data(500 * 500 * 4);
     for (int x = 0; x < 500; ++x) {
