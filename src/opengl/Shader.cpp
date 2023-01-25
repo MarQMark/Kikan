@@ -69,6 +69,7 @@ namespace Kikan {
         return id;
     }
 
+    // TODO: FIX This it ain't working
     void Shader::changeVs(const std::string& src) {
         glDeleteShader(_vs);
         glDeleteProgram(_id);
@@ -76,6 +77,7 @@ namespace Kikan {
         create_program(vs, _fs);
     }
 
+    // TODO: FIX This it ain't working
     void Shader::changeFs(const std::string& src) {
         glDeleteProgram(_id);
         glDeleteShader(_fs);
