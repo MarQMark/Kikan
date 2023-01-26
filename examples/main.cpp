@@ -7,29 +7,63 @@
 #include "Kikan/ecs/Entity.h"
 #include "Kikan/opengl/buffers/Texture2D.h"
 #include "Kikan/opengl/vertices/VertexRegistry.h"
+#include "Kikan/opengl/batching/ManuelBatch.h"
 
 double tt = 0;
 
 void preRender(void* o, Kikan::Renderer* renderer, double dt){
     tt += dt;
-    int width, height;
+    /*int width, height;
     glfwGetWindowSize(renderer->getWindow(), &width, &height);
 
     Kikan::Shader shader("shaders/default.vert", "/home/mark/Documents/shader/ray.frag");
     shader.bind();
     shader.uniformM4fv("u_mvp", renderer->mvp);
     shader.uniform2fv("u_resolution", glm::vec2(width, height));
-    shader.uniform1lf("u_time", tt / 1000.0);
+    shader.uniform1lf("u_time", tt / 1000.0);*/
+
+    {
+        std::vector<Kikan::DefaultVertex> vertices(4);
+
+        Kikan::DefaultVertex v1;
+        v1.position = glm::vec3(-.5, .5, -.5);
+        vertices[0] = v1;
+
+        Kikan::DefaultVertex v2;
+        v2.position = glm::vec3(.5, .5, -.5);
+        vertices[1] = v2;
+
+        Kikan::DefaultVertex v3;
+        v3.position = glm::vec3(.5, -.5, -.5);
+        vertices[2] = v3;
+
+        Kikan::DefaultVertex v4;
+        v4.position = glm::vec3(-.5, -.5, -.5);
+        vertices[3] = v4;
+
+        for (auto& v : vertices) {
+            v.textureCoords = glm::vec2(0.0);
+            v.color = glm::vec4(0.2f, std::sin(tt / 1000.f), .4f, 1.f);
+            v.texture = -1;
+        }
+
+        std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
+
+        renderer->getBatch(0)->overrideVertices<Kikan::DefaultVertex>(vertices, indices);
+    }
+
+    renderer->getBatch(0)->render();
 }
 
 int WinMain() {
     Kikan::Engine engine;
     engine.getScene()->addSystem(new Kikan::SpriteRenderSystem());
 
-    //engine.getRenderer()->addPreRender(preRender, nullptr);
+    engine.getRenderer()->addPostRender(preRender, nullptr);
 
     auto* batch = new Kikan::ManuelBatch(Kikan::VertexRegistry::getLayout<Kikan::DefaultVertex>(), sizeof(Kikan::DefaultVertex));
     engine.getRenderer()->addBatch(batch, 0);
+
 
     std::vector<float> data(500 * 500 * 4);
     for (int x = 0; x < 500; ++x) {
