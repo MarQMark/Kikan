@@ -14,8 +14,12 @@ namespace Kikan{
             MINUTES
         };
 
-        Timer(std::string tag, Precision p = Precision::MILLI) : _tag(tag), _p(p) {};
-        Timer(long long* t, Precision p = Precision::MILLI) : _t(t), _p(p) {};
+        Timer(std::string tag, Precision p = Precision::MILLI) : _tag(tag), _p(p) {
+            start();
+        };
+        Timer(long long* t, Precision p = Precision::MILLI) : _t(t), _p(p) {
+            start();
+        };
 
         ~Timer(){
             long long duration = time(_p);
