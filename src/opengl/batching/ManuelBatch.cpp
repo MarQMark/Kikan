@@ -25,8 +25,8 @@ namespace Kikan {
 
         //bind all textures
         for (auto t : _textures) {
-            glActiveTexture(GL_TEXTURE0 + t.second);
-            glBindTexture(GL_TEXTURE_2D, t.first);
+            glActiveTexture(GL_TEXTURE0 + t.first);
+            glBindTexture(GL_TEXTURE_2D, t.second);
         }
 
         //draw
@@ -34,7 +34,7 @@ namespace Kikan {
     }
 
     void ManuelBatch::addTexture(GLsizei id, int slot) {
-        _textures[id] = slot;
+        _textures[slot] = id;
     }
 
     void ManuelBatch::removeTexture(GLsizei id) {
