@@ -18,7 +18,8 @@ set(SOURCE_FILES
         opengl/buffers/IndexBuffer.cpp
         opengl/buffers/Texture2D.cpp
         ecs/systems/SpriteRenderSystem.cpp
-        opengl/Camera.cpp input/Input.cpp ../include/Kikan/input/Input.h)
+        opengl/Camera.cpp input/Input.cpp
+        core/Logging.cpp)
 
 add_library(Kikan ${SOURCE_FILES})
 
