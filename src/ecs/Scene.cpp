@@ -78,7 +78,7 @@ namespace Kikan {
             system->update(dt);
     }
 
-    Camera *Scene::camera() {
+    Renderer::Camera *Scene::camera() {
         return _camera;
     }
 }

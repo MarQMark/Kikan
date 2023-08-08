@@ -4,21 +4,21 @@
 #include <chrono>
 #include "vector"
 #include "Kikan/ecs/Scene.h"
-#include "Kikan/opengl/Renderer.h"
+#include "Kikan/renderer/stdRenderer/StdRenderer.h"
 #include "Kikan/util/Time.h"
 
 namespace Kikan {
     class Engine {
     public:
         Engine(int width = 1280, int height = 720){
-            _renderer = new Renderer(width, height);
-            _input = Input::create(_renderer->getWindow());
+            _renderer = new Renderer::StdRenderer(width, height);
+            _input = Input::create(((Renderer::StdRenderer*)_renderer)->getWindow());
             setCurrScene();
         }
 
         ~Engine(){
             delete _input;
-            delete _renderer;
+            _renderer->destroy();
         }
 
         bool shouldRun() const;
@@ -29,7 +29,7 @@ namespace Kikan {
         void addScene(const std::string& name);
         void setCurrScene(const std::string& name = "default");
 
-        Renderer* getRenderer();
+        Renderer::Renderer* getRenderer();
 
         Input* getInput();
 
@@ -53,7 +53,7 @@ namespace Kikan {
 
         std::string _title = std::string();
 
-        Renderer* _renderer;
+        Renderer::Renderer* _renderer;
         std::vector<Scene*> _scenes;
         Scene* _curr_scene;
 

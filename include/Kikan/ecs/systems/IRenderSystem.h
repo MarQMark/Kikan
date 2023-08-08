@@ -2,18 +2,18 @@
 #define KIKAN_I_RENDER_SYSTEM_H
 
 #include "ISystem.h"
-#include "Kikan/opengl/Renderer.h"
+#include "Kikan/renderer/stdRenderer/StdRenderer.h"
 
 namespace Kikan {
     class IRenderSystem : public ISystem {
     public:
         IRenderSystem() = default;
 
-        void setRenderer(Renderer* renderer){
+        void setRenderer(Renderer::StdRenderer* renderer){
             _renderer = renderer;
         }
     protected:
-        Renderer* _renderer{};
+        Renderer::StdRenderer* _renderer{};
     };
 }
 

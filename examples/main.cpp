@@ -5,13 +5,15 @@
 #include "Kikan/ecs/components/QuadSprite.h"
 #include "Kikan/ecs/components/PolygonSprite.h"
 #include "Kikan/ecs/Entity.h"
-#include "Kikan/opengl/buffers/Texture2D.h"
-#include "Kikan/opengl/vertices/VertexRegistry.h"
-#include "Kikan/opengl/batching/ManuelBatch.h"
+#include "Kikan/renderer/stdRenderer/buffers/Texture2D.h"
+#include "Kikan/renderer/stdRenderer/vertices/VertexRegistry.h"
+#include "Kikan/renderer/stdRenderer/batching/ManuelBatch.h"
+
+#include "Kikan/core/Logging.h"
 
 double tt = 0;
 
-void preRender(void* o, Kikan::Renderer* renderer, double dt){
+void preRender(void* o, Kikan::Renderer::StdRenderer* renderer, double dt){
     tt += dt;
     /*int width, height;
     glfwGetWindowSize(renderer->getWindow(), &width, &height);
@@ -23,21 +25,21 @@ void preRender(void* o, Kikan::Renderer* renderer, double dt){
     shader.uniform1lf("u_time", tt / 1000.0);*/
 
     {
-        std::vector<Kikan::DefaultVertex> vertices(4);
+        std::vector<Kikan::Renderer::DefaultVertex> vertices(4);
 
-        Kikan::DefaultVertex v1;
+        Kikan::Renderer::DefaultVertex v1;
         v1.position = glm::vec3(-.5, .5, -.5);
         vertices[0] = v1;
 
-        Kikan::DefaultVertex v2;
+        Kikan::Renderer::DefaultVertex v2;
         v2.position = glm::vec3(.5, .5, -.5);
         vertices[1] = v2;
 
-        Kikan::DefaultVertex v3;
+        Kikan::Renderer::DefaultVertex v3;
         v3.position = glm::vec3(.5, -.5, -.5);
         vertices[2] = v3;
 
-        Kikan::DefaultVertex v4;
+        Kikan::Renderer::DefaultVertex v4;
         v4.position = glm::vec3(-.5, -.5, -.5);
         vertices[3] = v4;
 
@@ -49,7 +51,7 @@ void preRender(void* o, Kikan::Renderer* renderer, double dt){
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
-        renderer->getBatch(0)->overrideVertices<Kikan::DefaultVertex>(vertices, indices);
+        renderer->getBatch(0)->overrideVertices<Kikan::Renderer::DefaultVertex>(vertices, indices);
     }
 
     renderer->getBatch(0)->render();
@@ -59,10 +61,15 @@ int WinMain() {
     Kikan::Engine engine;
     engine.getScene()->addSystem(new Kikan::SpriteRenderSystem());
 
-    engine.getRenderer()->addPostRender(preRender, nullptr);
+    ((Kikan::Renderer::StdRenderer*)engine.getRenderer())->addPostRender(preRender, nullptr);
 
-    auto* batch = new Kikan::ManuelBatch(Kikan::VertexRegistry::getLayout<Kikan::DefaultVertex>(), sizeof(Kikan::DefaultVertex));
-    engine.getRenderer()->addBatch(batch, 0);
+    int a = 3;
+    Kikan::Core::Logging::get()->print("test %d \n", a);
+
+    auto* batch = new Kikan::Renderer::ManuelBatch(
+            Kikan::Renderer::VertexRegistry::getLayout<Kikan::Renderer::DefaultVertex>(),
+       sizeof(Kikan::Renderer::DefaultVertex));
+    ((Kikan::Renderer::StdRenderer*)engine.getRenderer())->addBatch(batch, 0);
 
 
     std::vector<float> data(500 * 500 * 4);
@@ -75,7 +82,7 @@ int WinMain() {
         }
     }
 
-    Kikan::Texture2D texture2D(500, 500, data.data());
+    Kikan::Renderer::Texture2D texture2D(500, 500, data.data());
 
     auto* entity = new Kikan::Entity();
     auto* sprite = new Kikan::Texture2DSprite;

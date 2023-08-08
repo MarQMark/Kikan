@@ -11,7 +11,7 @@ namespace Kikan {
 
         //if no scene exists create default scene
         if(_scenes.capacity() == 0){
-            Scene* defaultScene = new Scene("default", _renderer, _input);
+            Scene* defaultScene = new Scene("default", (Renderer::StdRenderer*)_renderer, _input);
             _scenes.push_back(defaultScene);
             return defaultScene;
         }
@@ -60,7 +60,7 @@ namespace Kikan {
         update_fps();
         update_title();
 
-        if(glfwWindowShouldClose(_renderer->getWindow())){
+        if(glfwWindowShouldClose(((Renderer::StdRenderer*)_renderer)->getWindow())){
             _should_run = false;
             return;
         }
@@ -79,7 +79,7 @@ namespace Kikan {
         if(postRender != nullptr) postRender(this);
     }
 
-    Renderer *Engine::getRenderer() {
+    Renderer::Renderer *Engine::getRenderer() {
         return _renderer;
     }
 
@@ -103,10 +103,10 @@ namespace Kikan {
         if(_title.empty()){
             std::stringstream ss;
             ss << "KIKAN - FPS: " << time.fps;
-            glfwSetWindowTitle(_renderer->getWindow(), ss.str().c_str());
+            glfwSetWindowTitle(((Renderer::StdRenderer*)_renderer)->getWindow(), ss.str().c_str());
         }
         else {
-            glfwSetWindowTitle(_renderer->getWindow(), _title.c_str());
+            glfwSetWindowTitle(((Renderer::StdRenderer*)_renderer)->getWindow(), _title.c_str());
         }
     }
 
