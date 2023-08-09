@@ -64,21 +64,11 @@ namespace Kikan {
     }
 
     void Scene::addSystem(ISystem *system) {
-        if (auto *rSystem = dynamic_cast<IRenderSystem *>(system))
-            rSystem->setRenderer(_renderer);
-
-        system->setInput(_input);
         _systems.push_back(system);
     }
 
     void Scene::update(double dt) {
-        _renderer->mvp = _camera->matrix();
-
         for (ISystem *system: _systems)
             system->update(dt);
-    }
-
-    Renderer::Camera *Scene::camera() {
-        return _camera;
     }
 }

@@ -5,7 +5,6 @@
 #include "vector"
 #include "Kikan/ecs/TypeRegistry.h"
 #include "Kikan/ecs/Entity.h"
-#include "Kikan/input/Input.h"
 
 namespace Kikan {
 
@@ -15,16 +14,12 @@ namespace Kikan {
 
     class ISystem{
     public:
-        ISystem()= default;
+        ISystem() = default;
 
         virtual ~ISystem(){
             for (auto signatures : _signatures) {
                 delete signatures;
             }
-        }
-
-        void setInput(Input* input){
-            _input = input;
         }
 
         virtual void update(double dt) = 0;
@@ -47,8 +42,6 @@ namespace Kikan {
         }
 
     protected:
-        Input* _input{};
-
         template<class T>
         unsigned int signature(){
             return TypeRegistry::getSignature<T>();

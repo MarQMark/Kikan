@@ -3,17 +3,27 @@
 
 #include <chrono>
 #include "vector"
-#include "Kikan/ecs/Scene.h"
 #include "Kikan/renderer/stdRenderer/StdRenderer.h"
 #include "Kikan/util/Time.h"
+#include "Kikan/ecs/ECS.h"
+#include "Kikan/input/Input.h"
 
 namespace Kikan {
     class Engine {
-    public:
-        Engine(int width = 1280, int height = 720){
+    private:
+        Engine(int width, int height){
             _renderer = new Renderer::StdRenderer(width, height);
             _input = Input::create(((Renderer::StdRenderer*)_renderer)->getWindow());
-            setCurrScene();
+            _ecs = new Ecs::ECS();
+        }
+
+        static Engine* s_instance;
+    public:
+        static void init(int width = 1280, int height = 720){
+            s_instance = new Engine(width, height);
+        }
+        static Engine* Kikan() {
+            return s_instance;
         }
 
         ~Engine(){
@@ -25,12 +35,10 @@ namespace Kikan {
 
         void update();
 
-        Scene* getScene(const std::string& = "default");
-        void addScene(const std::string& name);
-        void setCurrScene(const std::string& name = "default");
+
 
         Renderer::Renderer* getRenderer();
-
+        Ecs::ECS* getECS();
         Input* getInput();
 
         Time time;
@@ -54,9 +62,7 @@ namespace Kikan {
         std::string _title = std::string();
 
         Renderer::Renderer* _renderer;
-        std::vector<Scene*> _scenes;
-        Scene* _curr_scene;
-
+        Ecs::ECS* _ecs;
         Input* _input;
 
         void update_fps();

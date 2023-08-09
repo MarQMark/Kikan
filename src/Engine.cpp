@@ -3,32 +3,10 @@
 #include "Kikan/Engine.h"
 
 namespace Kikan {
+    Engine* Engine::s_instance = nullptr;
+
     bool Engine::shouldRun() const {
         return _should_run;
-    }
-
-    Scene *Engine::getScene(const std::string& name) {
-
-        //if no scene exists create default scene
-        if(_scenes.capacity() == 0){
-            Scene* defaultScene = new Scene("default", (Renderer::StdRenderer*)_renderer, _input);
-            _scenes.push_back(defaultScene);
-            return defaultScene;
-        }
-
-        //look for specified scene
-        for (Scene* scene : _scenes) {
-            if (scene->name() == name)
-                return scene;
-        }
-
-        //return default if no scene found
-        return _scenes.at(0);
-    }
-
-
-    void Engine::addScene(const std::string& name) {
-        //TODO implement function
     }
 
     void Engine::update_fps(){
@@ -68,7 +46,7 @@ namespace Kikan {
         if(preUpdate) preUpdate(this);
 
         // UPDATE
-        _curr_scene->update(_dt);
+        getECS()->getScene()->update(_dt);
 
         if(postUpdate) postUpdate(this);
         if(preRender) preRender(this);
@@ -81,10 +59,6 @@ namespace Kikan {
 
     Renderer::Renderer *Engine::getRenderer() {
         return _renderer;
-    }
-
-    void Engine::setCurrScene(const std::string& name) {
-        _curr_scene = getScene(name);
     }
 
     Input *Engine::getInput() {
@@ -108,6 +82,10 @@ namespace Kikan {
         else {
             glfwSetWindowTitle(((Renderer::StdRenderer*)_renderer)->getWindow(), _title.c_str());
         }
+    }
+
+    Ecs::ECS *Engine::getECS() {
+        return _ecs;
     }
 
 }

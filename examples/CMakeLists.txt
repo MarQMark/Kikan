@@ -16,9 +16,10 @@ add_dependencies(example copy_shaders_examples)
 
 #link Kikan
 target_link_libraries(example Kikan)
-
 # Link Kikan Renderer
 target_link_libraries(Kikan KikanRenderer)
+# Link Kikan ECS
+target_link_libraries(Kikan KikanECS)
 
 #define GLEW_STATIC (necessary for glew)
 add_compile_definitions(GLEW_STATIC)

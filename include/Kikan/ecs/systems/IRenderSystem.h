@@ -2,16 +2,16 @@
 #define KIKAN_I_RENDER_SYSTEM_H
 
 #include "ISystem.h"
+#include "Kikan/Engine.h"
 #include "Kikan/renderer/stdRenderer/StdRenderer.h"
 
 namespace Kikan {
     class IRenderSystem : public ISystem {
     public:
-        IRenderSystem() = default;
+        IRenderSystem() {
+            _renderer = (Renderer::StdRenderer*)Engine::Kikan()->getRenderer();
+        };
 
-        void setRenderer(Renderer::StdRenderer* renderer){
-            _renderer = renderer;
-        }
     protected:
         Renderer::StdRenderer* _renderer{};
     };

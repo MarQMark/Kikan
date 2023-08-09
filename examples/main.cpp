@@ -10,6 +10,7 @@
 #include "Kikan/renderer/stdRenderer/batching/ManuelBatch.h"
 
 #include "Kikan/core/Logging.h"
+#include "Kikan/renderer/stdRenderer/Camera.h"
 
 double tt = 0;
 
@@ -58,18 +59,21 @@ void preRender(void* o, Kikan::Renderer::StdRenderer* renderer, double dt){
 }
 
 int WinMain() {
-    Kikan::Engine engine;
-    engine.getScene()->addSystem(new Kikan::SpriteRenderSystem());
+    Kikan::Engine::init();
+    Kikan::Engine* engine = Kikan::Engine::Kikan();
 
-    ((Kikan::Renderer::StdRenderer*)engine.getRenderer())->addPostRender(preRender, nullptr);
+    Kikan::Renderer::Camera camera;
+    ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->mvp = camera.matrix();
+
+    engine->getECS()->getScene()->addSystem(new Kikan::SpriteRenderSystem());
+
+    ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->addPostRender(preRender, nullptr);
 
     int a = 3;
     Kikan::Core::Logging::get()->print("test %d \n", a);
 
-    auto* batch = new Kikan::Renderer::ManuelBatch(
-            Kikan::Renderer::VertexRegistry::getLayout<Kikan::Renderer::DefaultVertex>(),
-       sizeof(Kikan::Renderer::DefaultVertex));
-    ((Kikan::Renderer::StdRenderer*)engine.getRenderer())->addBatch(batch, 0);
+    auto* batch = new Kikan::Renderer::ManuelBatch(Kikan::Renderer::VertexRegistry::getLayout<Kikan::Renderer::DefaultVertex>(),sizeof(Kikan::Renderer::DefaultVertex));
+    ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->addBatch(batch, 0);
 
 
     std::vector<float> data(500 * 500 * 4);
@@ -94,7 +98,7 @@ int WinMain() {
     sprite->color = glm::vec4(0.3, 0.4, 0.8, 1.0);
     sprite->layer = 0;
     entity->addComponent(sprite);
-    engine.getScene()->addEntity(entity);
+    engine->getECS()->getScene()->addEntity(entity);
 
     /*auto* entity2 = new Entity();
     auto* sprite2 = new PolygonSprite();
@@ -111,8 +115,8 @@ int WinMain() {
     entity2->addComponent(sprite2);
     engine.getScene()->addEntity(entity2);*/
 
-    while (engine.shouldRun()) {
-        engine.update();
+    while (engine->shouldRun()) {
+        engine->update();
     }
 
     return 0;
