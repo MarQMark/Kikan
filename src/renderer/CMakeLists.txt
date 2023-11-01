@@ -19,8 +19,13 @@ set(SOURCE_FILES
 add_library(KikanRenderer ${SOURCE_FILES})
 
 target_include_directories(KikanRenderer
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../include
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../external/glfw/include
+)
+target_link_directories(KikanRenderer PRIVATE external/glfw/src)
+
+# Link Kikan Renderer
+target_link_libraries(KikanRenderer glfw)
 
 #copy shaders to target folder
 add_custom_target(copy_shaders ALL
@@ -32,12 +37,6 @@ add_dependencies(KikanRenderer copy_shaders)
 
 #define GLEW_STATIC (necessary for glew)
 add_compile_definitions(GLEW_STATIC)
-
-#link GLFW
-find_library(LIB_GLFW
-        NAMES libglfw3.a
-        PATHS ${PROJECT_SOURCE_DIR}/../lib)
-target_link_libraries(KikanRenderer ${LIB_GLFW})
 
 #link all necessary libraries for opengl
 if (UNIX)

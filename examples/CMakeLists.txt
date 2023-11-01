@@ -3,8 +3,11 @@ project(Kikan)
 add_executable(example main.cpp)
 
 target_include_directories(example
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../external/glfw/include
+)
+
+target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
 
 #copy shaders to target folder
 add_custom_target(copy_shaders_examples ALL
@@ -23,12 +26,6 @@ target_link_libraries(Kikan KikanECS)
 
 #define GLEW_STATIC (necessary for glew)
 add_compile_definitions(GLEW_STATIC)
-
-#link GLFW
-find_library(LIB_GLFW
-        NAMES libglfw3.a
-        PATHS ${PROJECT_SOURCE_DIR}/lib)
-target_link_libraries(example ${LIB_GLFW})
 
 #link all necessary libraries for opengl
 if (UNIX)
