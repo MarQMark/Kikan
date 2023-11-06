@@ -11,6 +11,7 @@
 
 #include "Kikan/core/Logging.h"
 #include "Kikan/renderer/stdRenderer/Camera.h"
+#include "Kikan/renderer/stdRenderer/Shaders.h"
 
 double tt = 0;
 
@@ -19,7 +20,7 @@ void preRender(void* o, Kikan::Renderer::StdRenderer* renderer, double dt){
     /*int width, height;
     glfwGetWindowSize(renderer->getWindow(), &width, &height);
 
-    Kikan::Shader shader("shaders/default.vert", "/home/mark/Documents/shader/ray.frag");
+    Kikan::Shader shader(StdShaders::sVS, "/home/mark/Documents/shader/ray.frag");
     shader.bind();
     shader.uniformM4fv("u_mvp", renderer->mvp);
     shader.uniform2fv("u_resolution", glm::vec2(width, height));

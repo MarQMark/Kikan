@@ -27,14 +27,6 @@ target_link_directories(KikanRenderer PRIVATE external/glfw/src)
 # Link Kikan Renderer
 target_link_libraries(KikanRenderer glfw)
 
-#copy shaders to target folder
-add_custom_target(copy_shaders ALL
-        COMMAND  ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../shaders
-        ${PROJECT_BINARY_DIR}/shaders
-        COMMENT "Copying shaders into binary directory")
-add_dependencies(KikanRenderer copy_shaders)
-
 #define GLEW_STATIC (necessary for glew)
 add_compile_definitions(GLEW_STATIC)
 

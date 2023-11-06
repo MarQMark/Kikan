@@ -1,7 +1,10 @@
 #include "Kikan/renderer/stdRenderer/StdRenderer.h"
+
 #include <iostream>
 #include <sstream>
+
 #include "Kikan/util/EarClipping.h"
+#include "Kikan/renderer/stdRenderer/Shaders.h"
 
 
 namespace Kikan { namespace Renderer {
@@ -41,7 +44,7 @@ namespace Kikan { namespace Renderer {
             std::cout << "ERROR: Could not initialize GLEW" << std::endl;
 
         //load default shader
-        _shaders["default"] = new Shader("shaders/default.vert", "shaders/default.frag");
+        _shaders["default"] = new Shader(StdShaders::sVS, StdShaders::sFS);
 
         //load texture slot in sampler in default frag shader
         _shaders["default"]->uniform1li("u_sampler", 0);

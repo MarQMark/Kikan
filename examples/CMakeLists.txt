@@ -9,14 +9,6 @@ target_include_directories(example
 
 target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
 
-#copy shaders to target folder
-add_custom_target(copy_shaders_examples ALL
-        COMMAND  ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/../shaders
-        ${PROJECT_BINARY_DIR}/shaders
-        COMMENT "Copying shaders into examples binary directory")
-add_dependencies(example copy_shaders_examples)
-
 #link Kikan
 target_link_libraries(example Kikan)
 # Link Kikan Renderer
