@@ -14,6 +14,9 @@ set(SOURCE_FILES
 
 add_library(KikanECS ${SOURCE_FILES})
 
+#link Kikan
+target_link_libraries(KikanECS Kikan)
+
 target_include_directories(KikanECS
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../include
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../external/glfw/include
