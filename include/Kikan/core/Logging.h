@@ -4,6 +4,13 @@
 #include <cstdio>
 #include <cstdarg>
 
+#define kikanPrint Kikan::Core::Logging::get()->print
+#define kikanPrintL Kikan::Core::Logging::get()->printL
+#define kikanPrintE Kikan::Core::Logging::get()->printE
+#define kikanPrintW Kikan::Core::Logging::get()->printW
+#define kikanPrintI Kikan::Core::Logging::get()->printI
+#define kikanPrintV Kikan::Core::Logging::get()->printV
+
 namespace Kikan {
     namespace Core {
 
