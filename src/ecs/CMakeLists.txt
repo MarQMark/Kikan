@@ -6,6 +6,8 @@ set(SOURCE_FILES
         Scene.cpp
         Entity.cpp
         TypeRegistry.cpp
+        EcsThread.cpp
+
         systems/PhysicsSystem.cpp
         systems/SpriteRenderSystem.cpp
         )

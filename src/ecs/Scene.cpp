@@ -1,64 +1,26 @@
 #include "Kikan/ecs/Scene.h"
 #include "Kikan/ecs/systems/IRenderSystem.h"
+#include "Kikan/core/Logging.h"
+#include "Kikan/ecs/Util.h"
 
-namespace Kikan {
+namespace Kikan { namespace Ecs {
     std::string Scene::name() {
         return _name;
     }
 
-    bool isSubset(std::vector<unsigned int> &systemSignature, std::vector<unsigned int> &entitySignature) {
-        return std::includes(entitySignature.begin(), entitySignature.end(), systemSignature.begin(),
-                             systemSignature.end());
-    }
-
     void Scene::addEntity(Entity *entity) {
-        _entities.push_back(entity);
-
-        std::vector<unsigned int> entitySignature = entity->getSignatures();
-        std::sort(entitySignature.begin(), entitySignature.end());
-
-        for (ISystem *system: _systems) {
-            bool containsAll = false;
-
-            for (auto systemSignature: system->getSignatures()) {
-                if (isSubset(*systemSignature, entitySignature)) {
-                    containsAll = true;
-                    break;
-                }
-            }
-
-            if (containsAll)
-                system->addEntity(entity);
-        }
+        Util::addEntity(entity, &_entities, &_systems);
+        for(auto* thread : _threads)
+            thread->addEntity(entity);
     }
 
     void Scene::removeEntity(Entity *entity) {
-        std::vector<unsigned int> entitySignature = entity->getSignatures();
-        std::sort(entitySignature.begin(), entitySignature.end());
-
-        for (ISystem *system: _systems) {
-            bool containsAll = false;
-
-            for (auto systemSignature: system->getSignatures()) {
-                if (isSubset(*systemSignature, entitySignature)) {
-                    containsAll = true;
-                    break;
-                }
-            }
-
-            if (containsAll)
-                system->removeEntity(entity);
-        }
-
-        for (int i = 0; i < (int)_entities.size(); ++i) {
-            if (_entities.at(i) == entity) {
-                _entities.erase(_entities.begin() + i);
-                return;
-            }
-        }
+        Util::removeEntity(entity, &_entities, &_systems);
     }
 
     void Scene::deleteEntity(Entity *entity) {
+        for(auto* thread : _threads)
+            thread->removeEntity(entity);
         removeEntity(entity);
         delete entity;
     }
@@ -71,4 +33,28 @@ namespace Kikan {
         for (ISystem *system: _systems)
             system->update(dt);
     }
-}
+
+    void Scene::createThread(uint32_t cycle, uint32_t timeout) {
+        auto* thread = new EcsThread(cycle, timeout);
+        thread->start();
+        _threads.push_back(thread);
+    }
+
+    void Scene::addThreadedSystem(ISystem *system, uint32_t id) {
+        if (_threads.size() - 1 < id){
+            kikanPrintE("No ECS thread with ID: %d exists\n", id);
+            return;
+        }
+
+        _threads.at(id)->addSystem(system);
+    }
+
+    void Scene::removeThreadedEntity(Entity *entity, uint32_t id) {
+        if (_threads.size() - 1 < id){
+            kikanPrintE("No ECS thread with ID: %d exists\n", id);
+            return;
+        }
+
+        _threads.at(id)->removeEntity(entity);
+    }
+} }
