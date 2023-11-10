@@ -4,6 +4,7 @@
 #include "Kikan/ecs/components/QuadSprite.h"
 #include "Kikan/ecs/components/PolygonSprite.h"
 #include "Kikan/ecs/components/Texture2DSprite.h"
+#include "Kikan/ecs/components/LineQuadSprite.h"
 
 namespace Kikan {
     SpriteRenderSystem::SpriteRenderSystem() {
@@ -11,6 +12,7 @@ namespace Kikan {
         singleInclude(QuadSprite);
         singleInclude(PolygonSprite);
         singleInclude(Texture2DSprite);
+        singleInclude(LineQuadSprite);
     }
 
     void SpriteRenderSystem::update(double dt) {
@@ -54,6 +56,38 @@ namespace Kikan {
                         texture2DSprite->textureID,
                         texture2DSprite->color,
                         texture2DSprite->layer);
+            }
+
+            auto *lineQuadSprite = e->getComponent<LineQuadSprite>();
+            if(lineQuadSprite){
+                _renderer->renderQuad(
+                        lineQuadSprite->points[0],
+                        lineQuadSprite->points[1],
+                        lineQuadSprite->points[1] + glm::vec2(0, -lineQuadSprite->thickness),
+                        lineQuadSprite->points[0] + glm::vec2(0, -lineQuadSprite->thickness),
+                        lineQuadSprite->color,
+                        lineQuadSprite->layer);
+                _renderer->renderQuad(
+                        lineQuadSprite->points[1] + glm::vec2(-lineQuadSprite->thickness, -lineQuadSprite->thickness),
+                        lineQuadSprite->points[1] + glm::vec2(0, -lineQuadSprite->thickness),
+                        lineQuadSprite->points[2] + glm::vec2(0, lineQuadSprite->thickness),
+                        lineQuadSprite->points[2] + glm::vec2(-lineQuadSprite->thickness, lineQuadSprite->thickness),
+                        lineQuadSprite->color,
+                        lineQuadSprite->layer);
+                _renderer->renderQuad(
+                        lineQuadSprite->points[3] + glm::vec2(0, lineQuadSprite->thickness),
+                        lineQuadSprite->points[2] + glm::vec2(0, lineQuadSprite->thickness),
+                        lineQuadSprite->points[2],
+                        lineQuadSprite->points[3],
+                        lineQuadSprite->color,
+                        lineQuadSprite->layer);
+                _renderer->renderQuad(
+                        lineQuadSprite->points[0] + glm::vec2(0, -lineQuadSprite->thickness),
+                        lineQuadSprite->points[0] + glm::vec2(lineQuadSprite->thickness, -lineQuadSprite->thickness),
+                        lineQuadSprite->points[3] + glm::vec2(lineQuadSprite->thickness, lineQuadSprite->thickness),
+                        lineQuadSprite->points[3] + glm::vec2(0, lineQuadSprite->thickness),
+                        lineQuadSprite->color,
+                        lineQuadSprite->layer);
             }
         }
     }

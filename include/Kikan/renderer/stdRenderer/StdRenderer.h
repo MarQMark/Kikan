@@ -42,6 +42,12 @@ class StdRenderer : public Renderer {
 
         /*
         *  Uses Auto-batching with DefaultVertex.
+         *
+         *  Order of Points is:
+        *      1 ------ 2
+        *      |        |
+        *      |        |
+        *      4 ------ 3
         */
         void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer);
 
