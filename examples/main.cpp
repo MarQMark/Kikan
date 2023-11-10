@@ -11,7 +11,6 @@
 
 #include "Kikan/core/Logging.h"
 #include "Kikan/renderer/stdRenderer/Camera.h"
-#include "Kikan/renderer/stdRenderer/Shaders.h"
 
 double tt = 0;
 
@@ -75,7 +74,6 @@ int WinMain() {
 
     auto* batch = new Kikan::Renderer::ManuelBatch(Kikan::Renderer::VertexRegistry::getLayout<Kikan::Renderer::DefaultVertex>(),sizeof(Kikan::Renderer::DefaultVertex));
     ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->addBatch(batch, 0);
-
 
     std::vector<float> data(500 * 500 * 4);
     for (int x = 0; x < 500; ++x) {
