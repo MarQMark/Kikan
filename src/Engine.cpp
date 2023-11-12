@@ -46,7 +46,7 @@ namespace Kikan {
         if(preUpdate) preUpdate(this);
 
         // UPDATE
-        getECS()->getScene()->update(_dt);
+        getECS()->update(_dt);
 
         if(postUpdate) postUpdate(this);
         if(preRender) preRender(this);

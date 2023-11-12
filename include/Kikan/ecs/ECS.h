@@ -10,6 +10,8 @@ namespace Kikan { namespace Ecs {
         ECS(const std::string& name = "default");
         ~ECS();
 
+        void update(double dt);
+
         Scene* getScene(const std::string& = "default");
         void addScene(const std::string& name);
         // TODO: Remove Scene

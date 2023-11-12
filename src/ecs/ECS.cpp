@@ -88,4 +88,10 @@ namespace Kikan { namespace Ecs {
         _threads.at(id)->removeEntity(entity);
     }
 
+    void ECS::update(double dt) {
+        for (ISystem *system: _systems)
+            system->update(dt);
+
+        _currScene->update(dt);
+    }
 }}
