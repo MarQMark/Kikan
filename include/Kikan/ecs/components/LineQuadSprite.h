@@ -6,7 +6,10 @@
 
 namespace Kikan {
     struct LineQuadSprite : IComponent {
-        glm::vec2 points[4];
+        /* specifies top left corner */
+        glm::vec2 position;
+        /* Width, Height */
+        glm::vec2 dimensions;
         glm::vec4 color;
         float thickness;
         float layer;
