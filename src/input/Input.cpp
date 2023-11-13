@@ -1,4 +1,5 @@
 #include "Kikan/input/Input.h"
+#include "Kikan/core/Logging.h"
 
 namespace Kikan {
      Input *Input::create(GLFWwindow* window) {
@@ -47,7 +48,7 @@ namespace Kikan {
     }
 
     void Input::key_callback(int key, int scancode, int action, int mods) {
-        _keys[key] = (action == GLFW_PRESS);
+        _keys[key] = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
     }
 
     bool Input::keyPressed(Key k) {
