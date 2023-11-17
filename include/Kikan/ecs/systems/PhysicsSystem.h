@@ -9,6 +9,9 @@ namespace Kikan {
         PhysicsSystem();
 
         void update(double dt) override;
+
+        float gravity = 10;
+        float friction = 0.1f;
     };
 }
 
