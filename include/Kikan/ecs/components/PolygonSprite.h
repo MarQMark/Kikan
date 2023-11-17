@@ -7,6 +7,7 @@
 
 namespace Kikan {
     struct PolygonSprite : IComponent {
+    public:
         std::vector<glm::vec2> points;
         glm::vec4 color;
         float layer;

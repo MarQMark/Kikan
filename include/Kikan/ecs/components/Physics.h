@@ -6,8 +6,9 @@
 
 namespace Kikan {
     struct Physics : IComponent {
-        glm::vec2 _velocity;
-        glm::vec2 _acceleration;
+    public:
+        glm::vec2 velocity;
+        glm::vec2 acceleration;
 
         void destroy() override{
             delete this;

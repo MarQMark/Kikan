@@ -60,32 +60,36 @@ namespace Kikan {
 
             auto *lineQuadSprite = e->getComponent<LineQuadSprite>();
             if(lineQuadSprite){
+                auto* transform = e->getComponent<Transform>();
+                float width = lineQuadSprite->dimensions.x * transform->scale.x;
+                float height = lineQuadSprite->dimensions.y * transform->scale.y;
+                float thickness = lineQuadSprite->thickness;
                 _renderer->renderQuad(
-                        lineQuadSprite->position,
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, 0),
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, 0) + glm::vec2(0, -lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(0, -lineQuadSprite->thickness),
+                        glm::vec2(transform->position),
+                        glm::vec2(transform->position) + glm::vec2(width,   0),
+                        glm::vec2(transform->position) + glm::vec2(width,   0) + glm::vec2(0, -thickness),
+                        glm::vec2(transform->position) + glm::vec2(0,       -thickness),
                         lineQuadSprite->color,
                         lineQuadSprite->layer);
                 _renderer->renderQuad(
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, 0) + glm::vec2(-lineQuadSprite->thickness, -lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, 0) + glm::vec2(0, -lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, -lineQuadSprite->dimensions.y) + glm::vec2(0, lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, -lineQuadSprite->dimensions.y) + glm::vec2(-lineQuadSprite->thickness, lineQuadSprite->thickness),
+                        glm::vec2(transform->position) + glm::vec2(width, 0)        + glm::vec2(-thickness, -thickness),
+                        glm::vec2(transform->position) + glm::vec2(width, 0)        + glm::vec2(0,          -thickness),
+                        glm::vec2(transform->position) + glm::vec2(width, -height)  + glm::vec2(0,          thickness),
+                        glm::vec2(transform->position) + glm::vec2(width, -height)  + glm::vec2(-thickness, thickness),
                         lineQuadSprite->color,
                         lineQuadSprite->layer);
                 _renderer->renderQuad(
-                        lineQuadSprite->position + glm::vec2(0, -lineQuadSprite->dimensions.y) + glm::vec2(0, lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, -lineQuadSprite->dimensions.y) + glm::vec2(0, lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->dimensions.x, -lineQuadSprite->dimensions.y),
-                        lineQuadSprite->position + glm::vec2(0, -lineQuadSprite->dimensions.y),
+                        glm::vec2(transform->position) + glm::vec2(0,       -height) + glm::vec2(0, thickness),
+                        glm::vec2(transform->position) + glm::vec2(width,   -height) + glm::vec2(0, thickness),
+                        glm::vec2(transform->position) + glm::vec2(width,   -height),
+                        glm::vec2(transform->position) + glm::vec2(0,       -height),
                         lineQuadSprite->color,
                         lineQuadSprite->layer);
                 _renderer->renderQuad(
-                        lineQuadSprite->position + glm::vec2(0, -lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(lineQuadSprite->thickness, -lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(0, -lineQuadSprite->dimensions.y) + glm::vec2(lineQuadSprite->thickness, lineQuadSprite->thickness),
-                        lineQuadSprite->position + glm::vec2(0, -lineQuadSprite->dimensions.y) + glm::vec2(0, lineQuadSprite->thickness),
+                        glm::vec2(transform->position) + glm::vec2(0,           -thickness),
+                        glm::vec2(transform->position) + glm::vec2(thickness,   -thickness),
+                        glm::vec2(transform->position) + glm::vec2(0,           -height)    + glm::vec2(thickness, thickness),
+                        glm::vec2(transform->position) + glm::vec2(0,           -height)    + glm::vec2(0,         thickness),
                         lineQuadSprite->color,
                         lineQuadSprite->layer);
             }

@@ -6,8 +6,9 @@
 
 namespace Kikan {
     struct LineQuadSprite : IComponent {
-        /* specifies top left corner */
-        glm::vec2 position;
+    public:
+        /* Position is specified by transform and defines top left corner */
+
         /* Width, Height */
         glm::vec2 dimensions;
         glm::vec4 color;

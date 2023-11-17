@@ -7,6 +7,7 @@
 
 namespace Kikan {
     struct Texture2DSprite : IComponent {
+    public:
         glm::vec2 points[4];
         glm::vec4 color;
         GLuint textureID;

@@ -6,9 +6,10 @@
 
 namespace Kikan {
     struct Transform : IComponent {
-        glm::vec3 _position = glm::vec3(0.0, 0.0, 0.0);
-        glm::vec3 _scale = glm::vec3(1.0, 1.0, 1.0);
-        glm::vec3 _rotation = glm::vec3(1.0, 1.0, 1.0);
+    public:
+        glm::vec3 position = glm::vec3(0.0, 0.0, 0.0);
+        glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0);
+        glm::vec3 rotation = glm::vec3(1.0, 1.0, 1.0);
 
         void destroy() override{
             delete this;

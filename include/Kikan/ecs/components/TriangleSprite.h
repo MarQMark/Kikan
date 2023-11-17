@@ -6,6 +6,7 @@
 
 namespace Kikan {
     struct TriangleSprite : IComponent {
+    public:
         glm::vec2 points[3];
         glm::vec4 color;
         float layer;

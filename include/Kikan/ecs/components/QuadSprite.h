@@ -6,6 +6,7 @@
 
 namespace Kikan {
     struct QuadSprite : IComponent {
+    public:
         glm::vec2 points[4];
         glm::vec4 color;
         float layer;
