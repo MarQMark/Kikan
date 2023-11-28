@@ -9,7 +9,7 @@ namespace Kikan { namespace Ecs {
 
     class Util{
     public:
-        static bool isSubset(std::vector<unsigned int> &systemSignature, std::vector<unsigned int> &entitySignature) {
+        static bool isSubset(std::vector<unsigned int>& systemSignature, std::vector<unsigned int>& entitySignature) {
             return std::includes(entitySignature.begin(), entitySignature.end(), systemSignature.begin(),
                                  systemSignature.end());
         }
@@ -59,6 +59,41 @@ namespace Kikan { namespace Ecs {
                     return;
                 }
             }
+        }
+
+        static void getEntities(std::vector<unsigned int>* signatures, std::vector<Entity*>* entities, std::vector<Entity*>& entitiesList){
+            std::sort(signatures->begin(), signatures->end());
+
+            for(auto* entity : entitiesList){
+
+                std::vector<unsigned int> entitySignature = entity->getSignatures();
+                std::sort(entitySignature.begin(), entitySignature.end());
+
+                if (isSubset(*signatures, entitySignature))
+                    entities->push_back(entity);
+            }
+
+            delete signatures;
+        }
+
+        static Entity* getEntity(std::vector<unsigned int>* signatures, std::vector<Entity*>& entitiesList) {
+            Kikan::Entity* e = nullptr;
+
+            std::sort(signatures->begin(), signatures->end());
+
+            for(auto* entity : entitiesList){
+
+                std::vector<unsigned int> entitySignature = entity->getSignatures();
+                std::sort(entitySignature.begin(), entitySignature.end());
+
+                if (isSubset(*signatures, entitySignature)){
+                    e =  entity;
+                    break;
+                }
+            }
+
+            delete signatures;
+            return e;
         }
     };
 }}

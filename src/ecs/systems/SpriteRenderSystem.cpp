@@ -8,11 +8,11 @@
 
 namespace Kikan {
     SpriteRenderSystem::SpriteRenderSystem() {
-        singleInclude(TriangleSprite);
-        singleInclude(QuadSprite);
-        singleInclude(PolygonSprite);
-        singleInclude(Texture2DSprite);
-        singleInclude(LineQuadSprite);
+        includeSingle(TriangleSprite);
+        includeSingle(QuadSprite);
+        includeSingle(PolygonSprite);
+        includeSingle(Texture2DSprite);
+        includeSingle(LineQuadSprite);
     }
 
     void SpriteRenderSystem::update(double dt) {

@@ -31,6 +31,9 @@ namespace Kikan { namespace Ecs {
          * */
         void deleteEntity(Entity* entity);
 
+        Entity* getEntity(std::vector<unsigned int>* signatures);
+        void getEntities(std::vector<unsigned int>* signatures, std::vector<Entity*>* entities);
+
         void addSystem(ISystem* system);
         // TODO: Remove System
 

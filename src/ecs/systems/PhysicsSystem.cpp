@@ -3,7 +3,7 @@
 
 namespace Kikan {
     PhysicsSystem::PhysicsSystem() {
-        singleInclude(Physics);
+        includeSingle(Physics);
     }
 
     void PhysicsSystem::update(double dt) {

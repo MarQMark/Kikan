@@ -33,6 +33,9 @@ namespace Kikan { namespace Ecs {
         void removeEntity(Entity* entity);
         void deleteEntity(Entity* entity);
 
+        Entity* getEntity(std::vector<unsigned int>* signatures);
+        void getEntities(std::vector<unsigned int>* signatures, std::vector<Entity*>* entities);
+
         void addSystem(ISystem* system);
 
         void createThread(uint32_t cycle, uint32_t timeout);

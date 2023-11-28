@@ -15,5 +15,6 @@ Adding an Entity to the main ECS will not add it to any scene.
 Removing entities from the main ECS does not remove them from the scene systems.
 Deleting however is recursive.
 
+To add Entities to the correct Systems it uses [[Signatures]]
 
 

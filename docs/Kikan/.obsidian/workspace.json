@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ECS/ECS.md",
+                "file": "ECS/Signatures.md",
                 "mode": "source",
                 "source": false
               }
@@ -97,7 +97,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "ECS/ECS.md",
+                "file": "ECS/Signatures.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +114,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "ECS/ECS.md",
+                "file": "ECS/Signatures.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -137,7 +137,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "ECS/ECS.md"
+                "file": "ECS/Signatures.md"
               }
             }
           }
@@ -160,8 +160,9 @@
   },
   "active": "92d1f7ec2f47beaa",
   "lastOpenFiles": [
-    "Kikan.md",
     "ECS/ECS.md",
+    "ECS/Signatures.md",
+    "Kikan.md",
     "ECS",
     "General/Todo.md",
     "Core/Logging.md",

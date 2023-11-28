@@ -7,11 +7,6 @@
 #include "Kikan/ecs/Entity.h"
 
 namespace Kikan {
-
-#define sig(x) signature<x>()
-#define singleInclude(x) includeSignatures(new std::vector<unsigned int>({ sig(x) }))
-#define includeAnd(args...) includeSignatures(new std::vector<unsigned int>({ args }))
-
     class ISystem{
     public:
         ISystem() = default;
@@ -42,11 +37,6 @@ namespace Kikan {
         }
 
     protected:
-        template<class T>
-        unsigned int signature(){
-            return TypeRegistry::getSignature<T>();
-        }
-
         void includeSignatures(std::vector<unsigned int>* signatures){
             std::sort(signatures->begin(), signatures->end());
             _signatures.push_back(signatures);

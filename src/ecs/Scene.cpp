@@ -57,4 +57,12 @@ namespace Kikan { namespace Ecs {
 
         _threads.at(id)->removeEntity(entity);
     }
+
+    Entity *Scene::getEntity(std::vector<unsigned int>* signatures) {
+        return Util::getEntity(signatures, _entities);
+    }
+
+    void Scene::getEntities(std::vector<unsigned int> *signatures, std::vector<Entity *>* entities) {
+        Util::getEntities(signatures, entities, _entities);
+    }
 } }

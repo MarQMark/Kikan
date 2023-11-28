@@ -60,6 +60,14 @@ namespace Kikan { namespace Ecs {
         delete entity;
     }
 
+    Entity *ECS::getEntity(std::vector<unsigned int> *signatures) {
+        return Util::getEntity(signatures, _entities);
+    }
+
+    void ECS::getEntities(std::vector<unsigned int> *signatures, std::vector<Entity *> *entities) {
+        Util::getEntities(signatures, entities, _entities);
+    }
+
     void ECS::addSystem(ISystem *system) {
         _systems.push_back(system);
     }
@@ -94,4 +102,6 @@ namespace Kikan { namespace Ecs {
 
         _currScene->update(dt);
     }
+
+
 }}
