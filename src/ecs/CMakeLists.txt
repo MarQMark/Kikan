@@ -10,7 +10,8 @@ set(SOURCE_FILES
 
         systems/PhysicsSystem.cpp
         systems/SpriteRenderSystem.cpp
-        )
+        systems/BasicAABBCollisionSystem.cpp
+)
 
 add_library(KikanECS ${SOURCE_FILES})
 
