@@ -11,6 +11,11 @@
 
 #include "Kikan/core/Logging.h"
 #include "Kikan/renderer/stdRenderer/Camera.h"
+#include "Kikan/ecs/components/LineQuadSprite.h"
+#include "Kikan/ecs/components/Physics.h"
+#include "Kikan/ecs/TypeRegistry.h"
+
+#include "Kikan/ecs/Util.h"
 
 double tt = 0;
 
@@ -67,52 +72,48 @@ int WinMain() {
 
     engine->getECS()->getScene()->addSystem(new Kikan::SpriteRenderSystem());
 
-    ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->addPostRender(preRender, nullptr);
+   // ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->addPostRender(preRender, nullptr);
 
-    int a = 3;
-    Kikan::Core::Logging::get()->print("test %d \n", a);
-
-    auto* batch = new Kikan::Renderer::ManuelBatch(Kikan::Renderer::VertexRegistry::getLayout<Kikan::Renderer::DefaultVertex>(),sizeof(Kikan::Renderer::DefaultVertex));
-    ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->addBatch(batch, 0);
-
-    std::vector<float> data(500 * 500 * 4);
-    for (int x = 0; x < 500; ++x) {
-        for (int y = 0; y < 500; ++y) {
-            data[(x + 500 * y) * 4] = 0.;
-            data[(x + 500 * y) * 4 + 1] = 0.;
-            data[(x + 500 * y) * 4 + 2] = (float)(1.f - std::sqrt((x - 250) * (x - 250) + (y - 250) * (y - 250)) / 250.0);
-            data[(x + 500 * y) * 4 + 3] = 1.;
-        }
+    {
+        auto* entity = new Kikan::Entity();
+        auto* sprite = new Kikan::LineQuadSprite();
+        entity->getComponent<Kikan::Transform>()->position = glm::vec3(-.5, .5, 0);
+        sprite->dimensions = glm::vec2(1, 1);
+        sprite->color = glm::vec4(0.8, 0.4, 0.3, 1.0);
+        sprite->layer = 0.1;
+        sprite->thickness = 0.01;
+        entity->addComponent(sprite);
+        engine->getECS()->getScene()->addEntity(entity);
     }
 
-    Kikan::Renderer::Texture2D texture2D(500, 500, data.data());
+    {
+        auto* entity = new Kikan::Entity();
+        auto* physics = new Kikan::Physics();
+        entity->addComponent(physics);
+        engine->getECS()->getScene()->addEntity(entity);
+    }
 
-    auto* entity = new Kikan::Entity();
-    auto* sprite = new Kikan::Texture2DSprite;
-    sprite->points[0] = glm::vec2(-1, 1);
-    sprite->points[1] = glm::vec2(1, 1);
-    sprite->points[2] = glm::vec2(1, -1);
-    sprite->points[3] = glm::vec2(-1, -1);
-    sprite->textureID = texture2D.get();
-    sprite->color = glm::vec4(0.3, 0.4, 0.8, 1.0);
-    sprite->layer = 0;
-    entity->addComponent(sprite);
-    engine->getECS()->getScene()->addEntity(entity);
+    {
+        auto* entity = new Kikan::Entity();
+        auto* sprite = new Kikan::LineQuadSprite();
+        auto* physics = new Kikan::Physics();
+        entity->addComponent(sprite);
+        entity->addComponent(physics);
+        engine->getECS()->getScene()->addEntity(entity);
+    }
 
-    /*auto* entity2 = new Entity();
-    auto* sprite2 = new PolygonSprite();
-    std::vector<glm::vec2> points(6);
-    points[0] = glm::vec2(-.5, .5);
-    points[1] = glm::vec2(0, 1);
-    points[2] = glm::vec2(.5, .5);
-    points[3] = glm::vec2(.5, -.5);
-    points[4] = glm::vec2(0, -1);
-    points[5] = glm::vec2(-.5, -.5);
-    sprite2->points = points;
-    sprite2->color = glm::vec4(0.8, 0.4, 0.3, 1.0);
-    sprite2->layer = 0.1;
-    entity2->addComponent(sprite2);
-    engine.getScene()->addEntity(entity2);*/
+    {
+        auto* entity = new Kikan::Entity();
+        auto* sprite = new Kikan::LineQuadSprite();
+        entity->addComponent(sprite);
+        engine->getECS()->getScene()->addEntity(entity);
+    }
+
+
+
+    std::vector<Kikan::Entity*> es;
+    engine->getECS()->getScene()->getEntities(getSig(Kikan::Transform), &es);
+    //Kikan::Entity* e = engine->getECS()->getScene()->getEntity(getSigs(sig(Kikan::Physics), sig(Kikan::LineQuadSprite)));
 
     while (engine->shouldRun()) {
         engine->update();

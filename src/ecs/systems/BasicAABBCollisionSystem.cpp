@@ -2,7 +2,7 @@
 #include "Kikan/ecs/components/BasicAABBCollider.h"
 
 Kikan::BasicAABBCollisionSystem::BasicAABBCollisionSystem() {
-    singleInclude(BasicAABBCollider);
+    includeSingle(BasicAABBCollider);
 }
 
 void Kikan::BasicAABBCollisionSystem::update(double dt) {
