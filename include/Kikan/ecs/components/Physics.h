@@ -12,6 +12,8 @@ namespace Kikan {
 
         glm::vec2 friction = glm::vec2(0,0);
 
+        bool gravity = true;
+
         void destroy() override{
             delete this;
         };
