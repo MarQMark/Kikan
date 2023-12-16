@@ -111,7 +111,8 @@ namespace Kikan { namespace Renderer {
         v3.texture = -1;
         vertices[2] = &v3;
 
-        autoBatch<DefaultVertex>(vertices);
+        auto prio = (uint16_t)(layer * 100.f + 32768);
+        autoBatch<DefaultVertex>(vertices, prio);
     }
 
     void StdRenderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer) {
@@ -141,7 +142,8 @@ namespace Kikan { namespace Renderer {
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
-        autoBatch<DefaultVertex>(vertices, &indices);
+        auto prio = (uint16_t)(layer * 100.f + 32768);
+        autoBatch<DefaultVertex>(vertices, prio, &indices);
     }
 
     void StdRenderer::renderPolygon(std::vector<glm::vec2> &points, glm::vec4 color, float layer) {
@@ -160,7 +162,8 @@ namespace Kikan { namespace Renderer {
         if (result < 0)
             std::cout << "[ERROR] Could not triangulate Polygon" << std::endl;
 
-        autoBatch<DefaultVertex>(vertices, &indices);
+        auto prio = (uint16_t)(layer * 100.f + 32768);
+        autoBatch<DefaultVertex>(vertices, prio, &indices);
     }
 
     void StdRenderer::renderTexture2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, GLuint textureId, glm::vec4 color, float layer){
@@ -193,11 +196,12 @@ namespace Kikan { namespace Renderer {
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
-        autoBatch<DefaultVertex>(vertices, &indices);
+        auto prio = (uint16_t)(layer * 100.f + 32768);
+        autoBatch<DefaultVertex>(vertices, prio, &indices);
     }
 
     template<class T>
-    void StdRenderer::autoBatch(std::vector<IVertex *> vertices, std::vector<GLuint> *indices) {
+    void StdRenderer::autoBatch(std::vector<IVertex *> vertices, uint16_t prio, std::vector<GLuint> *indices) {
         if(vertices.empty())
             return;
 
@@ -208,7 +212,7 @@ namespace Kikan { namespace Renderer {
         for (IVertex* v : vertices) {
             if(v->texture != textureID || v == vertices.back()){
                 // get ID
-                uint64_t id = auto_batch_id(signature(T), textureID);
+                uint64_t id = auto_batch_id(signature(T), prio, textureID);
 
                 // Create Batch if none with ID exist
                 if(!_auto_batches.count(id))
@@ -262,8 +266,8 @@ namespace Kikan { namespace Renderer {
         _override_render = ovr;
     }
 
-    uint64_t StdRenderer::auto_batch_id(uint32_t signature, float textureID) {
-        return (uint64_t) signature << 32 | (uint32_t)textureID;
+    uint64_t StdRenderer::auto_batch_id(uint32_t signature,uint16_t prio, float textureID) {
+        return (uint64_t) prio << 48 | signature << 16 | (uint16_t)textureID;
     }
 
 

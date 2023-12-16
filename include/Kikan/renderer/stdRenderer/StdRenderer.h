@@ -75,10 +75,13 @@ class StdRenderer : public Renderer {
         void renderTexture2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0);
 
         /*
-        *  Each Auto-Batch gets an unique ID: 4 Bytes Vertex Signature + 4 Bytes Texture ID
+        *  Each Auto-Batch gets an unique ID: 2 Bytes Priority + 4 Bytes Vertex Signature + 2 Bytes Texture ID
+        *
+        * prio: The priority given in accordance to render order. The lower, the earlier it gets rendered
+        *       For each new prio a new batch gets created
         */
         template <class T>
-        void autoBatch(std::vector<IVertex*> vertices, std::vector<GLuint>* indices = nullptr);
+        void autoBatch(std::vector<IVertex*> vertices, uint16_t prio = 0, std::vector<GLuint>* indices = nullptr);
 
         void addBatch(ManuelBatch* batch, unsigned int key);
         ManuelBatch* getBatch(unsigned int key);
@@ -114,7 +117,7 @@ class StdRenderer : public Renderer {
         Override* _override_render = nullptr;
 
         void setup_openGl();
-        static uint64_t auto_batch_id(uint32_t signature, float textureID);
+        static uint64_t auto_batch_id(uint32_t signature, uint16_t prio, float textureID);
     };
 } }
 
