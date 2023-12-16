@@ -196,7 +196,7 @@ namespace Kikan { namespace Renderer {
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
-        auto prio = (uint16_t)(layer * 100.f + 32768);
+        auto prio = (uint16_t)(layer * -100.f + 32768);
         autoBatch<DefaultVertex>(vertices, prio, &indices);
     }
 
