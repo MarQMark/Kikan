@@ -166,27 +166,27 @@ namespace Kikan { namespace Renderer {
         autoBatch<DefaultVertex>(vertices, prio, &indices);
     }
 
-    void StdRenderer::renderTexture2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, GLuint textureId, glm::vec4 color, float layer){
+    void StdRenderer::renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color, float layer){
         std::vector<IVertex *> vertices(4);
 
         DefaultVertex v1;
-        v1.position = glm::vec3(p1.x, p1.y, layer);
-        v1.textureCoords = glm::vec2(0, 1);
+        v1.position = glm::vec3(p[0].x, p[0].y, layer);
+        v1.textureCoords = texCoords[0];
         vertices[0] = &v1;
 
         DefaultVertex v2;
-        v2.position = glm::vec3(p2.x, p2.y, layer);
-        v2.textureCoords = glm::vec2(1, 1);
+        v2.position = glm::vec3(p[1].x, p[1].y, layer);
+        v2.textureCoords = texCoords[1];
         vertices[1] = &v2;
 
         DefaultVertex v3;
-        v3.position = glm::vec3(p3.x, p3.y, layer);
-        v3.textureCoords = glm::vec2(1, 0);
+        v3.position = glm::vec3(p[2].x, p[2].y, layer);
+        v3.textureCoords = texCoords[2];
         vertices[2] = &v3;
 
         DefaultVertex v4;
-        v4.position = glm::vec3(p4.x, p4.y, layer);
-        v4.textureCoords = glm::vec2(0, 0);
+        v4.position = glm::vec3(p[3].x, p[3].y, layer);
+        v4.textureCoords = texCoords[3];
         vertices[3] = &v4;
 
         for (auto *v: vertices) {

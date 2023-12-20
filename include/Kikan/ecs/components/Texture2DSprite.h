@@ -9,6 +9,12 @@ namespace Kikan {
     struct Texture2DSprite : IComponent {
     public:
         glm::vec2 points[4];
+        glm::vec2 texCoords[4] = {
+                glm::vec2 (0, 1),
+                glm::vec2 (1, 1),
+                glm::vec2 (1, 0),
+                glm::vec2 (0, 0),
+        };
         glm::vec4 color;
         GLuint textureID;
         float layer;

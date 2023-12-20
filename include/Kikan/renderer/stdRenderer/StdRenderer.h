@@ -72,7 +72,7 @@ class StdRenderer : public Renderer {
         *      |        |
         *      4 ------ 3
         */
-        void renderTexture2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0);
+        void renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0);
 
         /*
         *  Each Auto-Batch gets an unique ID: 2 Bytes Priority + 4 Bytes Vertex Signature + 2 Bytes Texture ID
