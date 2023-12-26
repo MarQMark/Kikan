@@ -93,16 +93,21 @@ namespace Kikan {
                         lineQuadSprite->color,
                         lineQuadSprite->layer);
             }
-            auto aaSprite = e->getComponent<AASprite>();
+            auto *aaSprite = e->getComponent<AASprite>();
             if(aaSprite){
                 auto* transform = e->getComponent<Transform>();
                 float width = aaSprite->dimensions.x * transform->scale.x;
                 float height = aaSprite->dimensions.y * transform->scale.y;
-                _renderer->renderQuad(
+                glm::vec2 points[4] = {
                         glm::vec2(transform->position),
                         glm::vec2(transform->position) + glm::vec2(width,   0),
                         glm::vec2(transform->position) + glm::vec2(width,   -height),
                         glm::vec2(transform->position) + glm::vec2(0,       -height),
+                };
+                _renderer->renderTexture2D(
+                        points,
+                        aaSprite->texCoords,
+                        aaSprite->textureID,
                         aaSprite->color,
                         aaSprite->layer);
             }
