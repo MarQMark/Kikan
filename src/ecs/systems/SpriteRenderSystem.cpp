@@ -5,6 +5,7 @@
 #include "Kikan/ecs/components/PolygonSprite.h"
 #include "Kikan/ecs/components/Texture2DSprite.h"
 #include "Kikan/ecs/components/LineQuadSprite.h"
+#include "Kikan/ecs/components/AASprite.h"
 
 namespace Kikan {
     SpriteRenderSystem::SpriteRenderSystem() {
@@ -13,6 +14,7 @@ namespace Kikan {
         includeSingle(PolygonSprite);
         includeSingle(Texture2DSprite);
         includeSingle(LineQuadSprite);
+        includeSingle(AASprite);
     }
 
     void SpriteRenderSystem::update(double dt) {
@@ -90,6 +92,19 @@ namespace Kikan {
                         glm::vec2(transform->position) + glm::vec2(0,           -height)    + glm::vec2(0,         thickness),
                         lineQuadSprite->color,
                         lineQuadSprite->layer);
+            }
+            auto aaSprite = e->getComponent<AASprite>();
+            if(aaSprite){
+                auto* transform = e->getComponent<Transform>();
+                float width = aaSprite->dimensions.x * transform->scale.x;
+                float height = aaSprite->dimensions.y * transform->scale.y;
+                _renderer->renderQuad(
+                        glm::vec2(transform->position),
+                        glm::vec2(transform->position) + glm::vec2(width,   0),
+                        glm::vec2(transform->position) + glm::vec2(width,   -height),
+                        glm::vec2(transform->position) + glm::vec2(0,       -height),
+                        aaSprite->color,
+                        aaSprite->layer);
             }
         }
     }
