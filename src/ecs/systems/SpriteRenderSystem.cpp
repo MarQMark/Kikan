@@ -98,11 +98,12 @@ namespace Kikan {
                 auto* transform = e->getComponent<Transform>();
                 float width = aaSprite->dimensions.x * transform->scale.x;
                 float height = aaSprite->dimensions.y * transform->scale.y;
+                glm::vec2 pos = glm::vec2(transform->position) + aaSprite->offset;
                 glm::vec2 points[4] = {
-                        glm::vec2(transform->position),
-                        glm::vec2(transform->position) + glm::vec2(width,   0),
-                        glm::vec2(transform->position) + glm::vec2(width,   -height),
-                        glm::vec2(transform->position) + glm::vec2(0,       -height),
+                        pos,
+                        pos + glm::vec2(width,   0),
+                        pos + glm::vec2(width,   -height),
+                        pos + glm::vec2(0,       -height),
                 };
                 _renderer->renderTexture2D(
                         points,
