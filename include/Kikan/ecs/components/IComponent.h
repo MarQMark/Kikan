@@ -3,6 +3,8 @@
 
 namespace Kikan {
     struct IComponent {
+        virtual ~IComponent() = default;
+
         virtual void destroy() = 0;
     };
 }
