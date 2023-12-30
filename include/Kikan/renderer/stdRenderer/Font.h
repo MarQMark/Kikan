@@ -15,16 +15,25 @@ namespace Kikan{
         };
 
     public:
-        Font(void* data, uint32_t size);
+        explicit Font(void* data);
+        ~Font();
 
         Glyph* getGlyph(char c);
         GLuint getID();
 
     private:
+        typedef struct __attribute__((packed)) {
+            uint32_t width;     // texture2D width
+            uint32_t height;    // texture2D height
+            uint32_t gCount;    // glyph count
+            uint32_t gWidth;    // glyph max width
+            uint32_t gHeight;   // glyph max height
+        } Header;
+
         std::map<char, Glyph*> _glyphs;
         Renderer::Texture2D* _txt;
 
-        void parse_font(int8_t* data, uint32_t size);
+        void parse_font(int8_t* data);
     };
 }
 

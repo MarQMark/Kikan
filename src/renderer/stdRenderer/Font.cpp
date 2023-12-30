@@ -4,8 +4,14 @@
 
 namespace Kikan{
 
-    Font::Font(void *data, uint32_t size) {
-        parse_font((int8_t*)data, size);
+    Font::Font(void *data) {
+        parse_font((int8_t*)data);
+    }
+
+    Font::~Font() {
+        for (const auto &g: _glyphs) {
+            delete g.second;
+        }
     }
 
     Font::Glyph* Font::getGlyph(char c) {
@@ -21,26 +27,32 @@ namespace Kikan{
         return _txt->get();
     }
 
-    void Font::parse_font(int8_t *data, uint32_t size) {
-        uint32_t width, height;
-        width = *(uint32_t*)data;
-        data+= 4;
-        height = *(uint32_t*)data;
-        data+= 4;
+    void Font::parse_font(int8_t *data) {
+        Header header = *(Header*)data;
+        data += sizeof(Header);
 
-        for(int i = 0; i < 82; i++){
+        for(uint32_t i = 0; i < header.gCount; i++){
             char c = *data;
             data++;
             auto* g = new Glyph;
-            g->dim.x = (float)*(uint32_t*)data / (float)width;
-            data+= 4;
-            g->dim.y = (float)*(uint32_t*)data / (float)height;
-            data+= 4;
-            g->pos.x = (float)*(uint32_t*)data / (float)width;
-            data+= 4;
-            g->pos.y = (float)*(uint32_t*)data / (float)height;
-            data+= 4;
+            g->dim.x = (float)*(uint32_t*)data / (float)header.width;       data+= 4;
+            g->dim.y = (float)*(uint32_t*)data / (float)header.height;      data+= 4;
+            g->pos.x = (float)*(uint32_t*)data / (float)header.width;       data+= 4;
+            g->pos.y = (float)*(uint32_t*)data / (float)header.height;      data+= 4;
+            g->offset.x = (float)*(uint32_t*)data / (float)header.gWidth;   data+= 4;
+            g->offset.y = (float)*(uint32_t*)data / (float)header.gHeight;  data+= 4;
             _glyphs[c] = g;
         }
+
+        uint8_t buff[header.width * header.height * 4];
+        for(uint32_t i = 0; i < header.width * header.height; i++){
+            buff[i * 4 + 0] = 255;      // Red
+            buff[i * 4 + 1] = 255;      // Green
+            buff[i * 4 + 2] = 255;      // Blue
+            buff[i * 4 + 3] = *data;    // Alpha
+            data++;
+        }
+
+        _txt = new Renderer::Texture2D((GLsizei)header.width, (GLsizei)header.height, buff);
     }
 }

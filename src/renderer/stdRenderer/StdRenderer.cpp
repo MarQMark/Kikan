@@ -5,6 +5,8 @@
 
 #include "Kikan/util/EarClipping.h"
 #include "Kikan/renderer/stdRenderer/Shaders.h"
+#include "Kikan/renderer/stdRenderer/DefaultFont.h"
+#include "Kikan/core/Logging.h"
 
 
 namespace Kikan { namespace Renderer {
@@ -51,6 +53,9 @@ namespace Kikan { namespace Renderer {
 
         //load default vertex layout
         VertexRegistry::addLayout<DefaultVertex>(DefaultVertex::getLayout());
+
+        //load default font
+        _fonts["default"] = new Font((void*)defaultFont);
 
         queryErrors("Setup");
     }
@@ -298,6 +303,20 @@ namespace Kikan { namespace Renderer {
     }
 
     void StdRenderer::destroy() {
+        // TODO: Fix memory leak
         delete this;
+    }
+
+    Font *StdRenderer::getFont(const std::string &name) {
+        if(!_fonts.count(name)){
+            kikanPrintE("[ERROR] Font %s not found\n", name.c_str());
+            return _fonts["default"];
+        }
+
+        return _fonts[name];
+    }
+
+    void StdRenderer::addFont(Font *font, const std::string &name) {
+        _fonts[name] = font;
     }
 } }

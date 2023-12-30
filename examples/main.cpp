@@ -16,6 +16,7 @@
 #include "Kikan/ecs/TypeRegistry.h"
 
 #include "Kikan/ecs/Util.h"
+#include "Kikan/ecs/components/AASprite.h"
 
 double tt = 0;
 
@@ -109,6 +110,16 @@ int WinMain() {
         engine->getECS()->getScene()->addEntity(entity);
     }
 
+    {
+        auto* entity = new Kikan::Entity();
+        auto* sprite = new Kikan::AASprite();
+        sprite->offset = glm::vec2(-.5, .5);
+        sprite->dimensions = glm::vec2(1);
+        sprite->textureID = ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->getFont()->getID();
+        sprite->layer = -.2f;
+        entity->addComponent(sprite);
+        engine->getECS()->getScene()->addEntity(entity);
+    }
 
 
     std::vector<Kikan::Entity*> es;

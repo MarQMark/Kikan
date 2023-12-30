@@ -11,6 +11,7 @@
 #include "Kikan/renderer/stdRenderer/batching/ManuelBatch.h"
 #include "Kikan/renderer/stdRenderer/vertices/DefaultVertex.h"
 #include "Kikan/renderer/stdRenderer/vertices/VertexRegistry.h"
+#include "Font.h"
 
 namespace Kikan { namespace Renderer {
 class StdRenderer : public Renderer {
@@ -94,6 +95,9 @@ class StdRenderer : public Renderer {
         Shader* shader(const std::string& name = "default");
         void shader(Shader* shader, const std::string& name = "default");
 
+        Font* getFont(const std::string& name = "default");
+        void addFont(Font* font, const std::string& name = "default");
+
         static void queryErrors(const std::string& tag);
     private:
         ~StdRenderer(){
@@ -109,6 +113,8 @@ class StdRenderer : public Renderer {
         std::map<unsigned int, ManuelBatch*> _batches;
 
         std::map<uint64_t, AutoBatch*> _auto_batches;
+
+        std::map<std::string, Font*> _fonts;
 
         void (*preRender)(void* o, StdRenderer* renderer, double dt) = nullptr;
         void (*postRender)(void* o, StdRenderer* renderer, double dt) = nullptr;
