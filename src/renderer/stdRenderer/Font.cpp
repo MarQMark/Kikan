@@ -16,8 +16,8 @@ namespace Kikan{
 
     Font::Glyph* Font::getGlyph(char c) {
         if(!_glyphs.count(c)){
-            kikanPrintE("[ERROR] %c not found in font\n", c);
-            return _glyphs.at(0);
+            kikanPrintE("[ERROR] %c(%d) not found in font\n", c, c);
+            return nullptr;
         }
 
         return _glyphs[c];
@@ -39,8 +39,8 @@ namespace Kikan{
             g->dim.y = (float)*(uint32_t*)data / (float)header.height;      data+= 4;
             g->pos.x = (float)*(uint32_t*)data / (float)header.width;       data+= 4;
             g->pos.y = (float)*(uint32_t*)data / (float)header.height;      data+= 4;
-            g->offset.x = (float)*(uint32_t*)data / (float)header.gWidth;   data+= 4;
-            g->offset.y = (float)*(uint32_t*)data / (float)header.gHeight;  data+= 4;
+            g->offset.x = (float)*(uint32_t*)data / (float)header.width;    data+= 4;
+            g->offset.y = (float)*(uint32_t*)data / (float)header.height;   data+= 4;
             _glyphs[c] = g;
         }
 

@@ -13,6 +13,11 @@ namespace Kikan{
             glm::vec2 pos;
             glm::vec2 dim;
         };
+        struct Options{
+            Font* font;
+            glm::vec4 color = glm::vec4(1);
+            glm::vec2 spacing = glm::vec2(1.1f);
+        };
 
     public:
         explicit Font(void* data);

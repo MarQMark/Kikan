@@ -116,11 +116,15 @@ int WinMain() {
         sprite->offset = glm::vec2(-.5, .5);
         sprite->dimensions = glm::vec2(1);
         sprite->textureID = ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->getFont()->getID();
+        Kikan::Font::Glyph* g = ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->getFont()->getGlyph(',');
+        sprite->texCoords[0] = glm::vec2(g->pos.x,               1 - (g->pos.y));
+        sprite->texCoords[1] = glm::vec2(g->pos.x + g->dim.x,    1 - (g->pos.y));
+        sprite->texCoords[2] = glm::vec2(g->pos.x + g->dim.x,    1 - (g->pos.y + g->dim.y));
+        sprite->texCoords[3] = glm::vec2(g->pos.x,               1 - (g->pos.y + g->dim.y));
         sprite->layer = -.2f;
         entity->addComponent(sprite);
         engine->getECS()->getScene()->addEntity(entity);
     }
-
 
     std::vector<Kikan::Entity*> es;
     engine->getECS()->getScene()->getEntities(getSig(Kikan::Transform), &es);

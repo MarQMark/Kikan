@@ -12,6 +12,7 @@
 namespace Kikan { namespace Renderer {
 
 #define signature(x) VertexRegistry::getSignature<x>()
+#define renderPrio(x) (uint16_t)(x * 100.f + 32768)
 
     void window_size_callback(GLFWwindow *window, int width, int height) {
         glViewport(0, 0, width, height);
@@ -116,8 +117,7 @@ namespace Kikan { namespace Renderer {
         v3.texture = -1;
         vertices[2] = &v3;
 
-        auto prio = (uint16_t)(layer * 100.f + 32768);
-        autoBatch<DefaultVertex>(vertices, prio);
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer));
     }
 
     void StdRenderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer) {
@@ -146,9 +146,7 @@ namespace Kikan { namespace Renderer {
         }
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
-
-        auto prio = (uint16_t)(layer * 100.f + 32768);
-        autoBatch<DefaultVertex>(vertices, prio, &indices);
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices);
     }
 
     void StdRenderer::renderPolygon(std::vector<glm::vec2> &points, glm::vec4 color, float layer) {
@@ -167,8 +165,7 @@ namespace Kikan { namespace Renderer {
         if (result < 0)
             std::cout << "[ERROR] Could not triangulate Polygon" << std::endl;
 
-        auto prio = (uint16_t)(layer * 100.f + 32768);
-        autoBatch<DefaultVertex>(vertices, prio, &indices);
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices);
     }
 
     void StdRenderer::renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color, float layer){
@@ -200,9 +197,75 @@ namespace Kikan { namespace Renderer {
         }
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices);
+    }
 
-        auto prio = (uint16_t)(layer * -100.f + 32768);
-        autoBatch<DefaultVertex>(vertices, prio, &indices);
+    void StdRenderer::renderText(std::string text, glm::vec2 pos, float height, float layer, Font::Options options){
+        Font* font = options.font;
+        if(!font)
+            font = _fonts["default"];
+
+        Font::Glyph* g = font->getGlyph('A');
+        const float scale = height/g->dim.y;
+        const float whitespace = scale * g->dim.x;
+
+        std::vector<DefaultVertex> vertices(4 * text.size());
+        std::vector<GLuint> indices(6 * text.size());
+
+        GLuint indexCnt = 0;
+        uint32_t nVertex = 0;
+        float y = pos.y;
+        float x = pos.x;
+
+        for (char c : text) {
+            if(c == ' ')       { x += whitespace;      continue; } // Whitespace
+            else if(c == '\t') { x += whitespace * 4;  continue; } // Tab
+            else if(c == '\r') { x = pos.x;            continue; } // Carriage Return
+            else if(c == '\n') {                                   // Newline
+                x = pos.x;
+                y-= height * 1.5f * options.spacing.y;
+                continue;
+            }
+
+            g = font->getGlyph(c);
+            if(!g) continue;
+            float cWidth = g->dim.x * scale;
+            float cHeight = g->dim.y * scale;
+            float offX = g->offset.x * scale;
+            float offY = g->offset.y * scale;
+
+            //Position
+            vertices[nVertex + 0].position = glm::vec3(x + offX,          y - offY,           layer);
+            vertices[nVertex + 1].position = glm::vec3(x + offX + cWidth, y - offY,           layer);
+            vertices[nVertex + 2].position = glm::vec3(x + offX + cWidth, y - offY - cHeight, layer);
+            vertices[nVertex + 3].position = glm::vec3(x + offX,          y - offY - cHeight, layer);
+
+            // set Texture Coords
+            vertices[nVertex + 0].textureCoords = glm::vec2(g->pos.x,               1 - (g->pos.y));
+            vertices[nVertex + 1].textureCoords = glm::vec2(g->pos.x + g->dim.x,    1 - (g->pos.y));
+            vertices[nVertex + 2].textureCoords = glm::vec2(g->pos.x + g->dim.x,    1 - (g->pos.y + g->dim.y));
+            vertices[nVertex + 3].textureCoords = glm::vec2(g->pos.x,               1 - (g->pos.y + g->dim.y));
+
+            indices[indexCnt + 0] = nVertex + 0;
+            indices[indexCnt + 1] = nVertex + 1;
+            indices[indexCnt + 2] = nVertex + 2;
+            indices[indexCnt + 3] = nVertex + 0;
+            indices[indexCnt + 4] = nVertex + 2;
+            indices[indexCnt + 5] = nVertex + 3;
+
+            nVertex+=4;
+            indexCnt+=6;
+
+            x += cWidth * options.spacing.x;
+        }
+
+        std::vector<IVertex*> iVertices(vertices.size());
+        for (uint32_t i = 0; i < vertices.size(); i++) {
+            vertices[i].color = options.color;
+            iVertices[i] = &vertices[i];
+            iVertices[i]->texture = (float)font->getID();
+        }
+        autoBatch<DefaultVertex>(iVertices, renderPrio(layer), &indices);
     }
 
     template<class T>

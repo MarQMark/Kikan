@@ -76,6 +76,13 @@ class StdRenderer : public Renderer {
         void renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0);
 
         /*
+        * Uses Auto-batching with DefaultVertex.
+        *
+        * If not font is specified the default font is used
+        */
+        void renderText(std::string text, glm::vec2 pos, float height, float layer = 0, Font::Options options = {});
+
+        /*
         *  Each Auto-Batch gets an unique ID: 2 Bytes Priority + 4 Bytes Vertex Signature + 2 Bytes Texture ID
         *
         * prio: The priority given in accordance to render order. The lower, the earlier it gets rendered
