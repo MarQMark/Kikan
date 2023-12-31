@@ -12,7 +12,7 @@
 namespace Kikan {
 
 #define signature(x) VertexRegistry::getSignature<x>()
-#define renderPrio(x) (uint16_t)(x * 100.f + 32768)
+#define renderPrio(x) (uint16_t)(x * -100.f + 32768)
 
     void window_size_callback(GLFWwindow *window, int width, int height) {
         glViewport(0, 0, width, height);
