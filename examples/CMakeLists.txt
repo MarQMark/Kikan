@@ -15,6 +15,8 @@ target_link_libraries(example Kikan)
 target_link_libraries(Kikan KikanRenderer)
 # Link Kikan ECS
 target_link_libraries(Kikan KikanECS)
+# Link Kikan UI
+target_link_libraries(Kikan KikanUI)
 
 #define GLEW_STATIC (necessary for glew)
 add_compile_definitions(GLEW_STATIC)

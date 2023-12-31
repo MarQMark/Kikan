@@ -45,6 +45,7 @@ add_subdirectory("include")
 
 add_subdirectory("src/renderer")
 add_subdirectory("src/ecs")
+add_subdirectory("src/ui")
 add_subdirectory("src")
 
 add_subdirectory("examples")

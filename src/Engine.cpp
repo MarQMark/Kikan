@@ -88,5 +88,9 @@ namespace Kikan {
         return _ecs;
     }
 
+    UI *Engine::getUI() {
+        return _ui;
+    }
+
 }
 

@@ -7,6 +7,7 @@
 #include "Kikan/util/Time.h"
 #include "Kikan/ecs/ECS.h"
 #include "Kikan/input/Input.h"
+#include "Kikan/ui/UI.h"
 
 namespace Kikan {
     class Engine {
@@ -15,6 +16,7 @@ namespace Kikan {
             _renderer = new StdRenderer(width, height);
             _input = Input::create(((StdRenderer*)_renderer)->getWindow());
             _ecs = new ECS();
+            _ui = new UI();
         }
 
         static Engine* s_instance;
@@ -40,6 +42,7 @@ namespace Kikan {
         Renderer* getRenderer();
         ECS* getECS();
         Input* getInput();
+        UI* getUI();
 
         Time time;
 
@@ -64,6 +67,7 @@ namespace Kikan {
         Renderer* _renderer;
         ECS* _ecs;
         Input* _input;
+        UI* _ui;
 
         void update_fps();
         void update_title();
