@@ -6,7 +6,7 @@
 #include "GL/glew.h"
 #include "glm/glm.hpp"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class Shader {
     public:
         Shader(const std::string &vertexPath, const std::string &fragmentPath);
@@ -38,6 +38,6 @@ namespace Kikan { namespace Renderer {
         GLuint _fs;
         std::map<std::string, GLint> _uniforms;
     };
-} }
+}
 
 #endif //KIKAN_SHADER_H

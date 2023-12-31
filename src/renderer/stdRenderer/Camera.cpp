@@ -1,6 +1,6 @@
 #include "Kikan/renderer/stdRenderer/Camera.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     glm::mat4x4 Camera::matrix() {
         return _matrix;
     }
@@ -28,4 +28,4 @@ namespace Kikan { namespace Renderer {
     void Camera::reset() {
         _matrix = glm::mat4x4(1.0f);
     }
-} }
+}

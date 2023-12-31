@@ -20,7 +20,7 @@
 
 double tt = 0;
 
-void preRender(void* o, Kikan::Renderer::StdRenderer* renderer, double dt){
+void preRender(void* o, Kikan::StdRenderer* renderer, double dt){
     tt += dt;
     /*int width, height;
     glfwGetWindowSize(renderer->getWindow(), &width, &height);
@@ -32,21 +32,21 @@ void preRender(void* o, Kikan::Renderer::StdRenderer* renderer, double dt){
     shader.uniform1lf("u_time", tt / 1000.0);*/
 
     {
-        std::vector<Kikan::Renderer::DefaultVertex> vertices(4);
+        std::vector<Kikan::DefaultVertex> vertices(4);
 
-        Kikan::Renderer::DefaultVertex v1;
+        Kikan::DefaultVertex v1;
         v1.position = glm::vec3(-.5, .5, -.5);
         vertices[0] = v1;
 
-        Kikan::Renderer::DefaultVertex v2;
+        Kikan::DefaultVertex v2;
         v2.position = glm::vec3(.5, .5, -.5);
         vertices[1] = v2;
 
-        Kikan::Renderer::DefaultVertex v3;
+        Kikan::DefaultVertex v3;
         v3.position = glm::vec3(.5, -.5, -.5);
         vertices[2] = v3;
 
-        Kikan::Renderer::DefaultVertex v4;
+        Kikan::DefaultVertex v4;
         v4.position = glm::vec3(-.5, -.5, -.5);
         vertices[3] = v4;
 
@@ -58,7 +58,7 @@ void preRender(void* o, Kikan::Renderer::StdRenderer* renderer, double dt){
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
 
-        renderer->getBatch(0)->overrideVertices<Kikan::Renderer::DefaultVertex>(vertices, indices);
+        renderer->getBatch(0)->overrideVertices<Kikan::DefaultVertex>(vertices, indices);
     }
 
     renderer->getBatch(0)->render();
@@ -68,12 +68,12 @@ int WinMain() {
     Kikan::Engine::init();
     Kikan::Engine* engine = Kikan::Engine::Kikan();
 
-    Kikan::Renderer::Camera camera;
-    ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->mvp = camera.matrix();
+    Kikan::Camera camera;
+    ((Kikan::StdRenderer*)engine->getRenderer())->mvp = camera.matrix();
 
     engine->getECS()->getScene()->addSystem(new Kikan::SpriteRenderSystem());
 
-   // ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->addPostRender(preRender, nullptr);
+   // ((Kikan::StdRenderer*)engine->getRenderer())->addPostRender(preRender, nullptr);
 
     {
         auto* entity = new Kikan::Entity();
@@ -113,14 +113,9 @@ int WinMain() {
     {
         auto* entity = new Kikan::Entity();
         auto* sprite = new Kikan::AASprite();
-        sprite->offset = glm::vec2(-.5, .5);
-        sprite->dimensions = glm::vec2(1);
-        sprite->textureID = ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->getFont()->getID();
-        Kikan::Font::Glyph* g = ((Kikan::Renderer::StdRenderer*)engine->getRenderer())->getFont()->getGlyph(',');
-        sprite->texCoords[0] = glm::vec2(g->pos.x,               1 - (g->pos.y));
-        sprite->texCoords[1] = glm::vec2(g->pos.x + g->dim.x,    1 - (g->pos.y));
-        sprite->texCoords[2] = glm::vec2(g->pos.x + g->dim.x,    1 - (g->pos.y + g->dim.y));
-        sprite->texCoords[3] = glm::vec2(g->pos.x,               1 - (g->pos.y + g->dim.y));
+        sprite->offset = glm::vec2(-.4, .4);
+        sprite->dimensions = glm::vec2(.8);
+        sprite->textureID = ((Kikan::StdRenderer*)engine->getRenderer())->getFont()->getID();
         sprite->layer = -.2f;
         entity->addComponent(sprite);
         engine->getECS()->getScene()->addEntity(entity);

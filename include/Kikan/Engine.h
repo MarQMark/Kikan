@@ -12,9 +12,9 @@ namespace Kikan {
     class Engine {
     private:
         Engine(int width, int height){
-            _renderer = new Renderer::StdRenderer(width, height);
-            _input = Input::create(((Renderer::StdRenderer*)_renderer)->getWindow());
-            _ecs = new Ecs::ECS();
+            _renderer = new StdRenderer(width, height);
+            _input = Input::create(((StdRenderer*)_renderer)->getWindow());
+            _ecs = new ECS();
         }
 
         static Engine* s_instance;
@@ -37,8 +37,8 @@ namespace Kikan {
 
 
 
-        Renderer::Renderer* getRenderer();
-        Ecs::ECS* getECS();
+        Renderer* getRenderer();
+        ECS* getECS();
         Input* getInput();
 
         Time time;
@@ -61,8 +61,8 @@ namespace Kikan {
 
         std::string _title = std::string();
 
-        Renderer::Renderer* _renderer;
-        Ecs::ECS* _ecs;
+        Renderer* _renderer;
+        ECS* _ecs;
         Input* _input;
 
         void update_fps();

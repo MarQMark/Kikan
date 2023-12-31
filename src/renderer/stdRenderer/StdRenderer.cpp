@@ -9,7 +9,7 @@
 #include "Kikan/core/Logging.h"
 
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
 
 #define signature(x) VertexRegistry::getSignature<x>()
 #define renderPrio(x) (uint16_t)(x * 100.f + 32768)
@@ -382,4 +382,4 @@ namespace Kikan { namespace Renderer {
     void StdRenderer::addFont(Font *font, const std::string &name) {
         _fonts[name] = font;
     }
-} }
+}

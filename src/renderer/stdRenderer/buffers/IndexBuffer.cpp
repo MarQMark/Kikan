@@ -1,6 +1,6 @@
 #include "Kikan/renderer/stdRenderer/buffers/IndexBuffer.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     IndexBuffer::IndexBuffer(std::vector<GLuint> &indices) {
         glGenBuffers(1, &_id);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _id);
@@ -18,4 +18,4 @@ namespace Kikan { namespace Renderer {
     IndexBuffer::~IndexBuffer() {
         glDeleteBuffers(1, &_id);
     }
-} }
+}

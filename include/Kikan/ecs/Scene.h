@@ -9,7 +9,7 @@
 #include "Kikan/ecs/systems/ISystem.h"
 #include "Kikan/ecs/EcsThread.h"
 
-namespace Kikan { namespace Ecs {
+namespace Kikan {
     class Scene {
     public:
         Scene(std::string name) : _name(std::move(name)) {
@@ -50,6 +50,6 @@ namespace Kikan { namespace Ecs {
 
         std::vector<EcsThread*> _threads;
     };
-} }
+}
 
 #endif //KIKAN_SCENE_H

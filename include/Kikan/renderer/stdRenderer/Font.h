@@ -36,7 +36,7 @@ namespace Kikan{
         } Header;
 
         std::map<char, Glyph*> _glyphs;
-        Renderer::Texture2D* _txt;
+        Texture2D* _txt;
 
         void parse_font(int8_t* data);
     };

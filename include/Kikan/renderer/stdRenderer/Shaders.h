@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
         struct StdShaders{
         public:
             static const std::string sVS;
@@ -52,6 +52,6 @@ namespace Kikan { namespace Renderer {
                 "    fragColor = color;\n"
                 "}";
 
-}   }
+}
 
 #endif //KIKAN_SHADERS_H

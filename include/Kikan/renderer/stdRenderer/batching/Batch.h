@@ -3,7 +3,7 @@
 
 #include "Kikan/renderer/stdRenderer/buffers/VertexBuffer.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class Batch {
     public:
         Batch() = default;
@@ -15,6 +15,6 @@ namespace Kikan { namespace Renderer {
     protected:
         GLsizei _last_vertex = 0;
     };
-} }
+}
 
 #endif //KIKAN_BATCH_H

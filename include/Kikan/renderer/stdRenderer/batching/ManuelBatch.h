@@ -8,7 +8,7 @@
 #include "Kikan/renderer/stdRenderer/buffers/VertexBufferLayout.h"
 
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class ManuelBatch {
     public:
         ManuelBatch(VertexBufferLayout* vbl, GLuint vertexSize);
@@ -136,6 +136,6 @@ namespace Kikan { namespace Renderer {
 
         _indices = indices;
     }
-} }
+}
 
 #endif //KIKAN_MANUEL_BATCH_H

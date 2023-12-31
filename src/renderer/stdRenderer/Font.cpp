@@ -53,6 +53,6 @@ namespace Kikan{
             data++;
         }
 
-        _txt = new Renderer::Texture2D((GLsizei)header.width, (GLsizei)header.height, buff);
+        _txt = new Texture2D((GLsizei)header.width, (GLsizei)header.height, buff);
     }
 }

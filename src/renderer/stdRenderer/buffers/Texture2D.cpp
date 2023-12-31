@@ -1,6 +1,6 @@
 #include "Kikan/renderer/stdRenderer/buffers/Texture2D.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
 
     Texture2D::Texture2D(GLsizei width, GLsizei height, float data[], GLenum filter) : _width(width), _height(height){
         gen(filter);
@@ -57,4 +57,4 @@ namespace Kikan { namespace Renderer {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         unbind();
     }
-} }
+}

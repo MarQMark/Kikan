@@ -3,7 +3,7 @@
 #include <sstream>
 #include "Kikan/renderer/stdRenderer/Shader.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     Shader::Shader(const std::string &vertexSource, const std::string &fragmentSource) {
 
         int vs = compileShader(GL_VERTEX_SHADER, vertexSource);
@@ -144,4 +144,4 @@ namespace Kikan { namespace Renderer {
         if (loc != -1)
             glUniform1iv(loc, count, value);
     }
-} }
+}

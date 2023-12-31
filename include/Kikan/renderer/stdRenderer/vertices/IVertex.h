@@ -4,7 +4,7 @@
 #include "GL/glew.h"
 #include "Kikan/renderer/stdRenderer/buffers/VertexBufferLayout.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     struct IVertex {
     public:
         /*
@@ -13,5 +13,5 @@ namespace Kikan { namespace Renderer {
          */
         float texture{};
     };
-} }
+}
 #endif //KIKAN_IVERTEX_H

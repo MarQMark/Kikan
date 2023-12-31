@@ -38,7 +38,7 @@ namespace Kikan {
         update_fps();
         update_title();
 
-        if(glfwWindowShouldClose(((Renderer::StdRenderer*)_renderer)->getWindow())){
+        if(glfwWindowShouldClose(((StdRenderer*)_renderer)->getWindow())){
             _should_run = false;
             return;
         }
@@ -57,7 +57,7 @@ namespace Kikan {
         if(postRender != nullptr) postRender(this);
     }
 
-    Renderer::Renderer *Engine::getRenderer() {
+    Renderer *Engine::getRenderer() {
         return _renderer;
     }
 
@@ -77,14 +77,14 @@ namespace Kikan {
         if(_title.empty()){
             std::stringstream ss;
             ss << "KIKAN - FPS: " << time.fps;
-            glfwSetWindowTitle(((Renderer::StdRenderer*)_renderer)->getWindow(), ss.str().c_str());
+            glfwSetWindowTitle(((StdRenderer*)_renderer)->getWindow(), ss.str().c_str());
         }
         else {
-            glfwSetWindowTitle(((Renderer::StdRenderer*)_renderer)->getWindow(), _title.c_str());
+            glfwSetWindowTitle(((StdRenderer*)_renderer)->getWindow(), _title.c_str());
         }
     }
 
-    Ecs::ECS *Engine::getECS() {
+    ECS *Engine::getECS() {
         return _ecs;
     }
 

@@ -4,7 +4,7 @@
 #include <vector>
 #include "GL/glew.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     struct VertexBufferElement{
         unsigned int type;
         GLint count;
@@ -63,6 +63,6 @@ namespace Kikan { namespace Renderer {
         std::vector<VertexBufferElement> _elements;
         GLsizei _stride = 0;
     };
-} }
+}
 
 #endif //KIKAN_VERTEX_BUFFER_LAYOUT_H

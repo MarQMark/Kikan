@@ -3,7 +3,7 @@
 
 #include "Batch.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class AutoBatch{
     public:
          explicit AutoBatch(VertexBufferLayout* vbl, GLuint vertexSize, float textureID);
@@ -31,6 +31,6 @@ namespace Kikan { namespace Renderer {
         GLuint _next_index = 0;
         std::vector<GLuint> _indices;
     };
-} }
+}
 
 #endif //KIKAN_AUTO_BATCH_H

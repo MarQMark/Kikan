@@ -2,7 +2,7 @@
 #include "Kikan/core/Logging.h"
 #include "Kikan/ecs/Util.h"
 
-namespace Kikan { namespace Ecs {
+namespace Kikan {
     ECS::ECS(const std::string& name) {
         auto* defaultScene = new Scene(name);
         _currScene = defaultScene;
@@ -104,4 +104,4 @@ namespace Kikan { namespace Ecs {
     }
 
 
-}}
+}

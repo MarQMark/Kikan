@@ -4,7 +4,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtx/transform.hpp"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class Camera {
     public:
         Camera() {
@@ -26,6 +26,6 @@ namespace Kikan { namespace Renderer {
 
         glm::mat4x4 _matrix{};
     };
-} }
+}
 
 #endif //KIKAN_CAMERA_H

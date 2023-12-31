@@ -3,7 +3,7 @@
 #include "Kikan/core/Logging.h"
 #include "Kikan/ecs/Util.h"
 
-namespace Kikan { namespace Ecs {
+namespace Kikan {
     std::string Scene::name() {
         return _name;
     }
@@ -65,4 +65,4 @@ namespace Kikan { namespace Ecs {
     void Scene::getEntities(std::vector<unsigned int> *signatures, std::vector<Entity *>* entities) {
         Util::getEntities(signatures, entities, _entities);
     }
-} }
+}

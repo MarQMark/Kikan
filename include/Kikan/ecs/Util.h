@@ -5,7 +5,7 @@
 #include "Kikan/ecs/Entity.h"
 #include "Kikan/ecs/systems/ISystem.h"
 
-namespace Kikan { namespace Ecs {
+namespace Kikan {
 
     class Util{
     public:
@@ -96,6 +96,6 @@ namespace Kikan { namespace Ecs {
             return e;
         }
     };
-}}
+}
 
 #endif //KIKAN_UTIL_H

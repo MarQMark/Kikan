@@ -4,7 +4,7 @@
 #include <vector>
 #include "Kikan/ecs/Scene.h"
 
-namespace Kikan { namespace Ecs {
+namespace Kikan {
     class ECS {
     public:
         ECS(const std::string& name = "default");
@@ -51,6 +51,6 @@ namespace Kikan { namespace Ecs {
         std::vector<Scene*> _scenes;
         Scene* _currScene;
     };
-}}
+}
 
 #endif //KIKAN_ECS_H

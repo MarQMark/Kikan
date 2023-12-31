@@ -4,7 +4,7 @@
 #include "Kikan/renderer/stdRenderer/batching/AutoBatch.h"
 #include "Kikan/renderer/stdRenderer/buffers/IndexBuffer.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize, float textureID) : _textureID(textureID) {
         _vertex_space.size = vertexSize;
         _vbl = vbl;
@@ -80,4 +80,4 @@ namespace Kikan { namespace Renderer {
         //draw
         glDrawElements(GL_TRIANGLES, (GLsizei) _indices.size(), GL_UNSIGNED_INT, nullptr);
     }
-} }
+}

@@ -9,11 +9,11 @@ namespace Kikan {
     class IRenderSystem : public ISystem {
     public:
         IRenderSystem() {
-            _renderer = (Renderer::StdRenderer*)Engine::Kikan()->getRenderer();
+            _renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
         };
 
     protected:
-        Renderer::StdRenderer* _renderer{};
+        StdRenderer* _renderer{};
     };
 }
 

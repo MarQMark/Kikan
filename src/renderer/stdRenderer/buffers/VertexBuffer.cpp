@@ -1,6 +1,6 @@
 #include "Kikan/renderer/stdRenderer/buffers/VertexBuffer.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     VertexBuffer::VertexBuffer(VertexBufferLayout *vbl, unsigned int vertexSize) {
         _vbl = vbl;
         _vertex_size = vertexSize;
@@ -31,4 +31,4 @@ namespace Kikan { namespace Renderer {
             offset += element.count * VertexBufferElement::getTypeSize(element.type);
         }
     }
-} }
+}

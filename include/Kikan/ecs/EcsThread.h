@@ -5,7 +5,7 @@
 #include "Kikan/ecs/systems/ISystem.h"
 #include "Kikan/ecs/Entity.h"
 
-namespace Kikan { namespace Ecs {
+namespace Kikan {
     class EcsThread {
         enum Status {
             UNKNOWN,
@@ -42,6 +42,6 @@ namespace Kikan { namespace Ecs {
         uint32_t _timout;
         uint32_t _maxTimeout;
     };
-}}
+}
 
 #endif //KIKAN_ECSTHREAD_H

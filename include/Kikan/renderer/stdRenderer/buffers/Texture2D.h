@@ -4,7 +4,7 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class Texture2D {
     public:
         Texture2D(GLsizei width, GLsizei height, float data[], GLenum filter = GL_NEAREST);
@@ -25,6 +25,6 @@ namespace Kikan { namespace Renderer {
         GLsizei _width;
         GLsizei _height;
     };
-} }
+}
 
 #endif //KIKAN_TEXTURE2D_H

@@ -4,7 +4,7 @@
 #include <vector>
 #include "GL/glew.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class IndexBuffer {
     public:
         explicit IndexBuffer(std::vector<GLuint>& indices);
@@ -16,6 +16,6 @@ namespace Kikan { namespace Renderer {
     private:
         GLuint _id = 0;
     };
-} }
+}
 
 #endif //KIKAN_INDEX_BUFFER_H

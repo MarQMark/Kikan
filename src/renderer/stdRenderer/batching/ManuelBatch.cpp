@@ -3,7 +3,7 @@
 #include "Kikan/renderer/stdRenderer/buffers/VertexBuffer.h"
 #include "Kikan/renderer/stdRenderer/buffers/IndexBuffer.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     ManuelBatch::ManuelBatch(VertexBufferLayout *vbl, GLuint vertexSize) :
      _vbl(vbl) {
         _vertex_space.size = vertexSize;
@@ -40,4 +40,4 @@ namespace Kikan { namespace Renderer {
     void ManuelBatch::removeTexture(GLsizei id) {
         _textures.erase(id);
     }
-} }
+}

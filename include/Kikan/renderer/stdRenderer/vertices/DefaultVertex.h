@@ -4,7 +4,7 @@
 #include "glm/glm.hpp"
 #include "IVertex.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     struct DefaultVertex : IVertex {
         glm::vec3 position;
         glm::vec2 textureCoords;
@@ -21,6 +21,6 @@ namespace Kikan { namespace Renderer {
             return layout;
         }
     };
-} }
+}
 
 #endif //KIKAN_DEFAULT_VERTEX_H

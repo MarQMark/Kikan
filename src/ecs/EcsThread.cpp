@@ -3,8 +3,8 @@
 #include "Kikan/ecs/Util.h"
 #include <chrono>
 
-namespace Kikan { namespace Ecs {
-    Kikan::Ecs::EcsThread::~EcsThread() {
+namespace Kikan {
+    Kikan::EcsThread::~EcsThread() {
         for (auto *system: _systems) {
             delete system;
         }
@@ -14,7 +14,7 @@ namespace Kikan { namespace Ecs {
         delete _t;
     }
 
-    Kikan::Ecs::EcsThread::EcsThread(uint32_t cycleTime, uint32_t timout)
+    Kikan::EcsThread::EcsThread(uint32_t cycleTime, uint32_t timout)
             : _cycleTime(cycleTime), _timout(timout) {
         _maxTimeout = timout;
     }
@@ -67,4 +67,4 @@ namespace Kikan { namespace Ecs {
         Util::removeEntity(entity, &_entities, &_systems);
     }
 
-    }}
+}

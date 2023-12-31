@@ -7,7 +7,7 @@
 #include "GLFW/glfw3.h"
 #include "Kikan/renderer/stdRenderer/vertices/IVertex.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class VertexBuffer {
     public:
         explicit VertexBuffer(VertexBufferLayout* vbl, unsigned int vertexSize);
@@ -25,6 +25,6 @@ namespace Kikan { namespace Renderer {
 
         GLint _offset = 0;
     };
-} }
+}
 
 #endif //KIKAN_VERTEX_BUFFER_H

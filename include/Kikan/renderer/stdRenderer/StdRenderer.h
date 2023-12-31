@@ -13,7 +13,7 @@
 #include "Kikan/renderer/stdRenderer/vertices/VertexRegistry.h"
 #include "Font.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
 class StdRenderer : public Renderer {
     public:
         class Override{
@@ -132,6 +132,6 @@ class StdRenderer : public Renderer {
         void setup_openGl();
         static uint64_t auto_batch_id(uint32_t signature, uint16_t prio, float textureID);
     };
-} }
+}
 
 #endif //KIKAN_STD_RENDERER_H

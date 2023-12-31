@@ -6,7 +6,7 @@
 #include "typeinfo"
 #include "Kikan/renderer/stdRenderer/buffers/VertexBufferLayout.h"
 
-namespace Kikan { namespace Renderer {
+namespace Kikan {
     class VertexRegistry {
     public:
 
@@ -41,6 +41,6 @@ namespace Kikan { namespace Renderer {
         static std::map<unsigned int, VertexBufferLayout *> _vertex_layouts;
         static int _last_signature;
     };
-} }
+}
 
 #endif //KIKAN_VERTEX_REGISTRY_H
