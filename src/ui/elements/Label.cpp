@@ -4,16 +4,12 @@
 #include "Kikan/Engine.h"
 
 namespace Kikan{
-    void LabelPreRender(AutoBatch* batch, void* data){
-        auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
-        renderer->shader()->uniformM4fv("u_mvp", Engine::Kikan()->getUI()->getMVP());
-    }
 
-    Label::Label(glm::vec2 pos, glm::vec2 dim, std::string text) : _text(std::move(text)){
+    Label::Label(glm::vec2 pos, glm::vec2 dim, std::string text) : IUIElement(), _text(std::move(text)){
         init(pos, dim);
     }
 
-    Label::Label(glm::vec2 pos, glm::vec2 dim, Texture2D *txt) : _txt(txt) {
+    Label::Label(glm::vec2 pos, glm::vec2 dim, Texture2D *txt) : IUIElement(), _txt(txt) {
         init(pos, dim);
     }
 
@@ -27,8 +23,6 @@ namespace Kikan{
         _txt_pos[1] = glm::vec2(pos.x + dim.x,  pos.y);
         _txt_pos[2] = glm::vec2(pos.x + dim.x,  pos.y - dim.y);
         _txt_pos[3] = glm::vec2(pos.x,          pos.y - dim.y);
-
-        _opt.preRender = LabelPreRender;
     }
 
     void Label::render() {

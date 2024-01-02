@@ -59,7 +59,6 @@ namespace Kikan {
         };
         float _txt_layer_offset  = -0.011f;
 
-        struct StdRenderer::Options _opt;
         void init(glm::vec2 pos, glm::vec2 dim);
     };
 }
