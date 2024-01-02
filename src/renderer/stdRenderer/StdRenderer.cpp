@@ -261,7 +261,7 @@ namespace Kikan {
 
         std::vector<IVertex*> iVertices(vertices.size());
         for (uint32_t i = 0; i < vertices.size(); i++) {
-            vertices[i].color = options.color;
+            vertices[i].color = glm::vec4(0);//options.color; // TODO: Fix Font coloring
             iVertices[i] = &vertices[i];
             iVertices[i]->texture = (float)font->getID();
         }

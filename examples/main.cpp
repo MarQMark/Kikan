@@ -17,6 +17,7 @@
 
 #include "Kikan/ecs/Util.h"
 #include "Kikan/ecs/components/AASprite.h"
+#include "Kikan/ui/elements/Label.h"
 
 double tt = 0;
 
@@ -124,6 +125,9 @@ int WinMain() {
     std::vector<Kikan::Entity*> es;
     engine->getECS()->getScene()->getEntities(getSig(Kikan::Transform), &es);
     //Kikan::Entity* e = engine->getECS()->getScene()->getEntity(getSigs(sig(Kikan::Physics), sig(Kikan::LineQuadSprite)));
+
+    auto* label = new Kikan::Label(glm::vec2(-1,0), glm::vec2(1, .2), "test");
+    engine->getUI()->addElement(label);
 
     while (engine->shouldRun()) {
         engine->update();

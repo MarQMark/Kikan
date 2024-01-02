@@ -4,13 +4,15 @@
 #include <vector>
 #include "glm/glm.hpp"
 
-#include "Kikan/ui/elements/Interactable.h"
+#include "Kikan/ui/elements/IInteractable.h"
 
 namespace Kikan {
     class UI {
     public:
         UI();
         ~UI();
+
+        float renderLayer = -0.5;
 
         void setDimensions(uint32_t width, uint32_t height);
 
@@ -22,15 +24,20 @@ namespace Kikan {
          */
         void setMVP(glm::mat4x4 mvp);
 
-        void addElement(UIElement* element);
+        void addElement(IUIElement* element);
 
-        void render();
+        void update();
     private:
-        std::vector<Interactable*> _interactables;
-        std::vector<UIElement*> _ui_elements;
+        std::vector<IInteractable*> _interactables;
+        std::vector<IUIElement*> _ui_elements;
 
         uint32_t _width, _height;
         glm::mat4x4 _mvp{};
+
+        /*
+         *  Does not preform the render call only adds vertices to batch
+         */
+        void render();
     };
 }
 

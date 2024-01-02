@@ -3,6 +3,7 @@ project("KikanUI")
 #add all source files
 set(SOURCE_FILES
         UI.cpp
+        elements/Label.cpp
 )
 
 add_library(KikanUI ${SOURCE_FILES})

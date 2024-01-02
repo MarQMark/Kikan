@@ -48,6 +48,8 @@ namespace Kikan {
                 "    vec4 color = v_color;\n"
                 "\n"
                 "    color = mix(color, texture(u_sampler, v_texCoords), step(0., v_textureSlot));\n"
+                "    if(color.w == 0)\n"
+                "       discard;\n"
                 "\n"
                 "    fragColor = color;\n"
                 "}";

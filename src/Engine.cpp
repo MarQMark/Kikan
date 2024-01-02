@@ -46,10 +46,13 @@ namespace Kikan {
         if(preUpdate) preUpdate(this);
 
         // UPDATE
-        getECS()->update(_dt);
+        _ecs->update(_dt);
 
         if(postUpdate) postUpdate(this);
         if(preRender) preRender(this);
+
+        // update UI
+        _ui->update();
 
         // RENDER
         _renderer->render(_dt);
