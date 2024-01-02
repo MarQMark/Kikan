@@ -4,15 +4,15 @@
 
 namespace Kikan {
     UI::UI() {
-
+        resetMVP();
     }
 
     UI::~UI() {
 
     }
 
-    void UI::setDimensions(uint32_t width, uint32_t height) {
-        _mvp = glm::scale(_mvp, glm::vec3(width, height, 1.0f));
+    void UI::setDimensions(float width, float height) {
+        _mvp = glm::scale(_mvp, glm::vec3(1.f/width, 1.f/height, 1.0f));
     }
 
     void UI::setMVP(glm::mat4x4 mvp) {
@@ -35,7 +35,7 @@ namespace Kikan {
         render();
 
         double mouseX =  2 * Engine::Kikan()->getInput()->mouseX() / ((StdRenderer*)Engine::Kikan()->getRenderer())->getWidth()  - 1;
-        double mouseY = -2 * Engine::Kikan()->getInput()->mouseY() / ((StdRenderer*)Engine::Kikan()->getRenderer())->getHeight() + 1;
+        double mouseY =  2 * Engine::Kikan()->getInput()->mouseY() / ((StdRenderer*)Engine::Kikan()->getRenderer())->getHeight() + 1;
 
         glm::vec4 mouse = glm::vec4(mouseX, mouseY, 1, 1);
         mouse = glm::inverse(_mvp) * mouse;
@@ -49,12 +49,22 @@ namespace Kikan {
             }
         }
 
-        kikanPrint("x: %f  y: %f\n", mouseX, mouseY);
+        //kikanPrint("x: %f  y: %f\n", mouse.x, mouse.y);
     }
 
     void UI::render() {
         for (auto* e : _ui_elements) {
             e->render();
         }
+    }
+
+    glm::mat4x4 UI::getMVP() {
+        return _mvp;
+    }
+
+    void UI::resetMVP() {
+        _mvp = glm::mat4x4(1.0f);
+        _mvp = glm::translate(_mvp, glm::vec3(-1, 1, 0));
+        _mvp = glm::scale(_mvp, glm::vec3(2.f, 2.f, 1.0f));
     }
 }

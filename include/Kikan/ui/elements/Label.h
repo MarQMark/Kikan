@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 #include "Kikan/renderer/stdRenderer/buffers/Texture2D.h"
 #include "Kikan/renderer/stdRenderer/Font.h"
+#include "Kikan/renderer/stdRenderer/StdRenderer.h"
 
 namespace Kikan {
     class Label : public IUIElement {
@@ -58,6 +59,7 @@ namespace Kikan {
         };
         float _txt_layer_offset  = -0.011f;
 
+        struct StdRenderer::Options _opt;
         void init(glm::vec2 pos, glm::vec2 dim);
     };
 }

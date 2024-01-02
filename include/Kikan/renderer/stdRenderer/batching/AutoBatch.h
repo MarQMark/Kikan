@@ -4,7 +4,7 @@
 #include "Batch.h"
 
 namespace Kikan {
-    class AutoBatch{
+    class AutoBatch {
     public:
          explicit AutoBatch(VertexBufferLayout* vbl, GLuint vertexSize, float textureID);
         ~AutoBatch();
@@ -14,6 +14,8 @@ namespace Kikan {
 
         void render();
 
+        void addPreRender(void(*fn)(AutoBatch*, void*), void* data);
+        void addPostRender(void(*fn)(AutoBatch*, void*), void* data);
     private:
         int add_vertices(std::vector<IVertex*>& vertices, int start, int stop);
 
@@ -30,6 +32,11 @@ namespace Kikan {
 
         GLuint _next_index = 0;
         std::vector<GLuint> _indices;
+
+        void(*_pre_render)(AutoBatch* batch, void* data) = nullptr;
+        void(*_post_render)(AutoBatch* batch, void* data) = nullptr;
+        void* _pre_render_data = nullptr;
+        void* _post_render_data = nullptr;
     };
 }
 

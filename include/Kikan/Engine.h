@@ -38,7 +38,6 @@ namespace Kikan {
         void update();
 
 
-
         Renderer* getRenderer();
         ECS* getECS();
         Input* getInput();

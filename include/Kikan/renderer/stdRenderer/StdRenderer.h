@@ -22,6 +22,13 @@ class StdRenderer : public Renderer {
             virtual void postRender(StdRenderer* renderer, double dt) = 0;
         };
 
+        struct Options{
+            void(*preRender)(AutoBatch*, void*) = nullptr;
+            void(*postRender)(AutoBatch*, void*) = nullptr;
+            void* preRenderData = nullptr;
+            void* postRenderData = nullptr;
+        };
+
         StdRenderer(int width, int height) : _width(width), _height(height) {
             setup_openGl();
         }
@@ -39,7 +46,7 @@ class StdRenderer : public Renderer {
         /*
         *  Uses Auto-batching with DefaultVertex.
         */
-        void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer);
+        void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer, Options* opt = nullptr);
 
         /*
         *  Uses Auto-batching with DefaultVertex.
@@ -50,7 +57,7 @@ class StdRenderer : public Renderer {
         *      |        |
         *      4 ------ 3
         */
-        void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer);
+        void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer, Options* opt = nullptr);
 
         /*
         *  Uses Auto-batching with DefaultVertex.
@@ -59,7 +66,7 @@ class StdRenderer : public Renderer {
         *  This means Polygons cannot intersect with themselves, cannot have holes and
         *  three or more vertices cannot form a line
         */
-        void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer);
+        void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer, Options* opt = nullptr);
 
         /*
         * Uses Auto-batching with DefaultVertex.
@@ -73,14 +80,14 @@ class StdRenderer : public Renderer {
         *      |        |
         *      4 ------ 3
         */
-        void renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0);
+        void renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0, Options* opt = nullptr);
 
         /*
         * Uses Auto-batching with DefaultVertex.
         *
         * If not font is specified the default font is used
         */
-        void renderText(std::string text, glm::vec2 pos, float height, float layer = 0, Font::Options options = {});
+        void renderText(std::string text, glm::vec2 pos, float height, float layer = 0, Font::Options options = {}, Options* opt = nullptr);
 
         /*
         *  Each Auto-Batch gets an unique ID: 2 Bytes Priority + 4 Bytes Vertex Signature + 2 Bytes Texture ID
@@ -89,7 +96,7 @@ class StdRenderer : public Renderer {
         *       For each new prio a new batch gets created
         */
         template <class T>
-        void autoBatch(std::vector<IVertex*> vertices, uint16_t prio = 0, std::vector<GLuint>* indices = nullptr);
+        void autoBatch(std::vector<IVertex*> vertices, uint16_t prio = 0, std::vector<GLuint>* indices = nullptr, Options* opt = nullptr);
 
         void addBatch(ManuelBatch* batch, unsigned int key);
         ManuelBatch* getBatch(unsigned int key);

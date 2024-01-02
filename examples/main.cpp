@@ -126,7 +126,9 @@ int WinMain() {
     engine->getECS()->getScene()->getEntities(getSig(Kikan::Transform), &es);
     //Kikan::Entity* e = engine->getECS()->getScene()->getEntity(getSigs(sig(Kikan::Physics), sig(Kikan::LineQuadSprite)));
 
-    auto* label = new Kikan::Label(glm::vec2(-1,0), glm::vec2(1, .2), "test");
+    engine->getUI()->setDimensions(100.f, 100.f);
+    auto* label = new Kikan::Label(glm::vec2(0,0), glm::vec2(50, 50), "test");
+    label->setFontSize(10);
     engine->getUI()->addElement(label);
 
     while (engine->shouldRun()) {

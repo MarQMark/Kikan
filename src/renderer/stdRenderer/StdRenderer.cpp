@@ -68,9 +68,6 @@ namespace Kikan {
     void StdRenderer::render(double dt) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        _shaders["default"]->bind();
-        _shaders["default"]->uniformM4fv("u_mvp", mvp);
-
         if (preRender) preRender(_o_pre_render, this, dt);
         if (_override_render) _override_render->preRender(this, dt);
 
@@ -93,7 +90,7 @@ namespace Kikan {
         glfwPollEvents();
     }
 
-    void StdRenderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer) {
+    void StdRenderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer, Options* opt) {
         std::vector<IVertex *> vertices(3);
 
         DefaultVertex v1;
@@ -117,10 +114,10 @@ namespace Kikan {
         v3.texture = -1;
         vertices[2] = &v3;
 
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer));
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer), nullptr, opt);
     }
 
-    void StdRenderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer) {
+    void StdRenderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer, Options* opt) {
         std::vector<IVertex *> vertices(4);
 
         DefaultVertex v1;
@@ -146,10 +143,10 @@ namespace Kikan {
         }
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices);
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices, opt);
     }
 
-    void StdRenderer::renderPolygon(std::vector<glm::vec2> &points, glm::vec4 color, float layer) {
+    void StdRenderer::renderPolygon(std::vector<glm::vec2> &points, glm::vec4 color, float layer, Options* opt) {
         std::vector<IVertex *> vertices(points.size());
         std::vector<DefaultVertex> data(points.size());
         for (int i = 0; i < (int)points.size(); ++i) {
@@ -165,10 +162,10 @@ namespace Kikan {
         if (result < 0)
             std::cout << "[ERROR] Could not triangulate Polygon" << std::endl;
 
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices);
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices, opt);
     }
 
-    void StdRenderer::renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color, float layer){
+    void StdRenderer::renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color, float layer, Options* opt){
         std::vector<IVertex *> vertices(4);
 
         DefaultVertex v1;
@@ -197,10 +194,10 @@ namespace Kikan {
         }
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices);
+        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices, opt);
     }
 
-    void StdRenderer::renderText(std::string text, glm::vec2 pos, float height, float layer, Font::Options options){
+    void StdRenderer::renderText(std::string text, glm::vec2 pos, float height, float layer, Font::Options options, Options* opt){
         Font* font = options.font;
         if(!font)
             font = _fonts["default"];
@@ -265,11 +262,11 @@ namespace Kikan {
             iVertices[i] = &vertices[i];
             iVertices[i]->texture = (float)font->getID();
         }
-        autoBatch<DefaultVertex>(iVertices, renderPrio(layer), &indices);
+        autoBatch<DefaultVertex>(iVertices, renderPrio(layer), &indices, opt);
     }
 
     template<class T>
-    void StdRenderer::autoBatch(std::vector<IVertex *> vertices, uint16_t prio, std::vector<GLuint> *indices) {
+    void StdRenderer::autoBatch(std::vector<IVertex *> vertices, uint16_t prio, std::vector<GLuint> *indices, Options* opt) {
         if(vertices.empty())
             return;
 
@@ -291,6 +288,12 @@ namespace Kikan {
                     _auto_batches[id]->addVertices(vertices, start, stop);
                 else
                     _auto_batches[id]->addVertices(vertices, *indices, start, stop);
+
+                // Set Pre/Post Render
+                if(opt){
+                    _auto_batches[id]->addPreRender(opt->preRender, opt->preRenderData);
+                    _auto_batches[id]->addPostRender(opt->postRender, opt->postRenderData);
+                }
 
                 // Update start and position
                 start = stop + 1;

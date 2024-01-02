@@ -3,11 +3,22 @@
 #include <cstring>
 #include "Kikan/renderer/stdRenderer/batching/AutoBatch.h"
 #include "Kikan/renderer/stdRenderer/buffers/IndexBuffer.h"
+#include "Kikan/Engine.h"
 
 namespace Kikan {
+    void AutoBatchPreRender(AutoBatch* batch, void* data){
+        auto* shader = (Shader*)data;
+        shader->bind();
+        shader->uniformM4fv("u_mvp", ((StdRenderer*)Engine::Kikan()->getRenderer())->mvp);
+    }
+
     AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize, float textureID) : _textureID(textureID) {
         _vertex_space.size = vertexSize;
         _vbl = vbl;
+
+        auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
+        _pre_render_data = renderer->shader();
+        _pre_render = AutoBatchPreRender;
     }
 
     AutoBatch::~AutoBatch() {
@@ -77,7 +88,23 @@ namespace Kikan {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, (unsigned int) _textureID);
 
+        if(_pre_render)
+            _pre_render(this, _pre_render_data);
+
         //draw
         glDrawElements(GL_TRIANGLES, (GLsizei) _indices.size(), GL_UNSIGNED_INT, nullptr);
+
+        if(_post_render)
+            _post_render(this, _post_render_data);
+    }
+
+    void AutoBatch::addPreRender(void (*fn)(AutoBatch *, void *), void *data) {
+        _pre_render = fn;
+        _pre_render_data = data;
+    }
+
+    void AutoBatch::addPostRender(void (*fn)(AutoBatch *, void *), void *data) {
+        _post_render = fn;
+        _post_render_data = data;
     }
 }

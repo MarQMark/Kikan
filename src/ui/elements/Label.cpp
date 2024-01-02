@@ -4,6 +4,11 @@
 #include "Kikan/Engine.h"
 
 namespace Kikan{
+    void LabelPreRender(AutoBatch* batch, void* data){
+        auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
+        renderer->shader()->uniformM4fv("u_mvp", Engine::Kikan()->getUI()->getMVP());
+    }
+
     Label::Label(glm::vec2 pos, glm::vec2 dim, std::string text) : _text(std::move(text)){
         init(pos, dim);
     }
@@ -22,16 +27,16 @@ namespace Kikan{
         _txt_pos[1] = glm::vec2(pos.x + dim.x,  pos.y);
         _txt_pos[2] = glm::vec2(pos.x + dim.x,  pos.y - dim.y);
         _txt_pos[3] = glm::vec2(pos.x,          pos.y - dim.y);
+
+        _opt.preRender = LabelPreRender;
     }
 
     void Label::render() {
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
         float renderLayer = Engine::Kikan()->getUI()->renderLayer;
 
-        // TODO: Not use default shaders due to mvp matrix
-
         if(_txt)
-            renderer->renderTexture2D(_txt_pos, _txt_coords, _txt->get(), _bg_color, renderLayer + _txt_layer_offset);
+            renderer->renderTexture2D(_txt_pos, _txt_coords, _txt->get(), _bg_color, renderLayer + _txt_layer_offset, &_opt);
         else if(_bg_color.w != 0)
             renderer->renderQuad(
                     glm::vec2(pos.x,          pos.y),
@@ -39,10 +44,11 @@ namespace Kikan{
                     glm::vec2(pos.x + dim.x,  pos.y - dim.y),
                     glm::vec2(pos.x,          pos.y - dim.y),
                     _bg_color,
-                    renderLayer + _bg_layer_offset);
+                    renderLayer + _bg_layer_offset,
+                    &_opt);
 
         if(!_text.empty())
-            renderer->renderText(_text, pos, dim.y, renderLayer + _font_layer_offset, _font_options);
+            renderer->renderText(_text, pos, _font_size, renderLayer + _font_layer_offset, _font_options, &_opt);
     }
 
     void Label::setBgLayerOffset(float offset) {

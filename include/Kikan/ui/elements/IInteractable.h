@@ -3,6 +3,7 @@
 
 #include "IUIElement.h"
 #include "Kikan/core/Logging.h"
+#include <vector>
 
 namespace Kikan {
     class IInteractable : public IUIElement {
@@ -23,8 +24,12 @@ namespace Kikan {
         };
 
         void changeState(State state){
+            if(_prev_state == state)
+                return;
+
             _prev_state = _state;
             _state = state;
+            stateChange();
         }
 
         State getState(){

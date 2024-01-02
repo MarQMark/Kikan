@@ -14,7 +14,7 @@ namespace Kikan {
 
         float renderLayer = -0.5;
 
-        void setDimensions(uint32_t width, uint32_t height);
+        void setDimensions(float width, float height);
 
         /*
          * Using this is discouraged if not strictly necessary
@@ -23,6 +23,8 @@ namespace Kikan {
          * If this is used it has to be set again after every resize event (subject to change)
          */
         void setMVP(glm::mat4x4 mvp);
+        glm::mat4x4 getMVP();
+        void resetMVP();
 
         void addElement(IUIElement* element);
 
