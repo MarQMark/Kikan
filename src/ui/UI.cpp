@@ -34,19 +34,31 @@ namespace Kikan {
     void UI::update() {
         render();
 
-        double mouseX =  2 * Engine::Kikan()->getInput()->mouseX() / ((StdRenderer*)Engine::Kikan()->getRenderer())->getWidth()  - 1;
-        double mouseY =  2 * Engine::Kikan()->getInput()->mouseY() / ((StdRenderer*)Engine::Kikan()->getRenderer())->getHeight() + 1;
+        auto* input = Engine::Kikan()->getInput();
+        double mouseX =  2 * input->mouseX() / ((StdRenderer*)Engine::Kikan()->getRenderer())->getWidth()  - 1;
+        double mouseY =  2 * input->mouseY() / ((StdRenderer*)Engine::Kikan()->getRenderer())->getHeight() + 1;
 
         glm::vec4 mouse = glm::vec4(mouseX, mouseY, 1, 1);
         mouse = glm::inverse(_mvp) * mouse;
 
+        // TODO: Fix this mess
         for(auto* interactable : _interactables){
             if(isInside(mouse, interactable->pos, interactable->dim)){
-                interactable->changeState(IInteractable::State::HOVERED);
+                if(input->mousePressed(Mouse::BUTTON_LEFT)){
+                    if(interactable->getState() == IInteractable::State::PRESSED)
+                        interactable->changeState(IInteractable::State::HELD);
+                    else
+                        interactable->changeState(IInteractable::State::PRESSED);
+                }
+                else
+                    interactable->changeState(IInteractable::State::HOVERED);
             }
             else{
                 interactable->changeState(IInteractable::State::NONE);
             }
+
+            if(interactable->getState() == IInteractable::State::PRESSED)
+                kikanPrint("%d \n", interactable->getState());
         }
 
         //kikanPrint("x: %f  y: %f\n", mouse.x, mouse.y);
@@ -63,6 +75,7 @@ namespace Kikan {
     }
 
     void UI::resetMVP() {
+        //TODO: Fix matrix
         _mvp = glm::mat4x4(1.0f);
         _mvp = glm::translate(_mvp, glm::vec3(-1, 1, 0));
         _mvp = glm::scale(_mvp, glm::vec3(2.f, 2.f, 1.0f));

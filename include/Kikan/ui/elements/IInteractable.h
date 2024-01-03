@@ -8,6 +8,9 @@
 namespace Kikan {
     class IInteractable : public IUIElement {
     public:
+        IInteractable() : IUIElement() {
+        }
+
         ~IInteractable(){
             for(auto* callback : _callbacks)
                 delete callback;
@@ -67,15 +70,27 @@ namespace Kikan {
         }
 
         void stateChange(){
+            if(!_enabled)
+                return;
+
             for(auto* callback : _callbacks){
                 if(callback->state == State::ALL || callback->state == _state)
                     callback->callback(this, callback->data);
             }
         }
 
+        void disable(){
+            _enabled = false;
+        }
+        void enable(){
+            _enabled = true;
+        }
+
     private:
         State _state = State::NONE;
         State _prev_state = State::NONE;
+
+        bool _enabled = true;
 
         struct Callback{
             void(*callback)(IInteractable* interactable, void* data);

@@ -5,6 +5,7 @@ set(SOURCE_FILES
         UI.cpp
         elements/IUIElement.cpp
         elements/Label.cpp
+        elements/Button.cpp
 )
 
 add_library(KikanUI ${SOURCE_FILES})

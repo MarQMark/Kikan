@@ -18,6 +18,7 @@
 #include "Kikan/ecs/Util.h"
 #include "Kikan/ecs/components/AASprite.h"
 #include "Kikan/ui/elements/Label.h"
+#include "Kikan/ui/elements/Button.h"
 
 double tt = 0;
 
@@ -129,7 +130,10 @@ int WinMain() {
     engine->getUI()->setDimensions(100.f, 100.f);
     auto* label = new Kikan::Label(glm::vec2(0,0), glm::vec2(50, 50), "test");
     label->setFontSize(10);
-    engine->getUI()->addElement(label);
+    //engine->getUI()->addElement(label);
+    auto* btn = new Kikan::Button(glm::vec2(0,0), glm::vec2(25, 25));
+    engine->getUI()->addElement(btn);
+
 
     while (engine->shouldRun()) {
         engine->update();
