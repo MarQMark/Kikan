@@ -5,11 +5,11 @@
 
 namespace Kikan{
 
-    Label::Label(glm::vec2 pos, glm::vec2 dim, std::string text) : IUIElement(), _text(std::move(text)){
+    Label::Label(std::string name, glm::vec2 pos, glm::vec2 dim, std::string text) : IUIElement(std::move(name)), _text(std::move(text)){
         init(pos, dim);
     }
 
-    Label::Label(glm::vec2 pos, glm::vec2 dim, Texture2D *txt) : IUIElement(), _txt(txt) {
+    Label::Label(std::string name, glm::vec2 pos, glm::vec2 dim, Texture2D *txt) : IUIElement(std::move(name)), _txt(txt) {
         init(pos, dim);
     }
 
@@ -25,24 +25,28 @@ namespace Kikan{
         _txt_pos[3] = glm::vec2(pos.x,          pos.y - dim.y);
     }
 
-    void Label::render() {
+    void Label::render(glm::vec2 parentPos) {
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
         float renderLayer = Engine::Kikan()->getUI()->renderLayer;
 
-        if(_txt)
-            renderer->renderTexture2D(_txt_pos, _txt_coords, _txt->get(), _bg_color, renderLayer + _txt_layer_offset, &_opt);
+        if(_txt){
+            glm::vec2 position[4];
+            for(int i = 0; i < 4; i++)
+                position[i] += _txt_pos[i] + parentPos;
+            renderer->renderTexture2D(position, _txt_coords, _txt->get(), _bg_color, renderLayer + _txt_layer_offset, &_opt);
+        }
         else if(_bg_color.w != 0)
             renderer->renderQuad(
-                    glm::vec2(pos.x,          pos.y),
-                    glm::vec2(pos.x + dim.x,  pos.y),
-                    glm::vec2(pos.x + dim.x,  pos.y - dim.y),
-                    glm::vec2(pos.x,          pos.y - dim.y),
+                    glm::vec2(parentPos.x + pos.x,          parentPos.y + pos.y),
+                    glm::vec2(parentPos.x + pos.x + dim.x,  parentPos.y + pos.y),
+                    glm::vec2(parentPos.x + pos.x + dim.x,  parentPos.y + pos.y - dim.y),
+                    glm::vec2(parentPos.x + pos.x,          parentPos.y + pos.y - dim.y),
                     _bg_color,
                     renderLayer + _bg_layer_offset,
                     &_opt);
 
         if(!_text.empty())
-            renderer->renderText(_text, pos, _font_size, renderLayer + _font_layer_offset, _font_options, &_opt);
+            renderer->renderText(_text, pos + parentPos, _font_size, renderLayer + _font_layer_offset, _font_options, &_opt);
     }
 
     void Label::setBgLayerOffset(float offset) {
@@ -125,6 +129,10 @@ namespace Kikan{
 
     float Label::getTextureLayerOffset() const {
         return _txt_layer_offset;
+    }
+
+    void Label::destroy() {
+        delete this;
     }
 }
 

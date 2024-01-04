@@ -128,12 +128,29 @@ int WinMain() {
     //Kikan::Entity* e = engine->getECS()->getScene()->getEntity(getSigs(sig(Kikan::Physics), sig(Kikan::LineQuadSprite)));
 
     engine->getUI()->setDimensions(100.f, 100.f);
-    auto* label = new Kikan::Label(glm::vec2(0,80), glm::vec2(50, 50), "test");
+    auto* label = new Kikan::Label("Label", glm::vec2(0,80), glm::vec2(50, 50), "test");
     label->setFontSize(10);
     engine->getUI()->addElement(label);
-    auto* btn = new Kikan::Button(glm::vec2(20,40), glm::vec2(25, 25));
-    btn->setLayerOffset(-0.2);
-    engine->getUI()->addElement(btn);
+    {
+        auto* btn = new Kikan::Button("Button", glm::vec2(20,40), glm::vec2(25, 25));
+        btn->setLayerOffset(-0.2);
+        engine->getUI()->addElement(btn);
+    }
+    {
+        auto* btn = new Kikan::Button("Button2", glm::vec2(60,40), glm::vec2(25, 25));
+        btn->setLayerOffset(-0.2);
+        engine->getUI()->addElement(btn);
+    }
+    {
+        auto* btn = new Kikan::Button("Button3", glm::vec2(20,80), glm::vec2(25, 25));
+        btn->setLayerOffset(-0.2);
+        engine->getUI()->addElement(btn);
+    }
+    {
+        auto* btn = new Kikan::Button("Button4", glm::vec2(60,80), glm::vec2(25, 25));
+        btn->setLayerOffset(-0.2);
+        engine->getUI()->addElement(btn);
+    }
 
 
     while (engine->shouldRun()) {

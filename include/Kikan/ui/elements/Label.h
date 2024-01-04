@@ -11,8 +11,8 @@
 namespace Kikan {
     class Label : public IUIElement {
     public:
-        Label(glm::vec2 pos, glm::vec2 dim, std::string text);
-        Label(glm::vec2 pos, glm::vec2 dim, Texture2D* txt);
+        Label(std::string name, glm::vec2 pos, glm::vec2 dim, std::string text);
+        Label(std::string name, glm::vec2 pos, glm::vec2 dim, Texture2D* txt);
 
         void setBgLayerOffset(float offset);
         float getBgLayerOffset() const;
@@ -37,7 +37,9 @@ namespace Kikan {
         void setTextureLayerOffset(float offset);
         float getTextureLayerOffset() const;
 
-        void render() override;
+        void render(glm::vec2 parentPos) override;
+
+        void destroy() override;
     private:
         float _bg_layer_offset = -0.01f;
         glm::vec4 _bg_color = glm::vec4(0.5);

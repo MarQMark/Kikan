@@ -6,7 +6,7 @@
 namespace Kikan {
     class Button : public IInteractable {
     public:
-        Button(glm::vec2 pos, glm::vec2 dim);
+        Button(std::string name, glm::vec2 pos, glm::vec2 dim);
 
         void setColor(glm::vec4 color);
         void setHoverColor(glm::vec4 color);
@@ -20,7 +20,9 @@ namespace Kikan {
         void setLayerOffset(float offset);
         float getLayerOffset();
 
-        void render() override;
+        void render(glm::vec2 parentPos) override;
+
+        void destroy() override;
     private:
         glm::vec4 _base_color = glm::vec4(.2f, .4f, .8f, 1.f);
         glm::vec4 _hover_color;
@@ -31,6 +33,8 @@ namespace Kikan {
         bool _custom_disabled_color = false;
 
         float _layer_offset = -0.01;
+
+        float _focus_border;
 
         void adjust_colors();
     };

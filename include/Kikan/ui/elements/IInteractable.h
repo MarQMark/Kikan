@@ -8,7 +8,7 @@
 namespace Kikan {
     class IInteractable : public IUIElement {
     public:
-        IInteractable() : IUIElement() {
+        IInteractable(std::string name) : IUIElement(std::move(name)) {
         }
 
         ~IInteractable(){
@@ -70,7 +70,7 @@ namespace Kikan {
         }
 
         void stateChange(){
-            if(!_enabled)
+            if(!enabled)
                 return;
 
             for(auto* callback : _callbacks){
@@ -79,18 +79,16 @@ namespace Kikan {
             }
         }
 
-        void disable(){
-            _enabled = false;
-        }
-        void enable(){
-            _enabled = true;
-        }
+        // Even if not interactable it can still have focus
+        bool interactable = true;
 
+        // Do not use only for internal use
+        bool focused = false;
+
+        void destroy() override = 0;
     private:
         State _state = State::NONE;
         State _prev_state = State::NONE;
-
-        bool _enabled = true;
 
         struct Callback{
             void(*callback)(IInteractable* interactable, void* data);

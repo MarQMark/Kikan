@@ -2,7 +2,7 @@
 #include "Kikan/ui/elements/Helper.h"
 
 namespace Kikan{
-    IUIElement::IUIElement() {
+    IUIElement::IUIElement(std::string name) : _name(std::move(name)) {
         _opt.preRender = UIPreRender;
     }
 }

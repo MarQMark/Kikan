@@ -2,15 +2,17 @@
 #include "Kikan/Engine.h"
 
 namespace Kikan {
-    Button::Button(glm::vec2 pos, glm::vec2 dim) : IInteractable() {
+    Button::Button(std::string name, glm::vec2 pos, glm::vec2 dim) : IInteractable(std::move(name)) {
         this->pos = pos;
         this->dim = dim;
+        _focus_border = Engine::Kikan()->getUI()->getHeight() / 200.f;
         adjust_colors();
     }
 
-    void Button::render() {
+    void Button::render(glm::vec2 parentPos) {
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
         float renderLayer = Engine::Kikan()->getUI()->renderLayer;
+        glm::vec2 position = pos + parentPos;
 
         glm::vec4 color;
         switch (getState()) {
@@ -29,13 +31,49 @@ namespace Kikan {
         }
 
         renderer->renderQuad(
-                glm::vec2(pos.x,          pos.y),
-                glm::vec2(pos.x + dim.x,  pos.y),
-                glm::vec2(pos.x + dim.x,  pos.y - dim.y),
-                glm::vec2(pos.x,          pos.y - dim.y),
+                glm::vec2(position.x,          position.y),
+                glm::vec2(position.x + dim.x,  position.y),
+                glm::vec2(position.x + dim.x,  position.y - dim.y),
+                glm::vec2(position.x,          position.y - dim.y),
                 color,
                 renderLayer + _layer_offset,
                 &_opt);
+
+        if(focused){
+            float thickness = _focus_border;
+            renderer->renderQuad(
+                    glm::vec2(pos),
+                    glm::vec2(pos) + glm::vec2(dim.x,   0),
+                    glm::vec2(pos) + glm::vec2(dim.x,   0) + glm::vec2(0, -thickness),
+                    glm::vec2(pos) + glm::vec2(0,       -thickness),
+                    glm::vec4(.2,.2,.2,.5),
+                    renderLayer + _layer_offset - 0.01f,
+                    &_opt);
+            renderer->renderQuad(
+                    glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(-thickness, -thickness),
+                    glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(0,          -thickness),
+                    glm::vec2(pos) + glm::vec2(dim.x, -dim.y)  + glm::vec2(0,          thickness),
+                    glm::vec2(pos) + glm::vec2(dim.x, -dim.y)  + glm::vec2(-thickness, thickness),
+                    glm::vec4(.2,.2,.2,.5),
+                    renderLayer + _layer_offset - 0.01f,
+                    &_opt);
+            renderer->renderQuad(
+                    glm::vec2(pos) + glm::vec2(0,       -dim.y) + glm::vec2(0, thickness),
+                    glm::vec2(pos) + glm::vec2(dim.x,   -dim.y) + glm::vec2(0, thickness),
+                    glm::vec2(pos) + glm::vec2(dim.x,   -dim.y),
+                    glm::vec2(pos) + glm::vec2(0,       -dim.y),
+                    glm::vec4(.2,.2,.2,.5),
+                    renderLayer + _layer_offset - 0.01f,
+                    &_opt);
+            renderer->renderQuad(
+                    glm::vec2(pos) + glm::vec2(0,           -thickness),
+                    glm::vec2(pos) + glm::vec2(thickness,   -thickness),
+                    glm::vec2(pos) + glm::vec2(0,           -dim.y)    + glm::vec2(thickness, thickness),
+                    glm::vec2(pos) + glm::vec2(0,           -dim.y)    + glm::vec2(0,         thickness),
+                    glm::vec4(.2,.2,.2,.5),
+                    renderLayer + _layer_offset - 0.01f,
+                    &_opt);
+        }
     }
 
     void Button::adjust_colors() {
@@ -82,5 +120,9 @@ namespace Kikan {
     }
     float Button::getLayerOffset() {
         return _layer_offset;
+    }
+
+    void Button::destroy() {
+        delete this;
     }
 }

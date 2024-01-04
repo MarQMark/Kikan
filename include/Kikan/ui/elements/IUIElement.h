@@ -7,14 +7,25 @@
 namespace Kikan {
     class IUIElement {
     public:
-        IUIElement();
+        IUIElement(std::string name);
+        virtual ~IUIElement() = default;
 
         glm::vec2 pos = glm::vec2(0);
         glm::vec2 dim = glm::vec2(0);
 
+        bool enabled = true;
+
         struct StdRenderer::Options _opt;
 
-        virtual void render() = 0;
+        std::string getName(){
+            return _name;
+        }
+
+        virtual void render(glm::vec2 parentPos) = 0;
+
+        virtual void destroy() = 0;
+    private:
+        std::string _name;
     };
 }
 
