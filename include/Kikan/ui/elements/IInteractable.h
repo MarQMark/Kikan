@@ -4,6 +4,7 @@
 #include "IUIElement.h"
 #include "Kikan/core/Logging.h"
 #include <vector>
+#include <algorithm>
 
 namespace Kikan {
     class IInteractable : public IUIElement {
@@ -65,8 +66,7 @@ namespace Kikan {
                 return;
             }
 
-            // TODO: Fix
-            //std::remove(_callbacks.begin(), _callbacks.end(), _callbacks[id]);
+            _callbacks.erase(std::remove(_callbacks.begin(), _callbacks.end(), _callbacks[id]), _callbacks.end());
         }
 
         void stateChange(){
