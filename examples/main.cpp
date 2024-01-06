@@ -153,9 +153,9 @@ int WinMain() {
         engine->getUI()->addElement(btn);
     }
     {
-        auto* textbox = new Kikan::Textbox("textbox", glm::vec2(100,80), glm::vec2(32, 10));
+        auto* textbox = new Kikan::Textbox("textbox", glm::vec2(100,100), glm::vec2(64, 20));
         //textbox->setText("Whis is a test wow");
-        textbox->setText("Whis is");
+        textbox->setText("Abcdefghijklmnop");
         engine->getUI()->addElement(textbox);
     }
 

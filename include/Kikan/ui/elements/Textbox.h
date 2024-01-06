@@ -23,6 +23,8 @@ namespace Kikan {
     private:
         std::string _text;
         std::string _render_text;
+        uint32_t _text_bound_l = 0;
+        uint32_t _text_bound_r = 0;
         float _cut_percentage = 0;
         bool _left_bound = true;
 
@@ -46,6 +48,7 @@ namespace Kikan {
 
         void update_font_scale();
         float get_text_len(const std::string& text);
+        float get_char_len(char c) const;
 
         void render_text(const std::string& text, glm::vec2 pos);
         void render_outline();

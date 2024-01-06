@@ -11,22 +11,26 @@ namespace Kikan{
         this->dim = dim;
 
         _font_options.font = ((StdRenderer*)Engine::Kikan()->getRenderer())->getFont();
-        _font_size = dim.y * 0.8f;
-        _text_offset.y = -dim.y * 0.1f;
+        _font_size = dim.y * 0.9f * 0.5f;
+        _text_offset.y = -dim.y * 0.2f;
 
-        _cursor_style.dim.y = dim.y * 0.9f;
-        _cursor_style.off.y = _text_offset.y = -dim.y * 0.05f;
+        _cursor_style.dim.y = dim.y * 0.9f * .6f;
         _cursor_style.dim.x = .5;
+        _cursor_style.off.y = -dim.y * (1 - 0.9f * .75f) / 2.f;
     }
 
     void Textbox::render(glm::vec2 parentPos) {
         update_font_scale();
+        _cursor_style.dim.x = _whitespace * _font_options.spacing.x;
+        _cursor_style.off.x = (_whitespace * _font_options.spacing.x) / 2.f;
+        _text_offset.x = _whitespace * _font_options.spacing.x;
+
         _cut_percentage = 1;
 
-        std::string test;
-
         float textWidth = 0;
-        for (char c : _text) {
+        int32_t i = _left_bound ? (int32_t)_text_bound_l : (int32_t)_text_bound_r;
+        for(;;){
+            char c = _text[i];
             float cWidth = 0;
             if(c == ' ')       { cWidth = _whitespace;    } // Whitespace
             else if(c == '\t') { cWidth = _whitespace * 4;} // Tab
@@ -38,17 +42,37 @@ namespace Kikan{
                 cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
             }
 
+            float spacing = c < 21 ? 0 : _whitespace * _font_options.spacing.x;
 
-            test.push_back(c);
-            if(textWidth + cWidth > dim.x){
-                _cut_percentage = (dim.x - textWidth)/cWidth;
+            if(textWidth + cWidth > (dim.x - 2 * _text_offset.x)){
+                _cut_percentage = ((dim.x - 2 * _text_offset.x) - (textWidth + spacing))/cWidth;
+                if(_left_bound)
+                    _text_bound_r = i + 1;
+                else
+                    _text_bound_l = i;
+
                 break;
             }
 
-            textWidth += cWidth + _whitespace * _font_options.spacing.x;;
+            textWidth += cWidth + spacing;
+
+
+            if(_left_bound){
+                i++;
+                if(i >= (int32_t)_text.size() - 1)
+                    break;
+            }
+            else{
+                i--;
+                if(i < 0)
+                    break;
+            }
         }
 
-        render_text(test, pos + parentPos + _text_offset);
+        std::string sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
+        //kikanPrint("%s  L: %d  R: %d\n",test.c_str() ,_text_bound_l, _text_bound_l);
+
+        render_text(sub, pos + parentPos + _text_offset);
         render_outline();
 
         if(!focused || _blink_time > _blink_max_time)
@@ -61,11 +85,24 @@ namespace Kikan{
 
         auto* input = Engine::Kikan()->getInput();
         if(_left && !input->keyPressed(Key::LEFT)){
-            _cursor = std::max(_cursor - 1, 0);
+            if(_cursor > 0){
+                _cursor--;
+                if(_cursor < (int32_t)_text_bound_l){
+                    _left_bound = true;
+                    _text_bound_l--;
+                }
+            }
             reset_blink();
         }
         if(_right && !input->keyPressed(Key::RIGHT)){
-            _cursor = std::min(_cursor + 1, (int32_t)_text.size() + 1);
+            if(_cursor < (int32_t)_text.size() - 1){
+                _cursor++;
+                if(_cursor >= (int32_t)_text_bound_r){
+                    _left_bound = false;
+                    if(_cursor > (int32_t)_text_bound_r)
+                        _text_bound_r++;
+                }
+            }
             reset_blink();
         }
 
@@ -79,7 +116,7 @@ namespace Kikan{
 
     void Textbox::setText(std::string text) {
         _text = std::move(text);
-        _cursor = (int32_t)_text.size() + 1;
+        _cursor = 0;//(int32_t)_text.size() + 1;
     }
 
     std::string Textbox::getText() {
@@ -214,10 +251,13 @@ namespace Kikan{
 
         float xOff= 0;
         if(_cursor != 0){
-            std::string sub = _text.substr(0, _cursor - 1);
+            std::string sub = _text.substr(_text_bound_l, _cursor - _text_bound_l);
             xOff = get_text_len(sub);
             if(_cursor > 1 && _text[_cursor - 2] == ' ')
                 xOff -= _whitespace * .2f;
+
+            //if(_cursor == (int32_t)_text_bound_r)
+            //    xOff -= get_char_len(_text[_text_bound_r]) * (1 - _cut_percentage);
         }
 
         glm::vec2 points[4] = {
@@ -254,7 +294,9 @@ namespace Kikan{
                 cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
             }
 
-            textWidth += cWidth + _whitespace * _font_options.spacing.x;;
+            if(c > 20)
+                textWidth += _whitespace * _font_options.spacing.x;
+            textWidth += cWidth;
         }
 
         return textWidth;
@@ -269,6 +311,21 @@ namespace Kikan{
 
     void Textbox::reset_blink() {
         _blink_time = _blink_max_time * 1.5;
+    }
+
+    float Textbox::get_char_len(char c) const {
+        float cWidth = 0;
+        if(c == ' ')       { cWidth = _whitespace;    } // Whitespace
+        else if(c == '\t') { cWidth = _whitespace * 4;} // Tab
+        else if(c == '\r') { cWidth = 0;          } // Carriage Return
+        else if(c == '\n') { cWidth = 0;          } // Carriage Return
+        else {
+            Font::Glyph* g = _font_options.font->getGlyph(c);
+            if(g)
+                cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
+        }
+
+        return cWidth;
     }
 
 }
