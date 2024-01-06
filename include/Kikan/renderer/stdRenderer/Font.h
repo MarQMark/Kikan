@@ -16,7 +16,7 @@ namespace Kikan{
         struct Options{
             Font* font;
             glm::vec4 color = glm::vec4(1);
-            glm::vec2 spacing = glm::vec2(1.1f);
+            glm::vec2 spacing = glm::vec2(0.01f);
         };
 
     public:

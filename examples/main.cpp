@@ -19,6 +19,7 @@
 #include "Kikan/ecs/components/AASprite.h"
 #include "Kikan/ui/elements/Label.h"
 #include "Kikan/ui/elements/Button.h"
+#include "Kikan/ui/elements/Textbox.h"
 
 double tt = 0;
 
@@ -150,6 +151,12 @@ int WinMain() {
         auto* btn = new Kikan::Button("Button4", glm::vec2(60,80), glm::vec2(25, 25));
         btn->setLayerOffset(-0.2);
         engine->getUI()->addElement(btn);
+    }
+    {
+        auto* textbox = new Kikan::Textbox("textbox", glm::vec2(100,80), glm::vec2(32, 10));
+        //textbox->setText("Whis is a test wow");
+        textbox->setText("Whis is");
+        engine->getUI()->addElement(textbox);
     }
 
 

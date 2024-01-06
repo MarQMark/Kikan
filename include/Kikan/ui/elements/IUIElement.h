@@ -22,6 +22,7 @@ namespace Kikan {
         }
 
         virtual void render(glm::vec2 parentPos) = 0;
+        virtual void update() {};
 
         virtual void destroy() = 0;
     private:

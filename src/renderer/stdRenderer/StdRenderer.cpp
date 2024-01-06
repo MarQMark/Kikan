@@ -12,7 +12,6 @@
 namespace Kikan {
 
 #define signature(x) VertexRegistry::getSignature<x>()
-#define renderPrio(x) (uint16_t)(x * -100.f + 32768)
 
     void window_size_callback(GLFWwindow *window, int width, int height) {
         glViewport(0, 0, width, height);
@@ -114,7 +113,7 @@ namespace Kikan {
         v3.texture = -1;
         vertices[2] = &v3;
 
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer), nullptr, opt);
+        autoBatch<DefaultVertex>(vertices, getRenderPrio(layer), nullptr, opt);
     }
 
     void StdRenderer::renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer, Options* opt) {
@@ -143,7 +142,7 @@ namespace Kikan {
         }
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices, opt);
+        autoBatch<DefaultVertex>(vertices, getRenderPrio(layer), &indices, opt);
     }
 
     void StdRenderer::renderPolygon(std::vector<glm::vec2> &points, glm::vec4 color, float layer, Options* opt) {
@@ -162,7 +161,7 @@ namespace Kikan {
         if (result < 0)
             std::cout << "[ERROR] Could not triangulate Polygon" << std::endl;
 
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices, opt);
+        autoBatch<DefaultVertex>(vertices, getRenderPrio(layer), &indices, opt);
     }
 
     void StdRenderer::renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color, float layer, Options* opt){
@@ -194,7 +193,7 @@ namespace Kikan {
         }
 
         std::vector<GLuint> indices = {0, 1, 2, 0, 2, 3};
-        autoBatch<DefaultVertex>(vertices, renderPrio(layer), &indices, opt);
+        autoBatch<DefaultVertex>(vertices, getRenderPrio(layer), &indices, opt);
     }
 
     void StdRenderer::renderText(std::string text, glm::vec2 pos, float height, float layer, Font::Options options, Options* opt){
@@ -253,7 +252,7 @@ namespace Kikan {
             nVertex+=4;
             indexCnt+=6;
 
-            x += cWidth * options.spacing.x;
+            x += cWidth + whitespace * options.spacing.x;
         }
 
         std::vector<IVertex*> iVertices(vertices.size());
@@ -262,7 +261,7 @@ namespace Kikan {
             iVertices[i] = &vertices[i];
             iVertices[i]->texture = (float)font->getID();
         }
-        autoBatch<DefaultVertex>(iVertices, renderPrio(layer), &indices, opt);
+        autoBatch<DefaultVertex>(iVertices, getRenderPrio(layer), &indices, opt);
     }
 
     template<class T>
@@ -384,5 +383,9 @@ namespace Kikan {
 
     void StdRenderer::addFont(Font *font, const std::string &name) {
         _fonts[name] = font;
+    }
+
+    uint16_t StdRenderer::getRenderPrio(float layer) {
+        return (uint16_t)(layer * -100.f + 32768);
     }
 }

@@ -98,6 +98,8 @@ class StdRenderer : public Renderer {
         template <class T>
         void autoBatch(std::vector<IVertex*> vertices, uint16_t prio = 0, std::vector<GLuint>* indices = nullptr, Options* opt = nullptr);
 
+        uint16_t getRenderPrio(float layer);
+
         void addBatch(ManuelBatch* batch, unsigned int key);
         ManuelBatch* getBatch(unsigned int key);
 

@@ -24,8 +24,10 @@ namespace Kikan{
 
         void render(glm::vec2 parentPos){
             for (auto e : elements) {
-                if(e->enabled)
+                if(e->enabled){
+                    e->update();
                     e->render(pos + parentPos);
+                }
             }
 
             for(auto n : nodes){
