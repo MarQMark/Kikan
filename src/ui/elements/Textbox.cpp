@@ -44,7 +44,7 @@ namespace Kikan{
 
             float spacing = c < 21 ? 0 : _whitespace * _font_options.spacing.x;
 
-            if(textWidth + cWidth > (dim.x - 2 * _text_offset.x)){
+            if(textWidth + cWidth >= (dim.x - 2 * _text_offset.x)){
                 _cut_percentage = ((dim.x - 2 * _text_offset.x) - (textWidth + spacing))/cWidth;
                 if(_left_bound)
                     _text_bound_r = i + 1;
@@ -58,7 +58,7 @@ namespace Kikan{
 
             if(_left_bound){
                 i++;
-                if(i >= (int32_t)_text.size() - 1)
+                if(i > (int32_t)_text.size() - 1)
                     break;
             }
             else{
@@ -140,11 +140,18 @@ namespace Kikan{
         float x = pos.x;
 
         for(uint32_t i = 0; i < text.size(); i++){
+
+            float yScale = 1;
+            if(_left_bound && i == text.size() - 1)
+                yScale = _cut_percentage;
+            else if(!_left_bound && i == 0)
+                yScale = _cut_percentage;
+
             char c = text[i];
-            if(c == ' ')       { x += _whitespace;      continue; } // Whitespace
-            else if(c == '\t') { x += _whitespace * 4;  continue; } // Tab
-            else if(c == '\r') { x = pos.x;             continue; } // Carriage Return
-            else if(c == '\n') {                                   // Newline
+            if(c == ' ')       { x += _whitespace * yScale;      continue; }
+            else if(c == '\t') { x += _whitespace * yScale * 4;  continue; }
+            else if(c == '\r') { x = pos.x;                      continue; }
+            else if(c == '\n') {
                 x = pos.x;
                 y-= _font_size * 1.5f * _font_options.spacing.y;
                 continue;
@@ -157,18 +164,15 @@ namespace Kikan{
             float offX = g->offset.x * _font_scale;
             float offY = g->offset.y * _font_scale;
 
-            float yScale = 1;
             float posCutL = 0;
             float posCutR = 0;
             float texCutL = 0;
             float texCutR = 0;
             if(_left_bound && i == text.size() - 1){
-                yScale = _cut_percentage;
                 posCutR = -cWidth * (1 - _cut_percentage);
                 texCutR = -g->dim.x * (1 - _cut_percentage);
             }
             else if(!_left_bound && i == 0){
-                yScale = _cut_percentage;
                 posCutR = -cWidth * (1 - _cut_percentage);
                 texCutL = g->dim.x * (1 - _cut_percentage);
             }
@@ -254,22 +258,16 @@ namespace Kikan{
             if(_left_bound){
                 std::string sub = _text.substr(_text_bound_l, _cursor - _text_bound_l);
                 xOff = get_text_len(sub);
-                if(_cursor > 1 && _text[_cursor - 2] == ' ')
+                if(_cursor > 1 && _text[_cursor - 1] == ' ')
                     xOff -= _whitespace * .2f;
-
             }
             else{
                 std::string sub = _text.substr(_cursor, _text_bound_r - _cursor);
-                kikanPrint("%s\n", sub.c_str());
                 xOff = (dim.x - 2 * _text_offset.x) - get_text_len(sub);
-                if(_cursor > 1 && _text[_cursor - 2] == ' ')
+                if(_cursor > 1 && _text[_cursor - 1] == ' ')
                     xOff -= _whitespace * .2f;
-
             }
-
         }
-
-
 
         glm::vec2 points[4] = {
                 pos + _cursor_style.off + glm::vec2(xOff, 0),
@@ -277,6 +275,17 @@ namespace Kikan{
                 pos + _cursor_style.off + glm::vec2(xOff, 0) + glm::vec2(_cursor_style.dim.x,   -_cursor_style.dim.y),
                 pos + _cursor_style.off + glm::vec2(xOff, 0) + glm::vec2(0,                     -_cursor_style.dim.y),
         };
+
+        // Dirty way of keeping the cursor always within the textbox
+        points[0].x = std::max(points[0].x, pos.x);
+        points[3].x = std::max(points[3].x, pos.x);
+        points[1].x = std::max(points[1].x, points[0].x + _cursor_style.dim.x);
+        points[2].x = std::max(points[2].x, points[3].x + _cursor_style.dim.x);
+
+        points[1].x = std::min(points[1].x, pos.x + dim.x);
+        points[2].x = std::min(points[2].x, pos.x + dim.x);
+        points[0].x = std::min(points[0].x, points[1].x - _cursor_style.dim.x);
+        points[3].x = std::min(points[3].x, points[2].x - _cursor_style.dim.x);
 
         renderer->renderQuad(
                 points[0],

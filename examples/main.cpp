@@ -155,7 +155,7 @@ int WinMain() {
     {
         auto* textbox = new Kikan::Textbox("textbox", glm::vec2(100,100), glm::vec2(64, 20));
         textbox->setText("Whis is a test wow");
-        //textbox->setText("Abcdefghijklmnop");
+        //textbox->setText("wawwawawawawawawawawaw");
         engine->getUI()->addElement(textbox);
     }
 
