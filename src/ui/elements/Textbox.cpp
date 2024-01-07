@@ -86,18 +86,20 @@ namespace Kikan{
         if(_left && !input->keyPressed(Key::LEFT)){
             if(_cursor > 0){
                 _cursor--;
-                if(_cursor < (int32_t)_text_bound_l){
+                if(_cursor <= (int32_t)_text_bound_l){
+                    if(_left_bound)
+                        _text_bound_l--;
                     _left_bound = true;
-                    _text_bound_l--;
                 }
             }
             reset_blink();
         }
         if(_right && !input->keyPressed(Key::RIGHT)){
-            if(_cursor < (int32_t)_text.size() - 1){
+            if(_cursor < (int32_t)_text.size()){
                 _cursor++;
                 if(_cursor >= (int32_t)_text_bound_r){
-                    _text_bound_r++;
+                    if(!_left_bound)
+                        _text_bound_r++;
                     _left_bound = false;
                 }
             }
@@ -257,7 +259,7 @@ namespace Kikan{
 
             }
             else{
-                std::string sub = _text.substr(_cursor + 1, _text_bound_r - _cursor - 1);
+                std::string sub = _text.substr(_cursor, _text_bound_r - _cursor);
                 kikanPrint("%s\n", sub.c_str());
                 xOff = (dim.x - 2 * _text_offset.x) - get_text_len(sub);
                 if(_cursor > 1 && _text[_cursor - 2] == ' ')

@@ -325,10 +325,10 @@ namespace Kikan {
     }
 
     void UI::focus_set(IInteractable *interactable, UINode* node) {
-        if(interactable && interactable->interactable)
-            interactable->focused = true;
         if(_focused)
             _focused->focused = false;
+        if(interactable && interactable->interactable)
+            interactable->focused = true;
         _focused = interactable;
         _focused_node = node;
     }
