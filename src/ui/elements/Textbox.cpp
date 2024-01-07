@@ -28,14 +28,14 @@ namespace Kikan{
         _cut_percentage = 1;
 
         float textWidth = 0;
-        int32_t i = _left_bound ? (int32_t)_text_bound_l : (int32_t)_text_bound_r;
+        int32_t i = _left_bound ? (int32_t)_text_bound_l : (int32_t)_text_bound_r - 1;
         for(;;){
             char c = _text[i];
             float cWidth = 0;
-            if(c == ' ')       { cWidth = _whitespace;    } // Whitespace
-            else if(c == '\t') { cWidth = _whitespace * 4;} // Tab
-            else if(c == '\r') { cWidth = 0;          } // Carriage Return
-            else if(c == '\n') { cWidth = 0;          } // Carriage Return
+            if(c == ' ')       { cWidth = _whitespace;    }
+            else if(c == '\t') { cWidth = _whitespace * 4;}
+            else if(c == '\r') { cWidth = 0;          }
+            else if(c == '\n') { cWidth = 0;          }
             else {
                 Font::Glyph* g = _font_options.font->getGlyph(c);
                 if(!g) continue;
@@ -53,7 +53,6 @@ namespace Kikan{
 
                 break;
             }
-
             textWidth += cWidth + spacing;
 
 
@@ -69,8 +68,8 @@ namespace Kikan{
             }
         }
 
+
         std::string sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
-        //kikanPrint("%s  L: %d  R: %d\n",test.c_str() ,_text_bound_l, _text_bound_l);
 
         render_text(sub, pos + parentPos + _text_offset);
         render_outline();
@@ -98,9 +97,8 @@ namespace Kikan{
             if(_cursor < (int32_t)_text.size() - 1){
                 _cursor++;
                 if(_cursor >= (int32_t)_text_bound_r){
+                    _text_bound_r++;
                     _left_bound = false;
-                    if(_cursor > (int32_t)_text_bound_r)
-                        _text_bound_r++;
                 }
             }
             reset_blink();
@@ -222,8 +220,8 @@ namespace Kikan{
         renderer->renderQuad(
                 glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(-thickness, -thickness),
                 glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(0,          -thickness),
-                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)  + glm::vec2(0,          thickness),
-                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)  + glm::vec2(-thickness, thickness),
+                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)   + glm::vec2(0,          thickness),
+                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)   + glm::vec2(-thickness, thickness),
                 glm::vec4(.6,.6,.6,.5),
                 layer - 0.01f,
                 &_opt);
@@ -251,14 +249,25 @@ namespace Kikan{
 
         float xOff= 0;
         if(_cursor != 0){
-            std::string sub = _text.substr(_text_bound_l, _cursor - _text_bound_l);
-            xOff = get_text_len(sub);
-            if(_cursor > 1 && _text[_cursor - 2] == ' ')
-                xOff -= _whitespace * .2f;
+            if(_left_bound){
+                std::string sub = _text.substr(_text_bound_l, _cursor - _text_bound_l);
+                xOff = get_text_len(sub);
+                if(_cursor > 1 && _text[_cursor - 2] == ' ')
+                    xOff -= _whitespace * .2f;
 
-            //if(_cursor == (int32_t)_text_bound_r)
-            //    xOff -= get_char_len(_text[_text_bound_r]) * (1 - _cut_percentage);
+            }
+            else{
+                std::string sub = _text.substr(_cursor + 1, _text_bound_r - _cursor - 1);
+                kikanPrint("%s\n", sub.c_str());
+                xOff = (dim.x - 2 * _text_offset.x) - get_text_len(sub);
+                if(_cursor > 1 && _text[_cursor - 2] == ' ')
+                    xOff -= _whitespace * .2f;
+
+            }
+
         }
+
+
 
         glm::vec2 points[4] = {
                 pos + _cursor_style.off + glm::vec2(xOff, 0),
