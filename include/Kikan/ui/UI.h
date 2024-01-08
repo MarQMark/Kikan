@@ -29,6 +29,7 @@ namespace Kikan {
         void setMVP(glm::mat4x4 mvp);
         glm::mat4x4 getMVP();
         void resetMVP();
+        glm::vec2 getUIMousePos();
 
         void addElement(IUIElement* element, UINode* parent = nullptr);
         void addNode(UINode* node, UINode* parent = nullptr);
@@ -90,6 +91,7 @@ namespace Kikan {
         glm::mat4x4 _mvp{};
         glm::mat4x4 _i_mvp{};
         bool _custom_mvp = false;
+        glm::vec2 _ui_mouse;
 
         bool _prev_left_click = false;
 
@@ -104,7 +106,7 @@ namespace Kikan {
 
         UINode* get_node(IUIElement* element, UINode* node);
 
-        void rec_update(UINode* node, glm::vec4 mousePos, bool leftClick);
+        void rec_update(UINode* node, bool leftClick);
     };
 }
 

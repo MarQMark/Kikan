@@ -6,6 +6,13 @@
 
 namespace Kikan{
 
+    void textboxOnClick(IInteractable* interactable, void* data){
+        auto* textbox = (Textbox*)interactable;
+        glm::vec2 mouse = Engine::Kikan()->getUI()->getUIMousePos();
+        // TODO: include parent nodes in pos
+        textbox->setCursor(mouse.x - textbox->pos.x);
+    }
+
     Textbox::Textbox(std::string name, glm::vec2 pos, glm::vec2 dim) : IInteractable(std::move(name)) {
         this->pos = pos;
         this->dim = dim;
@@ -17,6 +24,8 @@ namespace Kikan{
         _cursor_style.dim.y = dim.y * 0.9f * .6f;
         _cursor_style.dim.x = .5;
         _cursor_style.off.y = -dim.y * (1 - 0.9f * .75f) / 2.f;
+
+        registerCallback(textboxOnClick, State::PRESSED);
     }
 
     void Textbox::render(glm::vec2 parentPos) {
@@ -25,8 +34,84 @@ namespace Kikan{
         _cursor_style.off.x = (_whitespace * _font_options.spacing.x) / 2.f;
         _text_offset.x = _whitespace * _font_options.spacing.x;
 
-        _cut_percentage = 1;
 
+        calc_bounds();
+        std::string sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
+
+        render_text(sub, pos + parentPos + _text_offset);
+        render_outline();
+
+        if(!focused || _blink_time > _blink_max_time)
+            render_cursor();
+    }
+
+    void Textbox::update() {
+        if(!focused)
+            return;
+
+        auto* input = Engine::Kikan()->getInput();
+        if(_left && !input->keyPressed(Key::LEFT))
+            setCursor(_cursor - 1);
+        if(_right && !input->keyPressed(Key::RIGHT))
+            setCursor(_cursor + 1);
+
+        _left = input->keyPressed(Key::LEFT);
+        _right = input->keyPressed(Key::RIGHT);
+
+        _blink_time -= Engine::Kikan()->time.dt;
+        if(_blink_time < 0)
+            reset_blink();
+    }
+
+    void Textbox::setCursor(int32_t cursor) {
+        cursor = std::max(std::min(cursor, (int32_t)_text.size()), 0);
+        if(cursor >= (int32_t)_text_bound_r){
+            _left_bound = false;
+            _text_bound_r = cursor;
+        }
+        else if(cursor <= (int32_t)_text_bound_l){
+            _left_bound = true;
+            _text_bound_l = cursor;
+        }
+        _cursor = cursor;
+        reset_blink();
+    }
+
+    void Textbox::setCursor(float offset) {
+        std::string sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
+        float w = 0;
+        for(uint32_t i = 0; i < sub.size(); i++){
+            char c = sub[i];
+            float cWidth = get_char_len(c);
+            if(i == 0 && !_left_bound)
+                cWidth *= (1 - _cut_percentage);
+
+            w += cWidth;
+            if(w >= offset){
+                if(w - offset < cWidth / 2.f)
+                    setCursor((int32_t)(_text_bound_l + i + 1));
+                else
+                    setCursor((int32_t)(_text_bound_l + i));
+                break;
+            }
+        }
+    }
+
+    void Textbox::setText(std::string text) {
+        _text = std::move(text);
+        setCursor((int32_t)_text.size());
+    }
+
+    std::string Textbox::getText() {
+        return _text;
+    }
+
+    void Textbox::destroy() {
+        delete this;
+    }
+
+    void Textbox::calc_bounds() {
+        _cut_percentage = 1;
         float textWidth = 0;
         int32_t i = _left_bound ? (int32_t)_text_bound_l : (int32_t)_text_bound_r - 1;
         for(;;){
@@ -67,64 +152,6 @@ namespace Kikan{
                     break;
             }
         }
-
-
-        std::string sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
-
-        render_text(sub, pos + parentPos + _text_offset);
-        render_outline();
-
-        if(!focused || _blink_time > _blink_max_time)
-            render_cursor();
-    }
-
-    void Textbox::update() {
-        if(!focused)
-            return;
-
-        auto* input = Engine::Kikan()->getInput();
-        if(_left && !input->keyPressed(Key::LEFT)){
-            if(_cursor > 0){
-                _cursor--;
-                if(_cursor <= (int32_t)_text_bound_l){
-                    if(_left_bound)
-                        _text_bound_l--;
-                    _left_bound = true;
-                }
-            }
-            reset_blink();
-        }
-        if(_right && !input->keyPressed(Key::RIGHT)){
-            if(_cursor < (int32_t)_text.size()){
-                _cursor++;
-                if(_cursor >= (int32_t)_text_bound_r){
-                    if(!_left_bound)
-                        _text_bound_r++;
-                    _left_bound = false;
-                }
-            }
-            reset_blink();
-        }
-
-        _left = input->keyPressed(Key::LEFT);
-        _right = input->keyPressed(Key::RIGHT);
-
-        _blink_time -= Engine::Kikan()->time.dt;
-        if(_blink_time < 0)
-            reset_blink();
-    }
-
-    void Textbox::setText(std::string text) {
-        _text = std::move(text);
-        _cursor = 0;//(int32_t)_text.size() + 1;
-    }
-
-    std::string Textbox::getText() {
-        return _text;
-    }
-
-    void Textbox::destroy() {
-        delete this;
     }
 
     void Textbox::render_text(const std::string& text, glm::vec2 pos) {
@@ -142,9 +169,7 @@ namespace Kikan{
         for(uint32_t i = 0; i < text.size(); i++){
 
             float yScale = 1;
-            if(_left_bound && i == text.size() - 1)
-                yScale = _cut_percentage;
-            else if(!_left_bound && i == 0)
+            if((_left_bound && i == text.size() - 1) || (!_left_bound && i == 0))
                 yScale = _cut_percentage;
 
             char c = text[i];
@@ -260,12 +285,16 @@ namespace Kikan{
                 xOff = get_text_len(sub);
                 if(_cursor > 1 && _text[_cursor - 1] == ' ')
                     xOff -= _whitespace * .2f;
+                else
+                    xOff -= _whitespace * _font_options.spacing.x * .5f;
             }
             else{
                 std::string sub = _text.substr(_cursor, _text_bound_r - _cursor);
                 xOff = (dim.x - 2 * _text_offset.x) - get_text_len(sub);
                 if(_cursor > 1 && _text[_cursor - 1] == ' ')
                     xOff -= _whitespace * .2f;
+                else
+                    xOff -= _whitespace * _font_options.spacing.x * 1.5f;
             }
         }
 
@@ -347,5 +376,6 @@ namespace Kikan{
 
         return cWidth;
     }
+
 
 }

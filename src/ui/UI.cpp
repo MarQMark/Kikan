@@ -51,11 +51,12 @@ namespace Kikan {
         double mouseY =  -2 * input->mouseY() / renderer->getHeight() + 1;
         glm::vec4 mouse = glm::vec4(mouseX, mouseY, 1, 1);
         mouse = _i_mvp * mouse;
+        _ui_mouse = mouse;
 
         bool leftClick = input->mousePressed(Mouse::BUTTON_LEFT);
 
         if(_root->enabled)
-            rec_update(_root, mouse, leftClick);
+            rec_update(_root, leftClick);
 
         _prev_left_click = leftClick;
     }
@@ -64,7 +65,7 @@ namespace Kikan {
         return (p.x > pos.x && p.x < pos.x + dim.x && p.y < pos.y && p.y > pos.y - dim.y);
     }
 
-    void UI::rec_update(UINode *node, glm::vec4 mousePos, bool leftClick) {
+    void UI::rec_update(UINode *node, bool leftClick) {
         for(auto* element : node->elements){
             if(!element->enabled)
                 continue;
@@ -79,7 +80,7 @@ namespace Kikan {
             if(_focused == interactable && _enter_pressed)
                 continue;
 
-            if(isInside(mousePos, interactable->pos, interactable->dim)){
+            if(isInside(_ui_mouse, interactable->pos, interactable->dim)){
 
                 if(leftClick && _prev_left_click) {
                     interactable->changeState(IInteractable::State::HELD);
@@ -104,7 +105,7 @@ namespace Kikan {
 
         for(auto* n : node->nodes){
             if(n->enabled)
-                rec_update(n, mousePos, leftClick);
+                rec_update(n, leftClick);
         }
     }
 
@@ -340,6 +341,10 @@ namespace Kikan {
             return node->enabled;
 
         return is_node_enabled(node->parent);
+    }
+
+    glm::vec2 UI::getUIMousePos() {
+        return _ui_mouse;
     }
 
 

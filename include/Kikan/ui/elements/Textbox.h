@@ -16,6 +16,9 @@ namespace Kikan {
         void setText(std::string text);
         std::string getText();
 
+        void setCursor(int32_t cursor);
+        void setCursor(float offset);
+
         void render(glm::vec2 parentPos) override;
         void update() override;
 
@@ -50,9 +53,12 @@ namespace Kikan {
         float get_text_len(const std::string& text);
         float get_char_len(char c) const;
 
+        void calc_bounds();
+
         void render_text(const std::string& text, glm::vec2 pos);
         void render_outline();
         void render_cursor();
+
     };
 }
 
