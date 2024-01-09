@@ -50,13 +50,11 @@ namespace Kikan{
             return;
 
         auto* input = Engine::Kikan()->getInput();
-        if(_left && !input->keyPressed(Key::LEFT))
+        // TODO: Fix frame rate dependency
+        if(input->keyXPressed(Key::LEFT) || input->keyHolding(Key::LEFT))
             setCursor(_cursor - 1);
-        if(_right && !input->keyPressed(Key::RIGHT))
+        if(input->keyXPressed(Key::RIGHT) || input->keyHolding(Key::RIGHT))
             setCursor(_cursor + 1);
-
-        _left = input->keyPressed(Key::LEFT);
-        _right = input->keyPressed(Key::RIGHT);
 
         _blink_time -= Engine::Kikan()->time.dt;
         if(_blink_time < 0)
@@ -79,7 +77,7 @@ namespace Kikan{
 
     void Textbox::setCursor(float offset) {
         std::string sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
-        float w = 0;
+        float w = _text_offset.x;
         for(uint32_t i = 0; i < sub.size(); i++){
             char c = sub[i];
             float cWidth = get_char_len(c);

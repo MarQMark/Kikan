@@ -45,6 +45,8 @@ namespace Kikan {
 
         if(preUpdate) preUpdate(this);
 
+        _input->update();
+
         // UPDATE
         _ecs->update(_dt);
 

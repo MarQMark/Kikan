@@ -39,9 +39,6 @@ namespace Kikan {
         double _blink_time = _blink_max_time;
         void reset_blink();
 
-        bool _left = false;
-        bool _right = false;
-
         float _layer_offset;
 
         float _font_size;
