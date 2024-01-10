@@ -224,7 +224,6 @@ namespace Kikan {
             }
 
             g = font->getGlyph(c);
-            if(!g) continue;
             float cWidth = g->dim.x * scale;
             float cHeight = g->dim.y * scale;
             float offX = g->offset.x * scale;

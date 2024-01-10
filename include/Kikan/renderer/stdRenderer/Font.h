@@ -9,9 +9,9 @@ namespace Kikan{
     class Font {
     public:
         struct Glyph{
-            glm::vec2 offset;
-            glm::vec2 pos;
-            glm::vec2 dim;
+            glm::vec2 offset = glm::vec2(0);
+            glm::vec2 pos = glm::vec2(0);
+            glm::vec2 dim = glm::vec2(0);
         };
         struct Options{
             Font* font;

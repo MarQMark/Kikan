@@ -19,6 +19,16 @@ namespace Kikan {
 
         void setCursor(int32_t cursor);
         void setCursor(float offset);
+        int32_t getCursorPos() const;
+
+        void setTextOffset(glm::vec2 off);
+        glm::vec2 getTextOffset();
+
+        void setCursorStyle(struct CursorStyle style);
+        struct CursorStyle getCursorStyle();
+
+        void setFont(struct Font::Options font);
+        struct Font::Options getFont();
 
         void render(glm::vec2 parentPos) override;
         void update() override;
@@ -40,7 +50,7 @@ namespace Kikan {
         double _blink_time = _blink_max_time;
         void reset_blink();
 
-        float _layer_offset;
+        float _layer_offset = -.01f;
 
         float _font_size;
         float _font_scale;

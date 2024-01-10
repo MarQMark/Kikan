@@ -18,6 +18,9 @@ namespace Kikan {
         static bool isMod(Key key);
 
     private:
+        static char get_num_mod(Key k);
+        static char get_var_mod(Key k);
+        static char get_var(Key k);
     };
 }
 

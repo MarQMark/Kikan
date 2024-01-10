@@ -5,6 +5,7 @@
 namespace Kikan{
 
     Font::Font(void *data) {
+        _glyphs[0] = new Glyph;
         parse_font((int8_t*)data);
     }
 
@@ -16,8 +17,8 @@ namespace Kikan{
 
     Font::Glyph* Font::getGlyph(char c) {
         if(!_glyphs.count(c)){
-            kikanPrintE("[ERROR] %c(%d) not found in font\n", c, c);
-            return nullptr;
+            kikanPrintW("[WARNING] %c(%d) not found in font\n", c, c);
+            return _glyphs[0];
         }
 
         return _glyphs[c];

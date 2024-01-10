@@ -55,7 +55,7 @@ namespace Kikan{
         if(!KeyboardLayout::isMod(input->lastKey()))
             _last_key = input->lastKey();
 
-        if(_last_key && input->keyXPressed(_last_key)){
+        if(_last_key && (input->keyXPressed(_last_key) || input->keyHolding(_last_key))){
             char c = KeyboardLayout::getChar(_last_key, input->keyPressed(Key::LEFT_SHIFT) ? KeyboardLayout::Modifier::SHIFT : KeyboardLayout::Modifier::NONE);
             if(c > 0){
                 _text.insert(_cursor, 1, c);
@@ -63,15 +63,33 @@ namespace Kikan{
             }
         }
 
-        //if(input->keyXPressed(Key::BACKSPACE) || input->keyHolding(Key::BACKSPACE)){
-        //    auto tmp = std::string(_text);
-        //    tmp.erase(_cursor, 1);
-        //    setCursor(_cursor - 1);
-        //    if(tmp.size() < _text_bound_r)
-        //        _text_bound_r--;
-        //    kikanPrint("%s\n", tmp.c_str());
-        //    _text = tmp;
-        //}
+        if(input->keyXPressed(Key::BACKSPACE) || input->keyHolding(Key::BACKSPACE)){
+            if(_cursor > 0){
+                _text.erase(_cursor - 1, 1);
+                if(_text.size() < _text_bound_r){
+                    if(_cursor - 1 == (int32_t)_text.size()){
+                        _text_bound_r = _text.size();
+                        _left_bound = false;
+                    }
+                    else
+                        _left_bound = true;
+                }
+                setCursor(_cursor - 1);
+            }
+        }
+
+        if(input->keyXPressed(Key::DELETE) || input->keyHolding(Key::DELETE)){
+            if(_cursor < (int32_t)_text.size()){
+                _text.erase(_cursor, 1);
+                _left_bound = true;
+                setCursor(_cursor);
+            }
+        }
+
+        if(input->keyXPressed(Key::END))
+            setCursor((int32_t)_text.size());
+        if(input->keyXPressed(Key::HOME))
+            setCursor((int32_t)0);
 
         // TODO: Fix frame rate dependency
         if(input->keyXPressed(Key::LEFT) || input->keyHolding(Key::LEFT))
@@ -119,7 +137,12 @@ namespace Kikan{
     }
 
     void Textbox::setText(std::string text) {
+        if(_text_bound_r > text.size() - 1){
+            _left_bound = false;
+            _text_bound_r = text.size() - 1;
+        }
         _text = std::move(text);
+
         setCursor((int32_t)_text.size());
     }
 
@@ -132,8 +155,16 @@ namespace Kikan{
     }
 
     void Textbox::calc_bounds() {
+        if(_text.empty()) {
+            _left_bound = true;
+            _text_bound_l = 0;
+            setCursor(0);
+            return;
+        }
+
         _cut_percentage = 1;
         float textWidth = 0;
+        bool textTooLong = false;
         int32_t i = _left_bound ? (int32_t)_text_bound_l : (int32_t)_text_bound_r - 1;
         for(;;){
             char c = _text[i];
@@ -144,7 +175,6 @@ namespace Kikan{
             else if(c == '\n') { cWidth = 0;          }
             else {
                 Font::Glyph* g = _font_options.font->getGlyph(c);
-                if(!g) continue;
                 cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
             }
 
@@ -157,6 +187,7 @@ namespace Kikan{
                 else
                     _text_bound_l = i;
 
+                textTooLong = true;
                 break;
             }
             textWidth += cWidth + spacing;
@@ -173,9 +204,17 @@ namespace Kikan{
                     break;
             }
         }
+
+        if(!_left_bound && !textTooLong){
+            _left_bound = true;
+            calc_bounds();
+        }
     }
 
     void Textbox::render_text(const std::string& text, glm::vec2 pos) {
+        if(_text.empty())
+            return;
+
         float layer = Engine::Kikan()->getUI()->renderLayer + _layer_offset;
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
 
@@ -194,17 +233,12 @@ namespace Kikan{
                 yScale = _cut_percentage;
 
             char c = text[i];
-            if(c == ' ')       { x += _whitespace * yScale;      continue; }
-            else if(c == '\t') { x += _whitespace * yScale * 4;  continue; }
-            else if(c == '\r') { x = pos.x;                      continue; }
-            else if(c == '\n') {
-                x = pos.x;
-                y-= _font_size * 1.5f * _font_options.spacing.y;
-                continue;
-            }
+            if(c == ' ')       { x += _whitespace * yScale;     continue; }
+            else if(c == '\t') { x += _whitespace * yScale * 4; continue; }
+            else if(c == '\r') {                                continue; }
+            else if(c == '\n') {                                continue; }
 
             Font::Glyph* g = _font_options.font->getGlyph(c);
-            if(!g) continue;
             float cWidth = g->dim.x  * _font_scale;
             float cHeight = g->dim.y * _font_scale;
             float offX = g->offset.x * _font_scale;
@@ -359,8 +393,6 @@ namespace Kikan{
             else if(c == '\n') { cWidth = 0;          } // Carriage Return
             else {
                 Font::Glyph* g = _font_options.font->getGlyph(c);
-                if(!g)
-                    continue;
                 cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
             }
 
@@ -391,12 +423,37 @@ namespace Kikan{
         else if(c == '\n') { cWidth = 0;          } // Carriage Return
         else {
             Font::Glyph* g = _font_options.font->getGlyph(c);
-            if(g)
-                cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
+            cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
         }
 
         return cWidth;
     }
 
+    int32_t Textbox::getCursorPos() const {
+        return _cursor;
+    }
 
+    void Textbox::setTextOffset(glm::vec2 off) {
+        _text_offset = off;
+    }
+
+    glm::vec2 Textbox::getTextOffset() {
+        return _text_offset;
+    }
+
+    void Textbox::setCursorStyle(Textbox::CursorStyle style) {
+        _cursor_style = style;
+    }
+
+    Textbox::CursorStyle Textbox::getCursorStyle() {
+        return _cursor_style;
+    }
+
+    void Textbox::setFont(Font::Options font) {
+        _font_options = font;
+    }
+
+    struct Font::Options Textbox::getFont() {
+        return _font_options;
+    }
 }
