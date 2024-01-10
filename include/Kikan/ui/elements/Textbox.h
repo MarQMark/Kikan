@@ -2,6 +2,7 @@
 #define KIKAN_TEXTBOX_H
 
 #include "IInteractable.h"
+#include "Kikan/input/Input.h"
 
 namespace Kikan {
     class Textbox : public IInteractable{
@@ -45,6 +46,8 @@ namespace Kikan {
         float _font_scale;
         float _whitespace;
         Font::Options _font_options;
+
+        Key _last_key = Key::UNKNOWN;
 
         void update_font_scale();
         float get_text_len(const std::string& text);

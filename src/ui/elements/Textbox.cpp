@@ -3,6 +3,7 @@
 
 #include "Kikan/ui/elements/Textbox.h"
 #include "Kikan/Engine.h"
+#include "Kikan/input/KeyboardLayout.h"
 
 namespace Kikan{
 
@@ -50,6 +51,28 @@ namespace Kikan{
             return;
 
         auto* input = Engine::Kikan()->getInput();
+
+        if(!KeyboardLayout::isMod(input->lastKey()))
+            _last_key = input->lastKey();
+
+        if(_last_key && input->keyXPressed(_last_key)){
+            char c = KeyboardLayout::getChar(_last_key, input->keyPressed(Key::LEFT_SHIFT) ? KeyboardLayout::Modifier::SHIFT : KeyboardLayout::Modifier::NONE);
+            if(c > 0){
+                _text.insert(_cursor, 1, c);
+                setCursor(_cursor + 1);
+            }
+        }
+
+        //if(input->keyXPressed(Key::BACKSPACE) || input->keyHolding(Key::BACKSPACE)){
+        //    auto tmp = std::string(_text);
+        //    tmp.erase(_cursor, 1);
+        //    setCursor(_cursor - 1);
+        //    if(tmp.size() < _text_bound_r)
+        //        _text_bound_r--;
+        //    kikanPrint("%s\n", tmp.c_str());
+        //    _text = tmp;
+        //}
+
         // TODO: Fix frame rate dependency
         if(input->keyXPressed(Key::LEFT) || input->keyHolding(Key::LEFT))
             setCursor(_cursor - 1);

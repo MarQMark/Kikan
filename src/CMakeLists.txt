@@ -6,6 +6,7 @@ set(SOURCE_FILES
         core/Logging.cpp
 
         input/Input.cpp
+        input/KeyboardLayout.cpp
 )
 
 add_library(Kikan ${SOURCE_FILES})
