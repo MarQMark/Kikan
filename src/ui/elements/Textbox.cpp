@@ -5,13 +5,22 @@
 #include "Kikan/Engine.h"
 #include "Kikan/input/KeyboardLayout.h"
 
+/*
+ * TODO:
+ *      select
+ *      copy/ paste
+ *      ctrl + left/right
+ *
+ *      "Layouts" (UIelement position manipulation)
+ */
+
 namespace Kikan{
 
     void textboxOnClick(IInteractable* interactable, void* data){
         auto* textbox = (Textbox*)interactable;
-        glm::vec2 mouse = Engine::Kikan()->getUI()->getUIMousePos();
-        // TODO: include parent nodes in pos
-        textbox->setCursor(mouse.x - textbox->pos.x);
+        auto* ui = Engine::Kikan()->getUI();
+        glm::vec2 mouse = ui->getUIMousePos();
+        textbox->setCursor(mouse.x - ui->getPos(textbox).x);
     }
 
     Textbox::Textbox(std::string name, glm::vec2 pos, glm::vec2 dim) : IInteractable(std::move(name)) {

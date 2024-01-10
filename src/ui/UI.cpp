@@ -347,5 +347,18 @@ namespace Kikan {
         return _ui_mouse;
     }
 
+    // TODO: Check if return of vec2 is possible
+    glm::vec2 UI::getPos(IUIElement *element) {
+        auto* node = getNode(element);
+        glm::vec2 pos = element->pos;
+        pos += getPos(node);
+        return pos;
+    }
 
+    glm::vec2 UI::getPos(UINode *node) {
+        glm::vec2 pos = node->pos;
+        if(node->parent)
+            pos += getPos(node->parent);
+        return pos;
+    }
 }

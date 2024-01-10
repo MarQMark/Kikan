@@ -76,6 +76,9 @@ namespace Kikan {
          */
         void deleteNode(UINode* node);
 
+        glm::vec2 getPos(IUIElement* element);
+        glm::vec2 getPos(UINode* node);
+
         void update();
     private:
         //std::vector<IInteractable*> _interactables;
