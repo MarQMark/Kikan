@@ -53,6 +53,9 @@ namespace Kikan{
 
         if(!focused || _blink_time > _blink_max_time)
             render_cursor();
+
+        if(_cursor != _select_cursor)
+            render_select();
     }
 
     void Textbox::update() {
@@ -101,10 +104,12 @@ namespace Kikan{
             setCursor((int32_t)0);
 
         // TODO: Fix frame rate dependency
-        if(input->keyXPressed(Key::LEFT) || input->keyHolding(Key::LEFT))
+        if(input->keyXPressed(Key::LEFT) || input->keyHolding(Key::LEFT)){
             setCursor(_cursor - 1);
-        if(input->keyXPressed(Key::RIGHT) || input->keyHolding(Key::RIGHT))
+        }
+        if(input->keyXPressed(Key::RIGHT) || input->keyHolding(Key::RIGHT)){
             setCursor(_cursor + 1);
+        }
 
         _blink_time -= Engine::Kikan()->time.dt;
         if(_blink_time < 0)
@@ -123,6 +128,10 @@ namespace Kikan{
         }
         _cursor = cursor;
         reset_blink();
+
+        auto* input = Engine::Kikan()->getInput();
+        if(!input->keyPressed(Key::LEFT_SHIFT) && !input->keyPressed(Key::RIGHT_SHIFT))
+            _select_cursor = _cursor;
     }
 
     void Textbox::setCursor(float offset) {
@@ -342,25 +351,7 @@ namespace Kikan{
         float layer = Engine::Kikan()->getUI()->renderLayer + _layer_offset - 0.1f;
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
 
-        float xOff= 0;
-        if(_cursor != 0){
-            if(_left_bound){
-                std::string sub = _text.substr(_text_bound_l, _cursor - _text_bound_l);
-                xOff = get_text_len(sub);
-                if(_cursor > 1 && _text[_cursor - 1] == ' ')
-                    xOff -= _whitespace * .2f;
-                else
-                    xOff -= _whitespace * _font_options.spacing.x * .5f;
-            }
-            else{
-                std::string sub = _text.substr(_cursor, _text_bound_r - _cursor);
-                xOff = (dim.x - 2 * _text_offset.x) - get_text_len(sub);
-                if(_cursor > 1 && _text[_cursor - 1] == ' ')
-                    xOff -= _whitespace * .2f;
-                else
-                    xOff -= _whitespace * _font_options.spacing.x * 1.5f;
-            }
-        }
+        float xOff = get_cursor_off(_cursor);
 
         glm::vec2 points[4] = {
                 pos + _cursor_style.off + glm::vec2(xOff, 0),
@@ -391,7 +382,51 @@ namespace Kikan{
                 );
     }
 
-    float Textbox::get_text_len(const std::string& text) {
+
+    void Textbox::render_select() {
+        float layer = Engine::Kikan()->getUI()->renderLayer + _layer_offset - 0.1f;
+        auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
+
+        float rOff, lOff;
+        if(_cursor < _select_cursor){
+            rOff = get_cursor_off(_select_cursor);
+            lOff = get_cursor_off(_cursor);
+        }
+        else{
+            rOff = get_cursor_off(_cursor);
+            lOff = get_cursor_off(_select_cursor);
+        }
+
+        glm::vec2 points[4] = {
+                pos + _cursor_style.off + glm::vec2(lOff, 0),
+                pos + _cursor_style.off + glm::vec2(rOff, 0) + glm::vec2(_cursor_style.dim.x, 0),
+                pos + _cursor_style.off + glm::vec2(rOff, 0) + glm::vec2(_cursor_style.dim.x, -_cursor_style.dim.y),
+                pos + _cursor_style.off + glm::vec2(lOff, 0) + glm::vec2(0, -_cursor_style.dim.y),
+        };
+
+        // Dirty way of keeping the select always within the textbox
+        points[0].x = std::max(points[0].x, pos.x);
+        points[3].x = std::max(points[3].x, pos.x);
+        points[1].x = std::max(points[1].x, points[0].x + _cursor_style.dim.x);
+        points[2].x = std::max(points[2].x, points[3].x + _cursor_style.dim.x);
+
+        points[1].x = std::min(points[1].x, pos.x + dim.x);
+        points[2].x = std::min(points[2].x, pos.x + dim.x);
+        points[0].x = std::min(points[0].x, points[1].x - _cursor_style.dim.x);
+        points[3].x = std::min(points[3].x, points[2].x - _cursor_style.dim.x);
+
+        renderer->renderQuad(
+                points[0],
+                points[1],
+                points[2],
+                points[3],
+                glm::vec4(.2,.4,.8,.2),
+                layer,
+                &_opt
+        );
+    }
+
+    float Textbox::get_text_len(const std::string& text) const {
         float textWidth = 0;
 
         for (char c : text) {
@@ -438,6 +473,29 @@ namespace Kikan{
         return cWidth;
     }
 
+    float Textbox::get_cursor_off(int32_t cursor) {
+        float off = 0;
+        if(cursor != 0){
+            if(_left_bound){
+                std::string sub = _text.substr(_text_bound_l, cursor - _text_bound_l);
+                off = get_text_len(sub);
+                if(cursor > 1 && _text[cursor - 1] == ' ')
+                    off -= _whitespace * .2f;
+                else
+                    off -= _whitespace * _font_options.spacing.x * .5f;
+            }
+            else{
+                std::string sub = _text.substr(cursor, _text_bound_r - cursor);
+                off = (dim.x - 2 * _text_offset.x) - get_text_len(sub);
+                if(cursor > 1 && _text[cursor - 1] == ' ')
+                    off -= _whitespace * .2f;
+                else
+                    off -= _whitespace * _font_options.spacing.x * 1.5f;
+            }
+        }
+        return off;
+    }
+
     int32_t Textbox::getCursorPos() const {
         return _cursor;
     }
@@ -465,4 +523,7 @@ namespace Kikan{
     struct Font::Options Textbox::getFont() {
         return _font_options;
     }
+
+
+
 }

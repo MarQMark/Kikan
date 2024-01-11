@@ -45,6 +45,7 @@ namespace Kikan {
         glm::vec2 _text_offset = glm::vec2(0);
 
         int32_t _cursor = 0;
+        int32_t _select_cursor = 0;
         CursorStyle _cursor_style;
         const double _blink_max_time = 800.;
         double _blink_time = _blink_max_time;
@@ -60,15 +61,16 @@ namespace Kikan {
         Key _last_key = Key::UNKNOWN;
 
         void update_font_scale();
-        float get_text_len(const std::string& text);
+        float get_text_len(const std::string& text) const;
         float get_char_len(char c) const;
+        float get_cursor_off(int32_t cursor);
 
         void calc_bounds();
 
         void render_text(const std::string& text, glm::vec2 pos);
         void render_outline();
         void render_cursor();
-
+        void render_select();
     };
 }
 
