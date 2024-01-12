@@ -16,6 +16,7 @@ namespace Kikan {
 
         void setText(std::string text);
         std::string getText();
+        void eraseText(int32_t begin, int32_t end);
 
         void setCursor(int32_t cursor);
         void setCursor(float offset);
@@ -64,6 +65,7 @@ namespace Kikan {
         float get_text_len(const std::string& text) const;
         float get_char_len(char c) const;
         float get_cursor_off(int32_t cursor);
+        int32_t get_next_whitespace(int32_t start,  bool rightDir);
 
         void calc_bounds();
 

@@ -7,9 +7,8 @@
 
 /*
  * TODO:
- *      select
+ *      select with mouse
  *      copy/ paste
- *      ctrl + left/right
  *
  *      "Layouts" (UIelement position manipulation)
  */
@@ -70,32 +69,62 @@ namespace Kikan{
         if(_last_key && (input->keyXPressed(_last_key) || input->keyHolding(_last_key))){
             char c = KeyboardLayout::getChar(_last_key, input->keyPressed(Key::LEFT_SHIFT) ? KeyboardLayout::Modifier::SHIFT : KeyboardLayout::Modifier::NONE);
             if(c > 0){
+                if(_select_cursor > _cursor){
+                    eraseText(_cursor, _select_cursor);
+                    setCursor(_cursor);
+                }
+                else if(_select_cursor < _cursor){
+                    eraseText(_select_cursor, _cursor);
+                    setCursor(_select_cursor);
+                }
+
                 _text.insert(_cursor, 1, c);
                 setCursor(_cursor + 1);
+                _select_cursor = _cursor;
             }
         }
 
         if(input->keyXPressed(Key::BACKSPACE) || input->keyHolding(Key::BACKSPACE)){
-            if(_cursor > 0){
-                _text.erase(_cursor - 1, 1);
-                if(_text.size() < _text_bound_r){
-                    if(_cursor - 1 == (int32_t)_text.size()){
-                        _text_bound_r = _text.size();
-                        _left_bound = false;
-                    }
-                    else
-                        _left_bound = true;
-                }
-                setCursor(_cursor - 1);
+            int32_t begin = std::max(_cursor - 1, 0);
+            int32_t end = _cursor;
+
+            if(_cursor > _select_cursor){
+                begin = _select_cursor;
+                end = _cursor;
             }
+            else if(_cursor < _select_cursor){
+                begin = _cursor;
+                end = _select_cursor;
+                _select_cursor = begin;
+            }
+            else if(input->keyPressed(Key::LEFT_CONTROL) || input->keyPressed(Key::RIGHT_CONTROL)){
+                begin = get_next_whitespace(_cursor, false);
+            }
+
+            _select_cursor = begin;
+            eraseText(begin, end);
+            setCursor(begin);
         }
 
         if(input->keyXPressed(Key::DELETE) || input->keyHolding(Key::DELETE)){
-            if(_cursor < (int32_t)_text.size()){
-                _text.erase(_cursor, 1);
-                _left_bound = true;
-                setCursor(_cursor);
+            int32_t begin = _cursor;
+            int32_t end = std::max(_cursor + 1, (int32_t)_text.size());
+
+            if(_cursor > _select_cursor){
+                begin = _select_cursor;
+                end = _cursor;
             }
+            else if(_cursor < _select_cursor){
+                begin = _cursor;
+                end = _select_cursor;
+            }
+            else if(input->keyPressed(Key::LEFT_CONTROL) || input->keyPressed(Key::RIGHT_CONTROL)){
+                end = get_next_whitespace(_cursor, true);
+            }
+
+            _select_cursor = begin;
+            eraseText(begin, end);
+            setCursor(begin);
         }
 
         if(input->keyXPressed(Key::END))
@@ -105,10 +134,16 @@ namespace Kikan{
 
         // TODO: Fix frame rate dependency
         if(input->keyXPressed(Key::LEFT) || input->keyHolding(Key::LEFT)){
-            setCursor(_cursor - 1);
+            if(input->keyPressed(Key::LEFT_CONTROL) || input->keyPressed(Key::RIGHT_CONTROL))
+                setCursor(get_next_whitespace(_cursor, false));
+            else
+                setCursor(_cursor - 1);
         }
         if(input->keyXPressed(Key::RIGHT) || input->keyHolding(Key::RIGHT)){
-            setCursor(_cursor + 1);
+            if(input->keyPressed(Key::LEFT_CONTROL) || input->keyPressed(Key::RIGHT_CONTROL))
+                setCursor(get_next_whitespace(_cursor, true));
+            else
+                setCursor(_cursor + 1);
         }
 
         _blink_time -= Engine::Kikan()->time.dt;
@@ -166,6 +201,25 @@ namespace Kikan{
 
     std::string Textbox::getText() {
         return _text;
+    }
+
+    void Textbox::eraseText(int32_t begin, int32_t end) {
+        begin = std::min(std::max(begin, 0), (int32_t)_text.size());
+        end =   std::min(std::max(end,   0), (int32_t)_text.size());
+
+       _text.erase(begin, end - begin);
+
+        if(_text.size() < _text_bound_r){
+            if(_cursor - 1 == (int32_t)_text.size()){
+                _text_bound_r = _text.size();
+                _left_bound = false;
+            }
+            else
+                _left_bound = true;
+        }
+
+        if(_cursor > (int32_t)_text.size())
+            setCursor((int32_t)_text.size());
     }
 
     void Textbox::destroy() {
@@ -524,6 +578,30 @@ namespace Kikan{
         return _font_options;
     }
 
+    int32_t Textbox::get_next_whitespace(int32_t start, bool rightDir) {
+        int32_t inc = rightDir ? 1 : -1;
+        bool startWord = false;
+        if(!rightDir)
+            start -= 1;
 
+        if(start >= 0 && start < _text.size()){
+            if(_text[start] != ' ')
+                startWord = true;
+        }
 
+        for(int32_t i = start ;; i += inc){
+            if(i < 0)
+                return 0;
+            if(i > (int32_t )_text.size() - 1)
+                return (int32_t )_text.size();
+
+            char c = _text[i];
+            if(c != ' ')
+                startWord = true;
+            else if(c == ' ' && startWord)
+                return rightDir ? i : i + 1;
+        }
+
+        return start;
+    }
 }
