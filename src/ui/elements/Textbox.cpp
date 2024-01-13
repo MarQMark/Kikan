@@ -3,7 +3,6 @@
 
 #include "Kikan/ui/elements/Textbox.h"
 #include "Kikan/Engine.h"
-#include "Kikan/input/KeyboardLayout.h"
 
 /*
  * TODO:
@@ -35,6 +34,7 @@ namespace Kikan{
         _cursor_style.off.y = -dim.y * (1 - 0.9f * .75f) / 2.f;
 
         registerCallback(textboxOnClick, State::PRESSED);
+        _text_queue_id = Engine::Kikan()->getInput()->registerTextQueue();
     }
 
     void Textbox::render(glm::vec2 parentPos) {
@@ -58,16 +58,14 @@ namespace Kikan{
     }
 
     void Textbox::update() {
-        if(!focused)
-            return;
-
         auto* input = Engine::Kikan()->getInput();
+        if(!focused){
+            input->clearTextQueue(_text_queue_id);
+            return;
+        }
 
-        if(!KeyboardLayout::isMod(input->lastKey()))
-            _last_key = input->lastKey();
-
-        if(_last_key && (input->keyXPressed(_last_key) || input->keyHolding(_last_key))){
-            char c = KeyboardLayout::getChar(_last_key, input->keyPressed(Key::LEFT_SHIFT) ? KeyboardLayout::Modifier::SHIFT : KeyboardLayout::Modifier::NONE);
+        while(!input->isTextQueueEmpty(_text_queue_id)) {
+            char c = input->popTextQueue(_text_queue_id);
             if(c > 0){
                 if(_select_cursor > _cursor){
                     eraseText(_cursor, _select_cursor);
@@ -108,7 +106,7 @@ namespace Kikan{
 
         if(input->keyXPressed(Key::DELETE) || input->keyHolding(Key::DELETE)){
             int32_t begin = _cursor;
-            int32_t end = std::max(_cursor + 1, (int32_t)_text.size());
+            int32_t end = std::min(_cursor + 1, (int32_t)_text.size());
 
             if(_cursor > _select_cursor){
                 begin = _select_cursor;

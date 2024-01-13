@@ -25,11 +25,18 @@ namespace Kikan {
         };
         glfwSetKeyCallback(window, key);
 
+        auto text = [](GLFWwindow* w, unsigned int c){
+            static_cast<Input*>(glfwGetWindowUserPointer(w))->char_callback(c);
+        };
+        glfwSetCharCallback(window, text);
+
         return input;
     }
 
     Input::Input(GLFWwindow* window) {
-        // init maps
+        _window = window;
+
+         // init maps
         for (int i = -1; i < Key::LAST; ++i) {
             _keys[(Key)i] = KeyState::NONE;
             _queue_keys[(Key)i] = KeyState::NONE;
@@ -38,6 +45,11 @@ namespace Kikan {
         for (int i = 0; i < Mouse::BUTTON_LAST; ++i) {
             _m_keys[i] = false;
         }
+    }
+
+    Input::~Input() {
+        for(auto p : _text_queues)
+            delete p.second;
     }
 
     void Input::mouse_btn_callback(int btn, int action, int mods) {
@@ -53,6 +65,11 @@ namespace Kikan {
          kikanPrint("key: %d\n", key);
         _immediate_keys[(Key)key] = glfw_to_keystate(action);
         _queue_keys[(Key)key] = action;
+    }
+
+    void Input::char_callback(unsigned int codepoint) {
+        for(auto p : _text_queues)
+            p.second->push(codepoint);
     }
 
     double Input::mouseX() const {
@@ -166,4 +183,51 @@ namespace Kikan {
     Key Input::lastKey() {
         return _last_key;
     }
+
+    const char* Input::getClipboard() {
+        glfwGetClipboardString(_window);
+    }
+
+    void Input::setClipboard(char *content) {
+        glfwSetClipboardString(_window, content);
+    }
+
+    uint32_t Input::registerTextQueue() {
+        uint32_t id = _next_queue_id;
+        _next_queue_id++;
+        _text_queues[id] = new std::queue<uint32_t>;
+        return id;
+    }
+
+    void Input::unregisterTextQueue(uint32_t id) {
+        delete _text_queues[id];
+        _text_queues[id] = nullptr;
+    }
+
+    uint32_t Input::getTextQueue(uint32_t id) {
+        if(isTextQueueEmpty(id))
+            return 0;
+
+        return _text_queues[id]->front();
+    }
+
+    uint32_t Input::popTextQueue(uint32_t id) {
+        if(isTextQueueEmpty(id))
+            return 0;
+
+        uint32_t c = _text_queues[id]->front();
+        _text_queues[id]->pop();
+        return c;
+    }
+
+    bool Input::isTextQueueEmpty(uint32_t id) {
+        return _text_queues[id]->empty();
+    }
+
+    void Input::clearTextQueue(uint32_t id) {
+        while(!isTextQueueEmpty(id))
+            popTextQueue(id);
+    }
+
+
 }

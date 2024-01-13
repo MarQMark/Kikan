@@ -59,7 +59,7 @@ namespace Kikan {
         float _whitespace;
         Font::Options _font_options;
 
-        Key _last_key = Key::UNKNOWN;
+        uint32_t _text_queue_id;
 
         void update_font_scale();
         float get_text_len(const std::string& text) const;
