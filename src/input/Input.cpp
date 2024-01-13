@@ -62,7 +62,6 @@ namespace Kikan {
     }
 
     void Input::key_callback(int key, int scancode, int action, int mods) {
-         kikanPrint("key: %d\n", key);
         _immediate_keys[(Key)key] = glfw_to_keystate(action);
         _queue_keys[(Key)key] = action;
     }
@@ -188,6 +187,11 @@ namespace Kikan {
         glfwGetClipboardString(_window);
     }
 
+    /*
+     * !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * While string is in clipboard can cause lag
+     *
+    */
     void Input::setClipboard(char *content) {
         glfwSetClipboardString(_window, content);
     }
