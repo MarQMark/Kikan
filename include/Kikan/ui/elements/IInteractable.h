@@ -33,7 +33,14 @@ namespace Kikan {
 
             _prev_state = _state;
             _state = state;
-            stateChange();
+
+            if(!enabled)
+                return;
+
+            for(auto* callback : _callbacks){
+                if(callback->state == State::ALL || callback->state == _state)
+                    callback->callback(this, _state, callback->data);
+            }
         }
 
         State getState(){
@@ -51,7 +58,7 @@ namespace Kikan {
          *  state:      If other than ALL callback will only be called if state switches to the specified state
          *  data:       Option to pass data to the function, for example object which should be influenced by change (will not get freed by automatically)
          */
-        uint32_t registerCallback(void(*callback)(IInteractable* interactable, void* data), State state = State::ALL, void* data = nullptr){
+        uint32_t registerCallback(void(*callback)(IInteractable* interactable, State state, void* data), State state = State::ALL, void* data = nullptr){
             auto* cb = new Callback();
             cb->callback = callback;
             cb->state = state;
@@ -69,16 +76,6 @@ namespace Kikan {
             _callbacks.erase(std::remove(_callbacks.begin(), _callbacks.end(), _callbacks[id]), _callbacks.end());
         }
 
-        void stateChange(){
-            if(!enabled)
-                return;
-
-            for(auto* callback : _callbacks){
-                if(callback->state == State::ALL || callback->state == _state)
-                    callback->callback(this, callback->data);
-            }
-        }
-
         // Even if not interactable it can still have focus
         bool interactable = true;
 
@@ -91,7 +88,7 @@ namespace Kikan {
         State _prev_state = State::NONE;
 
         struct Callback{
-            void(*callback)(IInteractable* interactable, void* data);
+            void(*callback)(IInteractable* interactable, State state, void* data);
             void* data;
             State state = State::ALL; // only call if state switches to this
         };

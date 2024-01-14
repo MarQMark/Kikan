@@ -6,18 +6,18 @@
 
 /*
  * TODO:
- *      select with mouse
- *
  *      "Layouts" (UIelement position manipulation)
  */
 
 namespace Kikan{
 
-    void textboxOnClick(IInteractable* interactable, void* data){
+    void textboxOnClick(IInteractable* interactable, IInteractable::State state, void* data){
         auto* textbox = (Textbox*)interactable;
         auto* ui = Engine::Kikan()->getUI();
         glm::vec2 mouse = ui->getUIMousePos();
+
         textbox->setCursor(mouse.x - ui->getPos(textbox).x);
+        textbox->setHold();
     }
 
     Textbox::Textbox(std::string name, glm::vec2 pos, glm::vec2 dim) : IInteractable(std::move(name)) {
@@ -32,7 +32,7 @@ namespace Kikan{
         _cursor_style.dim.x = .5;
         _cursor_style.off.y = -dim.y * (1 - 0.9f * .75f) / 2.f;
 
-        registerCallback(textboxOnClick, State::PRESSED);
+        registerCallback(textboxOnClick, IInteractable::PRESSED);
         _text_queue_id = Engine::Kikan()->getInput()->registerTextQueue();
     }
 
@@ -58,6 +58,24 @@ namespace Kikan{
 
     void Textbox::update() {
         auto* input = Engine::Kikan()->getInput();
+        if(_holding_mouse && !input->mousePressed(Mouse::BUTTON_LEFT))
+            _holding_mouse = false;
+
+        if(_holding_mouse){
+            auto* ui = Engine::Kikan()->getUI();
+            glm::vec2 mouse = ui->getUIMousePos();
+            float  offset = mouse.x - ui->getPos(this).x;
+
+            setCursor(offset);
+            // TODO: make framerate independent
+            if(offset < 0){
+                setCursor(_cursor - 1);
+            }
+            else if(offset > dim.x){
+                setCursor(_cursor + 1);
+            }
+        }
+
         if(!focused){
             input->clearTextQueue(_text_queue_id);
             return;
@@ -214,7 +232,7 @@ namespace Kikan{
         reset_blink();
 
         auto* input = Engine::Kikan()->getInput();
-        if(!input->keyPressed(Key::LEFT_SHIFT) && !input->keyPressed(Key::RIGHT_SHIFT))
+        if(!input->keyPressed(Key::LEFT_SHIFT) && !input->keyPressed(Key::RIGHT_SHIFT) && !_holding_mouse)
             _select_cursor = _cursor;
     }
 
@@ -652,5 +670,9 @@ namespace Kikan{
         }
 
         return start;
+    }
+
+    void Textbox::setHold() {
+        _holding_mouse = true;
     }
 }

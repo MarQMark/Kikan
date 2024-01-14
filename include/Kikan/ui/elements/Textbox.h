@@ -31,6 +31,11 @@ namespace Kikan {
         void setFont(struct Font::Options font);
         struct Font::Options getFont();
 
+        /*
+         * This function is for internal use only
+         */
+        void setHold();
+
         void render(glm::vec2 parentPos) override;
         void update() override;
 
@@ -60,6 +65,8 @@ namespace Kikan {
         Font::Options _font_options;
 
         uint32_t _text_queue_id;
+
+        bool _holding_mouse = false;
 
         void update_font_scale();
         float get_text_len(const std::string& text) const;
