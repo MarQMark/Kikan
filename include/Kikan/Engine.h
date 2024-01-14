@@ -48,6 +48,9 @@ namespace Kikan {
         void setTitle(std::string& title);
         std::string getTitle();
 
+        void setTargetFPS(uint32_t fps);
+        uint32_t getTargetFPS();
+
         // custom methods
         void (*preUpdate)(Engine*) = nullptr;
         void (*postUpdate)(Engine*) = nullptr;
@@ -62,6 +65,7 @@ namespace Kikan {
         unsigned int _frames_last_second = 0;
 
         std::string _title = std::string();
+        uint32_t _fps = 60;
 
         Renderer* _renderer;
         ECS* _ecs;

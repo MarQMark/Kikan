@@ -347,6 +347,7 @@ namespace Kikan {
         return _ui_mouse;
     }
 
+    // TODO: Add position manipulation to nodes (layouts)
     // TODO: Check if return of vec2 is possible
     glm::vec2 UI::getPos(IUIElement *element) {
         auto* node = getNode(element);
