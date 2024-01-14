@@ -4,10 +4,6 @@
 #include "Kikan/ui/elements/Textbox.h"
 #include "Kikan/Engine.h"
 
-/*
- * TODO:
- *      "Layouts" (UIelement position manipulation)
- */
 
 namespace Kikan{
 
@@ -253,6 +249,8 @@ namespace Kikan{
                     setCursor((int32_t)(_text_bound_l + i));
                 break;
             }
+            if(i == sub.size() - 1)
+                setCursor((int32_t)(_text_bound_r));
         }
     }
 
