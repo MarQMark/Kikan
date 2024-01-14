@@ -49,7 +49,7 @@ namespace Kikan {
         std::string getTitle();
 
         void setTargetFPS(uint32_t fps);
-        uint32_t getTargetFPS();
+        uint32_t getTargetFPS() const;
 
         // custom methods
         void (*preUpdate)(Engine*) = nullptr;
@@ -73,6 +73,7 @@ namespace Kikan {
         UI* _ui;
 
         void update_fps();
+        void limit_fps();
         void update_title();
     };
 }

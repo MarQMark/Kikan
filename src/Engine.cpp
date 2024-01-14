@@ -34,6 +34,17 @@ namespace Kikan {
         time.tt += _dt;
     }
 
+    void Engine::limit_fps() {
+        if(_fps == 0)
+            return;
+
+        auto delay = (double)(1000./(double)_fps - ((std::chrono::duration<double, std::milli>)(std::chrono::high_resolution_clock::now() - _last_time)).count());
+        if(delay < 0)
+            kikanPrintW("[WARNING] Overload could not keep target FPS\n");
+        else
+            std::this_thread::sleep_for(std::chrono::microseconds((uint32_t)(delay * 1000)));
+    }
+
     void Engine::update() {
         update_fps();
         update_title();
@@ -61,13 +72,7 @@ namespace Kikan {
 
         if(postRender != nullptr) postRender(this);
 
-        if(_fps != 0){
-            auto delay = (int32_t)(2000./(double)_fps - time.dt);
-            if(delay < 0)
-                kikanPrintW("[WARNING] Overload could not keep target FPS\n");
-            else
-                std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-        }
+        limit_fps();
     }
 
     Renderer *Engine::getRenderer() {
@@ -109,7 +114,7 @@ namespace Kikan {
         _fps = fps;
     }
 
-    uint32_t Engine::getTargetFPS() {
+    uint32_t Engine::getTargetFPS() const {
         return _fps;
     }
 
