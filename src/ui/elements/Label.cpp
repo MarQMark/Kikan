@@ -19,10 +19,6 @@ namespace Kikan{
 
         _font_options.font = ((StdRenderer*)Engine::Kikan()->getRenderer())->getFont();
         _font_size = dim.y;
-        _txt_pos[0] = glm::vec2(pos.x,          pos.y);
-        _txt_pos[1] = glm::vec2(pos.x + dim.x,  pos.y);
-        _txt_pos[2] = glm::vec2(pos.x + dim.x,  pos.y - dim.y);
-        _txt_pos[3] = glm::vec2(pos.x,          pos.y - dim.y);
     }
 
     void Label::render(glm::vec2 parentPos) {
@@ -31,8 +27,10 @@ namespace Kikan{
 
         if(_txt){
             glm::vec2 position[4];
-            for(int i = 0; i < 4; i++)
-                position[i] = _txt_pos[i] + parentPos;
+            position[0] = parentPos + _txt_pos[0] = glm::vec2(pos.x,          pos.y);
+            position[1] = parentPos + _txt_pos[1] = glm::vec2(pos.x + dim.x,  pos.y);
+            position[2] = parentPos + _txt_pos[2] = glm::vec2(pos.x + dim.x,  pos.y - dim.y);
+            position[3] = parentPos + _txt_pos[3] = glm::vec2(pos.x,          pos.y - dim.y);
             renderer->renderTexture2D(position, _txt_coords, _txt->get(), _bg_color, renderLayer + _txt_layer_offset, &_opt);
         }
         else if(_bg_color.w != 0)
@@ -103,15 +101,6 @@ namespace Kikan{
 
     Texture2D *Label::getTexture() {
         return _txt;
-    }
-
-    void Label::setTexturePos(glm::vec2 *txtPos) {
-        for(int i = 0; i < 4; i++)
-            _txt_pos[i] = txtPos[i];
-    }
-
-    void Label::getTexturePos(glm::vec2 *txtPos) {
-        txtPos = _txt_pos;
     }
 
     void Label::setTextureCoords(glm::vec2 *txtCoords) {

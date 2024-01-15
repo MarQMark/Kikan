@@ -30,8 +30,6 @@ namespace Kikan {
 
         void setTexture2D(Texture2D* txt);
         Texture2D* getTexture();
-        void setTexturePos(glm::vec2 txtPos[]);
-        void getTexturePos(glm::vec2 txtPos[]);
         void setTextureCoords(glm::vec2 txtCoords[]);
         void getTextureCoords(glm::vec2 txtCoords[]);
         void setTextureLayerOffset(float offset);
