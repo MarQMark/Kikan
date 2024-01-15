@@ -32,7 +32,7 @@ namespace Kikan{
         if(_txt){
             glm::vec2 position[4];
             for(int i = 0; i < 4; i++)
-                position[i] += _txt_pos[i] + parentPos;
+                position[i] = _txt_pos[i] + parentPos;
             renderer->renderTexture2D(position, _txt_coords, _txt->get(), _bg_color, renderLayer + _txt_layer_offset, &_opt);
         }
         else if(_bg_color.w != 0)
