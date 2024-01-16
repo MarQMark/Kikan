@@ -128,21 +128,24 @@ namespace Kikan{
                 kikanPrintW("[WARNING] Copying is to clipboard discouraged as it can cause lag\n");
             }
             else if(input->keyXPressed(Key::V) || input->keyHolding(Key::V)){
-                std::string c(input->getClipboard());
-                if(!c.empty()){
-                    if(_select_cursor > _cursor){
-                        eraseText(_cursor, _select_cursor);
-                        setCursor(_cursor);
-                    }
-                    else if(_select_cursor < _cursor){
-                        eraseText(_select_cursor, _cursor);
-                        setCursor(_select_cursor);
-                    }
+                const char* tmp = input->getClipboard();
+                if(tmp && tmp[0] != '\0' && tmp[0] != '\357'){
+                    std::string c(tmp);
+                    if(!c.empty()){
+                        if(_select_cursor > _cursor){
+                            eraseText(_cursor, _select_cursor);
+                            setCursor(_cursor);
+                        }
+                        else if(_select_cursor < _cursor){
+                            eraseText(_select_cursor, _cursor);
+                            setCursor(_select_cursor);
+                        }
 
-                    _text.insert(_cursor, c);
-                    setCursor(_cursor + (int32_t)c.size());
-                    reset_blink();
-                    _select_cursor = _cursor;
+                        _text.insert(_cursor, c);
+                        setCursor(_cursor + (int32_t)c.size());
+                        reset_blink();
+                        _select_cursor = _cursor;
+                    }
                 }
             }
         }
