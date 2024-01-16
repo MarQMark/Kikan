@@ -184,7 +184,7 @@ namespace Kikan {
     }
 
     const char* Input::getClipboard() {
-        glfwGetClipboardString(_window);
+        return glfwGetClipboardString(_window);
     }
 
     /*

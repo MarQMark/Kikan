@@ -295,7 +295,8 @@ namespace Kikan{
         if(_text.empty()) {
             _left_bound = true;
             _text_bound_l = 0;
-            setCursor(0);
+            if(_cursor != 0)
+                setCursor(0);
             return;
         }
 
