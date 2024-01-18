@@ -10,7 +10,6 @@ namespace Kikan {
         struct Options {
             GLint level = 0;
             GLint internalformat = GL_RGBA;
-            GLint border = 0;
             GLenum format = GL_RGBA;
             GLenum type = GL_UNSIGNED_BYTE;
 
@@ -24,9 +23,6 @@ namespace Kikan {
         ~Texture2D();
 
         GLuint get() const;
-
-        void set(GLsizei width, GLsizei height, float data[]);
-        void set(GLsizei width, GLsizei height, unsigned char data[]);
 
         void bind(GLuint slot = 0) const;
         static void unbind();
