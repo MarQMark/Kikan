@@ -18,8 +18,8 @@ namespace Kikan {
         }
 
         ~Entity(){
-            for(auto & _component : _components)
-                _component.second->destroy();
+            for(auto & component : _components)
+                component.second->destroy();
         }
 
         template<class T>
@@ -37,7 +37,11 @@ namespace Kikan {
 
         template<class T>
         T* getComponent(){
-            return (T*)_components[TypeRegistry::getSignature<T>()];
+            unsigned int sig = TypeRegistry::getSignature<T>();
+            if(_components.count(sig))
+                return (T*)_components[TypeRegistry::getSignature<T>()];
+
+            return nullptr;
         }
 
         std::vector<unsigned int> getSignatures() const{
