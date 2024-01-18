@@ -2,7 +2,7 @@
 
 namespace Kikan {
 
-    Texture2D::Texture2D(GLsizei width, GLsizei height, uint8_t **data, Texture2D::Options *opt) {
+    Texture2D::Texture2D(GLsizei width, GLsizei height, uint8_t *data, Texture2D::Options *opt) {
         bool freeOpt = false;
         if(!opt){
             freeOpt = true;

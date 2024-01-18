@@ -20,7 +20,7 @@ namespace Kikan {
             GLint warpT = GL_CLAMP_TO_EDGE;
         };
 
-        Texture2D(GLsizei width, GLsizei height, uint8_t* data[], Options* opt = nullptr);
+        Texture2D(GLsizei width, GLsizei height, uint8_t* data, Options* opt = nullptr);
         ~Texture2D();
 
         GLuint get() const;
