@@ -7,8 +7,20 @@
 namespace Kikan {
     class Texture2D {
     public:
-        Texture2D(GLsizei width, GLsizei height, float data[], GLenum filter = GL_NEAREST);
-        Texture2D(GLsizei width, GLsizei height, unsigned char data[], GLenum filter = GL_NEAREST);
+        struct Options {
+            GLint level = 0;
+            GLint internalformat = GL_RGBA;
+            GLint border = 0;
+            GLenum format = GL_RGBA;
+            GLenum type = GL_UNSIGNED_BYTE;
+
+            GLint minFilter = GL_NEAREST;
+            GLint maxFilter = GL_NEAREST;
+            GLint warpS = GL_CLAMP_TO_EDGE;
+            GLint warpT = GL_CLAMP_TO_EDGE;
+        };
+
+        Texture2D(GLsizei width, GLsizei height, uint8_t* data[], Options* opt = nullptr);
         ~Texture2D();
 
         GLuint get() const;
@@ -19,8 +31,6 @@ namespace Kikan {
         void bind(GLuint slot = 0) const;
         static void unbind();
     private:
-        void gen(GLenum filter);
-
         GLuint _id;
         GLsizei _width;
         GLsizei _height;
