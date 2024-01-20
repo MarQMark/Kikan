@@ -40,4 +40,12 @@ namespace Kikan {
     GLuint Texture2D::get() const {
         return _id;
     }
+
+    GLsizei Texture2D::getWidth() const {
+        return _width;
+    }
+
+    GLsizei Texture2D::getHeight() const {
+        return _height;
+    }
 }

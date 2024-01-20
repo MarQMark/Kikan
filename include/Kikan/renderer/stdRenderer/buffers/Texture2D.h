@@ -26,6 +26,9 @@ namespace Kikan {
 
         void bind(GLuint slot = 0) const;
         static void unbind();
+
+        GLsizei getWidth() const;
+        GLsizei getHeight() const;
     private:
         GLuint _id;
         GLsizei _width;
