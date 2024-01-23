@@ -7,6 +7,7 @@ namespace Kikan {
         auto* defaultScene = new Scene(name);
         _currScene = defaultScene;
         addScene(defaultScene);
+        _scenes["default"] = defaultScene;
     }
 
     ECS::~ECS() {
@@ -25,7 +26,7 @@ namespace Kikan {
             return _scenes[name];
 
         //return default if no scene found
-        return _scenes.at(0);
+        return _scenes["default"];
     }
 
     void ECS::addScene(Scene* scene) {
