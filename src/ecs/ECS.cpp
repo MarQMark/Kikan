@@ -6,7 +6,7 @@ namespace Kikan {
     ECS::ECS(const std::string& name) {
         auto* defaultScene = new Scene(name);
         _currScene = defaultScene;
-        _scenes.push_back(defaultScene);
+        addScene(defaultScene);
     }
 
     ECS::~ECS() {
@@ -14,30 +14,49 @@ namespace Kikan {
             thread->stop();
             delete thread;
         }
-        for (Scene* scene : _scenes) {
-            delete scene;
+        for (auto p : _scenes) {
+            delete p.second;
         }
         _scenes.clear();
     }
 
     Scene *ECS::getScene(const std::string& name) {
-        //look for specified scene
-        for (Scene* scene : _scenes) {
-            if (scene->name() == name)
-                return scene;
-        }
+        if(_scenes.count(name))
+            return _scenes[name];
 
         //return default if no scene found
         return _scenes.at(0);
     }
 
-    void ECS::addScene(const std::string& name) {
-        auto* scene = new Scene(name);
-        _scenes.push_back(scene);
+    void ECS::addScene(Scene* scene) {
+        if(_scenes.count(scene->name())){
+            kikanPrintE("[ERROR] Ecs: Scene %s already exists\n", scene->name().c_str());
+            return;
+        }
+
+        _scenes[scene->name()] = scene;
     }
 
-    void ECS::setCurrScene(const std::string& name) {
-        _currScene = getScene(name);
+    void ECS::removeScene(const std::string &name) {
+        if(_scenes.count(name))
+            _scenes.erase(name);
+    }
+
+    void ECS::deleteScene(const std::string &name) {
+        if(_scenes.count(name))
+            delete _scenes[name];
+        removeScene(name);
+    }
+
+    void ECS::loadScene(const std::string &name) {
+        if(!_scenes.count(name)){
+            kikanPrintE("[ERROR] Ecs: Scene %s does not exist\n", name.c_str());
+            return;
+        }
+
+        _currScene->unload();
+        _currScene = _scenes[name];
+        _currScene->load();
     }
 
     void ECS::addEntity(Entity *entity) {
@@ -52,8 +71,8 @@ namespace Kikan {
 
     void ECS::deleteEntity(Entity *entity) {
         removeEntity(entity);
-        for(auto* scene : _scenes){
-            scene->removeEntity(entity);
+        for(auto p : _scenes){
+            p.second->removeEntity(entity);
         }
         for(auto* thread : _threads)
             thread->removeEntity(entity);
@@ -102,6 +121,4 @@ namespace Kikan {
 
         _currScene->update(dt);
     }
-
-
 }

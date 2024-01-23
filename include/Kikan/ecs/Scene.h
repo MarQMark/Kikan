@@ -42,7 +42,17 @@ namespace Kikan {
         void addThreadedSystem(ISystem* system, uint32_t id);
         void removeThreadedEntity(Entity* entity, uint32_t id);
 
+        void load();
+        void unload();
+        void setOnLoad(void(*onLoad)(Scene* scene, void* data), void* data);
+        void setOnUnload(void(*onUnload)(Scene* scene, void* data), void* data);
+
     private:
+        void (*on_load)(Scene* scene, void* data) = nullptr;
+        void* _on_load_data = nullptr;
+        void (*on_unload)(Scene* scene, void* data) = nullptr;
+        void* _on_unload_data = nullptr;
+
         const std::string _name;
 
         std::vector<Entity*> _entities;

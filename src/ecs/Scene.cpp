@@ -65,4 +65,24 @@ namespace Kikan {
     void Scene::getEntities(std::vector<unsigned int> *signatures, std::vector<Entity *>* entities) {
         Util::getEntities(signatures, entities, _entities);
     }
+
+    void Scene::load() {
+        if(on_load)
+            on_load(this, _on_load_data);
+    }
+
+    void Scene::unload() {
+        if(on_unload)
+            on_unload(this, _on_unload_data);
+    }
+
+    void Scene::setOnLoad(void (*onLoad)(Scene *, void *), void *data) {
+        on_load = onLoad;
+        _on_load_data = data;
+    }
+
+    void Scene::setOnUnload(void (*onUnload)(Scene *, void *), void *data) {
+        on_unload = onUnload;
+        _on_unload_data = data;
+    }
 }

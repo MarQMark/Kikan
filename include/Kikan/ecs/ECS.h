@@ -13,9 +13,10 @@ namespace Kikan {
         void update(double dt);
 
         Scene* getScene(const std::string& = "default");
-        void addScene(const std::string& name);
-        // TODO: Remove Scene
-        void setCurrScene(const std::string& name = "default");
+        void addScene(Scene* scene);
+        void removeScene(const std::string& name);
+        void deleteScene(const std::string& name);
+        void loadScene(const std::string& name = "default");
 
         void addEntity(Entity* entity);
 
@@ -48,7 +49,7 @@ namespace Kikan {
 
         std::vector<EcsThread*> _threads;
 
-        std::vector<Scene*> _scenes;
+        std::map<std::string, Scene*> _scenes;
         Scene* _currScene;
     };
 }
