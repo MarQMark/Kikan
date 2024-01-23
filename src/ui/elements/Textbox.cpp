@@ -148,6 +148,10 @@ namespace Kikan{
                     }
                 }
             }
+            else if(input->keyXPressed(Key::A) || input->keyHolding(Key::A)){
+                setCursor((int32_t)_text.size());
+                _select_cursor = 0;
+            }
         }
 
         if(input->keyXPressed(Key::BACKSPACE) || input->keyHolding(Key::BACKSPACE)){
