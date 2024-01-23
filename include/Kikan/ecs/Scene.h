@@ -44,8 +44,8 @@ namespace Kikan {
 
         void load();
         void unload();
-        void setOnLoad(void(*onLoad)(Scene* scene, void* data), void* data);
-        void setOnUnload(void(*onUnload)(Scene* scene, void* data), void* data);
+        void setOnLoad(void(*onLoad)(Scene* scene, void* data), void* data = nullptr);
+        void setOnUnload(void(*onUnload)(Scene* scene, void* data), void* data = nullptr);
 
     private:
         void (*on_load)(Scene* scene, void* data) = nullptr;
