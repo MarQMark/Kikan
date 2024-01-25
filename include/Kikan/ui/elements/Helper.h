@@ -6,7 +6,9 @@
 namespace Kikan{
     void UIPreRender(AutoBatch* batch, void* data){
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
-        renderer->shader()->uniformM4fv("u_mvp", Engine::Kikan()->getUI()->getMVP());
+        auto* shader = renderer->shader();
+        shader->bind();
+        shader->uniformM4fv("u_mvp", Engine::Kikan()->getUI()->getMVP());
     }
 }
 
