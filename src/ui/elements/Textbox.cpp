@@ -29,6 +29,8 @@ namespace Kikan{
         _cursor_style.dim.x = .5;
         _cursor_style.off.y = -dim.y * (1 - 0.9f * .75f) / 2.f;
 
+        _outline_thickness = _cursor_style.dim.x / 4.f;
+
         registerCallback(textboxOnClick, IInteractable::PRESSED);
         _text_queue_id = Engine::Kikan()->getInput()->registerTextQueue();
     }
@@ -41,9 +43,19 @@ namespace Kikan{
 
 
         calc_bounds();
-        std::string sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
 
-        render_text(sub, pos + parentPos + _text_offset);
+        glm::vec4 color;
+        std::string sub;
+        if(!_text.empty()){
+            color =  _font_options.color;
+            sub = _text.substr(_text_bound_l, _text_bound_r - _text_bound_l);
+        }
+        else{
+            color = _tooltip_color;
+            sub = _tooltip.substr(0, get_tooltip_bound());
+        }
+
+        render_text(sub, pos + parentPos + _text_offset, color);
         render_outline();
 
         if(!focused || _blink_time > _blink_max_time)
@@ -357,9 +369,10 @@ namespace Kikan{
         }
     }
 
-    void Textbox::render_text(const std::string& text, glm::vec2 pos) {
-        if(_text.empty())
+    void Textbox::render_text(const std::string& text, glm::vec2 pos, glm::vec4 color) {
+        if(text.empty())
             return;
+
 
         float layer = Engine::Kikan()->getUI()->renderLayer + _layer_offset;
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
@@ -430,7 +443,7 @@ namespace Kikan{
 
         std::vector<IVertex*> iVertices(vertices.size());
         for (uint32_t i = 0; i < vertices.size(); i++) {
-            vertices[i].color = _font_options.color;
+            vertices[i].color = color;
             iVertices[i] = &vertices[i];
             iVertices[i]->texture = (float)_font_options.font->getID();
         }
@@ -440,37 +453,36 @@ namespace Kikan{
     void Textbox::render_outline() {
         float layer = Engine::Kikan()->getUI()->renderLayer + _layer_offset;
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
-        float thickness = .2;
         renderer->renderQuad(
                 glm::vec2(pos),
                 glm::vec2(pos) + glm::vec2(dim.x,   0),
-                glm::vec2(pos) + glm::vec2(dim.x,   0) + glm::vec2(0, -thickness),
-                glm::vec2(pos) + glm::vec2(0,       -thickness),
-                glm::vec4(.6,.6,.6,.5),
+                glm::vec2(pos) + glm::vec2(dim.x,   0) + glm::vec2(0, -_outline_thickness),
+                glm::vec2(pos) + glm::vec2(0,       -_outline_thickness),
+                _outline_color,
                 layer - 0.01f,
                 &_opt);
         renderer->renderQuad(
-                glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(-thickness, -thickness),
-                glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(0,          -thickness),
-                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)   + glm::vec2(0,          thickness),
-                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)   + glm::vec2(-thickness, thickness),
-                glm::vec4(.6,.6,.6,.5),
+                glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(-_outline_thickness, -_outline_thickness),
+                glm::vec2(pos) + glm::vec2(dim.x, 0)        + glm::vec2(0,          -_outline_thickness),
+                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)   + glm::vec2(0, _outline_thickness),
+                glm::vec2(pos) + glm::vec2(dim.x, -dim.y)   + glm::vec2(-_outline_thickness, _outline_thickness),
+                _outline_color,
                 layer - 0.01f,
                 &_opt);
         renderer->renderQuad(
-                glm::vec2(pos) + glm::vec2(0,       -dim.y) + glm::vec2(0, thickness),
-                glm::vec2(pos) + glm::vec2(dim.x,   -dim.y) + glm::vec2(0, thickness),
+                glm::vec2(pos) + glm::vec2(0,       -dim.y) + glm::vec2(0, _outline_thickness),
+                glm::vec2(pos) + glm::vec2(dim.x,   -dim.y) + glm::vec2(0, _outline_thickness),
                 glm::vec2(pos) + glm::vec2(dim.x,   -dim.y),
                 glm::vec2(pos) + glm::vec2(0,       -dim.y),
-                glm::vec4(.6,.6,.6,.5),
+                _outline_color,
                 layer - 0.01f,
                 &_opt);
         renderer->renderQuad(
-                glm::vec2(pos) + glm::vec2(0,           -thickness),
-                glm::vec2(pos) + glm::vec2(thickness,   -thickness),
-                glm::vec2(pos) + glm::vec2(0,           -dim.y)    + glm::vec2(thickness, thickness),
-                glm::vec2(pos) + glm::vec2(0,           -dim.y)    + glm::vec2(0,         thickness),
-                glm::vec4(.6,.6,.6,.5),
+                glm::vec2(pos) + glm::vec2(0,                 -_outline_thickness),
+                glm::vec2(pos) + glm::vec2(_outline_thickness, -_outline_thickness),
+                glm::vec2(pos) + glm::vec2(0,                  -dim.y)    + glm::vec2(_outline_thickness, _outline_thickness),
+                glm::vec2(pos) + glm::vec2(0,                  -dim.y)    + glm::vec2(0, _outline_thickness),
+                _outline_color,
                 layer - 0.01f,
                 &_opt);
     }
@@ -681,5 +693,66 @@ namespace Kikan{
 
     void Textbox::setHold() {
         _holding_mouse = true;
+    }
+
+    void Textbox::setTooltip(std::string tooltip) {
+        _tooltip = std::move(tooltip);
+    }
+
+    std::string Textbox::getTooltip() {
+        return _tooltip;
+    }
+
+    uint32_t Textbox::get_tooltip_bound() {
+        _cut_percentage = 1;
+        float textWidth = 0;
+        bool textTooLong = false;
+        for(int32_t i = 0; i < (int32_t)_tooltip.size(); i++){
+            char c = _tooltip[i];
+            float cWidth = 0;
+            if(c == ' ')       { cWidth = _whitespace;    }
+            else if(c == '\t') { cWidth = _whitespace * 4;}
+            else if(c == '\r') { cWidth = 0;          }
+            else if(c == '\n') { cWidth = 0;          }
+            else {
+                Font::Glyph* g = _font_options.font->getGlyph(c);
+                cWidth = (g->dim.x * _font_scale) + (g->offset.x * _font_scale);
+            }
+
+            float spacing = c < 21 ? 0 : _whitespace * _font_options.spacing.x;
+
+            if(textWidth + cWidth >= (dim.x - 2 * _text_offset.x)){
+                _cut_percentage = ((dim.x - 2 * _text_offset.x) - (textWidth + spacing))/cWidth;
+                return i + 1;
+            }
+            textWidth += cWidth + spacing;
+        }
+
+        if(!textTooLong)
+            return _tooltip.size();
+    }
+
+    void Textbox::setTooltipColor(glm::vec4 color) {
+        _tooltip_color = color;
+    }
+
+    glm::vec4 Textbox::getToolTipColor() {
+        return _tooltip_color;
+    }
+
+    void Textbox::setOutlineThickness(float thickness) {
+        _outline_thickness = thickness;
+    }
+
+    float Textbox::getOutlineThickness() const {
+        return _outline_thickness;
+    }
+
+    glm::vec4 Textbox::getOutlineColor() const {
+        return _outline_color;
+    }
+
+    void Textbox::setOutlineColor(glm::vec4 outlineColor) {
+        _outline_color = outlineColor;
     }
 }

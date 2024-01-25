@@ -18,6 +18,11 @@ namespace Kikan {
         std::string getText();
         void eraseText(int32_t begin, int32_t end);
 
+        void setTooltip(std::string tooltip);
+        std::string getTooltip();
+        void setTooltipColor(glm::vec4 color);
+        glm::vec4 getToolTipColor();
+
         void setCursor(int32_t cursor);
         void setCursor(float offset);
         int32_t getCursorPos() const;
@@ -30,6 +35,12 @@ namespace Kikan {
 
         void setFont(struct Font::Options font);
         struct Font::Options getFont();
+
+        
+        void setOutlineThickness(float thickness);
+        float getOutlineThickness() const;
+        void setOutlineColor(glm::vec4 outlineColor);
+        glm::vec4 getOutlineColor() const;
 
         /*
          * This function is for internal use only
@@ -48,6 +59,9 @@ namespace Kikan {
         float _cut_percentage = 0;
         bool _left_bound = true;
 
+        std::string _tooltip;
+        glm::vec4 _tooltip_color = glm::vec4(.3,.3,.3,1);
+
         glm::vec2 _text_offset = glm::vec2(0);
 
         int32_t _cursor = 0;
@@ -64,6 +78,9 @@ namespace Kikan {
         float _whitespace;
         Font::Options _font_options;
 
+        float _outline_thickness = .2;
+        glm::vec4 _outline_color = glm::vec4(1);
+
         uint32_t _text_queue_id;
 
         bool _holding_mouse = false;
@@ -74,9 +91,11 @@ namespace Kikan {
         float get_cursor_off(int32_t cursor);
         int32_t get_next_whitespace(int32_t start,  bool rightDir);
 
+        uint32_t get_tooltip_bound();
+
         void calc_bounds();
 
-        void render_text(const std::string& text, glm::vec2 pos);
+        void render_text(const std::string& text, glm::vec2 pos, glm::vec4 color);
         void render_outline();
         void render_cursor();
         void render_select();

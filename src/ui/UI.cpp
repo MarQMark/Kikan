@@ -88,7 +88,6 @@ namespace Kikan {
                 else if(leftClick) {
                     interactable->changeState(IInteractable::State::PRESSED);
                     focus_set(interactable, node);
-                    kikanPrint("test\n");
                 }
                 else if(_prev_left_click){
                     interactable->changeState(IInteractable::State::RELEASED);
