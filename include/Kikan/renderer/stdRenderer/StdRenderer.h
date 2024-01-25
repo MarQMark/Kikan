@@ -27,6 +27,8 @@ class StdRenderer : public Renderer {
             void(*postRender)(AutoBatch*, void*) = nullptr;
             void* preRenderData = nullptr;
             void* postRenderData = nullptr;
+
+            bool autoFree = false;
         };
 
         StdRenderer(int width, int height) : _width(width), _height(height) {

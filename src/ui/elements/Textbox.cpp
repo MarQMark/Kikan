@@ -21,6 +21,7 @@ namespace Kikan{
         this->dim = dim;
 
         _font_options.font = ((StdRenderer*)Engine::Kikan()->getRenderer())->getFont();
+        _font_options.color = glm::vec4(1);
         _font_size = dim.y * 0.9f * 0.5f;
         _text_offset.y = -dim.y * 0.2f;
 
@@ -429,11 +430,11 @@ namespace Kikan{
 
         std::vector<IVertex*> iVertices(vertices.size());
         for (uint32_t i = 0; i < vertices.size(); i++) {
-            vertices[i].color = glm::vec4(0);//options.color; // TODO: Fix Font coloring
+            vertices[i].color = _font_options.color;
             iVertices[i] = &vertices[i];
             iVertices[i]->texture = (float)_font_options.font->getID();
         }
-        renderer->autoBatch<DefaultVertex>(iVertices, renderer->getRenderPrio(layer), &indices, &_opt);
+        renderer->autoBatch<DefaultVertex>(iVertices, renderer->getRenderPrio(layer), &indices, &_text_opt);
     }
 
     void Textbox::render_outline() {

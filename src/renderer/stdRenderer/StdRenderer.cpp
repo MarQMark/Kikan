@@ -6,6 +6,7 @@
 #include "Kikan/util/EarClipping.h"
 #include "Kikan/renderer/stdRenderer/Shaders.h"
 #include "Kikan/renderer/stdRenderer/DefaultFont.h"
+#include "Kikan/renderer/stdRenderer/RenderCallbacks.h"
 #include "Kikan/core/Logging.h"
 
 
@@ -47,6 +48,9 @@ namespace Kikan {
 
         //load default shader
         _shaders["default"] = new Shader(StdShaders::sVS, StdShaders::sFS);
+
+        // load default font shader
+        _shaders["default_text"] = new Shader(StdShaders::sVS, StdShaders::sTextFS);
 
         //load texture slot in sampler in default frag shader
         _shaders["default"]->uniform1li("u_sampler", 0);
@@ -201,6 +205,12 @@ namespace Kikan {
         if(!font)
             font = _fonts["default"];
 
+        if(!opt){
+            opt = new Options;
+            opt->autoFree = true;
+            opt->preRender = defaultTextPreRender;
+        }
+
         Font::Glyph* g = font->getGlyph('A');
         const float scale = height/g->dim.y;
         const float whitespace = scale * g->dim.x;
@@ -256,7 +266,7 @@ namespace Kikan {
 
         std::vector<IVertex*> iVertices(vertices.size());
         for (uint32_t i = 0; i < vertices.size(); i++) {
-            vertices[i].color = glm::vec4(0);//options.color; // TODO: Fix Font coloring
+            vertices[i].color = options.color;
             iVertices[i] = &vertices[i];
             iVertices[i]->texture = (float)font->getID();
         }
@@ -300,6 +310,9 @@ namespace Kikan {
 
             stop++;
         }
+
+        if(opt && opt->autoFree)
+            delete opt;
     }
 
     Shader *StdRenderer::shader(const std::string& name) {

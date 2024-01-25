@@ -1,24 +1,16 @@
 #include <algorithm>
-#include <iostream>
 #include <cstring>
 #include "Kikan/renderer/stdRenderer/batching/AutoBatch.h"
 #include "Kikan/renderer/stdRenderer/buffers/IndexBuffer.h"
-#include "Kikan/Engine.h"
+#include "Kikan/renderer/stdRenderer/RenderCallbacks.h"
 
 namespace Kikan {
-    void AutoBatchPreRender(AutoBatch* batch, void* data){
-        auto* shader = (Shader*)data;
-        shader->bind();
-        shader->uniformM4fv("u_mvp", ((StdRenderer*)Engine::Kikan()->getRenderer())->mvp);
-    }
 
     AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize, float textureID) : _textureID(textureID) {
         _vertex_space.size = vertexSize;
         _vbl = vbl;
 
-        auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
-        _pre_render_data = renderer->shader();
-        _pre_render = AutoBatchPreRender;
+        _pre_render = defaultPreRender;
     }
 
     AutoBatch::~AutoBatch() {

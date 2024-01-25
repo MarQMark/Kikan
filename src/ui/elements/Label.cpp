@@ -18,6 +18,7 @@ namespace Kikan{
         this->dim = dim;
 
         _font_options.font = ((StdRenderer*)Engine::Kikan()->getRenderer())->getFont();
+        _font_options.color = glm::vec4(1);
         _font_size = dim.y;
     }
 
@@ -44,7 +45,7 @@ namespace Kikan{
                     &_opt);
 
         if(!_text.empty())
-            renderer->renderText(_text, pos + parentPos, _font_size, renderLayer + _font_layer_offset, _font_options, &_opt);
+            renderer->renderText(_text, pos + parentPos, _font_size, renderLayer + _font_layer_offset, _font_options, &_text_opt);
     }
 
     void Label::setBgLayerOffset(float offset) {

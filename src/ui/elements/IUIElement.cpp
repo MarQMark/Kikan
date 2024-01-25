@@ -4,5 +4,6 @@
 namespace Kikan{
     IUIElement::IUIElement(std::string name) : _name(std::move(name)) {
         _opt.preRender = UIPreRender;
+        _text_opt.preRender = UITextPreRender;
     }
 }

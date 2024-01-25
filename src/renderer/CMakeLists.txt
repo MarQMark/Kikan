@@ -15,6 +15,7 @@ set(SOURCE_FILES
         stdRenderer/buffers/Texture2D.cpp
         stdRenderer/Camera.cpp
         stdRenderer/Font.cpp
+        stdRenderer/RenderCallbacks.cpp
         )
 
 add_library(KikanRenderer ${SOURCE_FILES})

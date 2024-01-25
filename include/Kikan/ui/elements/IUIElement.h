@@ -16,6 +16,7 @@ namespace Kikan {
         bool enabled = true;
 
         struct StdRenderer::Options _opt;
+        struct StdRenderer::Options _text_opt;
 
         std::string getName(){
             return _name;

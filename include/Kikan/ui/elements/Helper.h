@@ -10,6 +10,13 @@ namespace Kikan{
         shader->bind();
         shader->uniformM4fv("u_mvp", Engine::Kikan()->getUI()->getMVP());
     }
+
+    void UITextPreRender(AutoBatch* batch, void* data){
+        auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
+        auto* shader = renderer->shader("default_text");
+        shader->bind();
+        shader->uniformM4fv("u_mvp", Engine::Kikan()->getUI()->getMVP());
+    }
 }
 
 #endif //KIKAN_HELPER_H
