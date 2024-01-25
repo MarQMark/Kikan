@@ -377,8 +377,14 @@ namespace Kikan{
         float layer = Engine::Kikan()->getUI()->renderLayer + _layer_offset;
         auto* renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
 
-        std::vector<DefaultVertex> vertices(4 * text.size());
-        std::vector<GLuint> indices(6 * text.size());
+        uint32_t textLen = 0;
+        for (char c : text) {
+            if(c != ' ' && c != '\t' && c != '\r' && c != '\n')
+                textLen++;
+        }
+
+        std::vector<DefaultVertex> vertices(4 * textLen);
+        std::vector<GLuint> indices(6 * textLen);
 
         GLuint indexCnt = 0;
         uint32_t nVertex = 0;
