@@ -48,7 +48,7 @@ namespace Kikan {
         Font::Options _font_options;
         float _font_size;
         glm::vec2 _text_offset;
-        float _font_layer_offset = -0.001f;
+        float _font_layer_offset = -0.01f;
 
         void adjust_colors();
     };
