@@ -6,6 +6,7 @@ namespace Kikan {
         this->pos = pos;
         this->dim = dim;
         _focus_border = Engine::Kikan()->getUI()->getHeight() / 200.f;
+        _disabled_color = glm::vec4(.4,.4,.4,1);
         adjust_colors();
     }
 
@@ -29,6 +30,8 @@ namespace Kikan {
                 color = _base_color;
                 break;
         }
+        if(!interactable)
+            color = _disabled_color;
 
         renderer->renderQuad(
                 glm::vec2(position.x,          position.y),
@@ -82,9 +85,6 @@ namespace Kikan {
 
         if(!_custom_hold_color)
             _hold_color = _base_color - (glm::vec4(1.,1.,1.,0) * .2f);
-
-        if(!_custom_disabled_color)
-            _disabled_color = _base_color + (glm::vec4(1.,1.,1.,0) * .5f);
     }
 
     void Button::setColor(glm::vec4 color) {
@@ -101,7 +101,6 @@ namespace Kikan {
     }
     void Button::setDisabledColor(glm::vec4 color) {
         _disabled_color = color;
-        _custom_disabled_color = true;
     }
     glm::vec4 Button::getColor() {
         return _base_color;

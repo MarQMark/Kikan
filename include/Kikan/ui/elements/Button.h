@@ -30,7 +30,6 @@ namespace Kikan {
         glm::vec4 _disabled_color;
         bool _custom_hover_color = false;
         bool _custom_hold_color = false;
-        bool _custom_disabled_color = false;
 
         float _layer_offset = -0.01;
 
