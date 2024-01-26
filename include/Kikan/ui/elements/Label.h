@@ -27,6 +27,8 @@ namespace Kikan {
         float getFontSize() const;
         void setFontLayerOffset(float offset);
         float getFontLayerOffset() const;
+        void setTextOffset(glm::vec2 offset);
+        glm::vec2 getTextOffset();
 
         void setTexture2D(Texture2D* txt);
         Texture2D* getTexture();
@@ -46,6 +48,7 @@ namespace Kikan {
         std::string _text;
         Font::Options _font_options;
         float _font_size;
+        glm::vec2 _text_offset;
         float _font_layer_offset = -0.012f;
 
         // Texture

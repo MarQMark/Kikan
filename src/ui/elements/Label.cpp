@@ -20,6 +20,7 @@ namespace Kikan{
         _font_options.font = ((StdRenderer*)Engine::Kikan()->getRenderer())->getFont();
         _font_options.color = glm::vec4(1);
         _font_size = dim.y;
+        _text_offset = glm::vec2(0, -dim.y * .1);
     }
 
     void Label::render(glm::vec2 parentPos) {
@@ -123,6 +124,14 @@ namespace Kikan{
 
     void Label::destroy() {
         delete this;
+    }
+
+    void Label::setTextOffset(glm::vec2 offset) {
+        _text_offset = offset;
+    }
+
+    glm::vec2 Label::getTextOffset() {
+        return _text_offset;
     }
 }
 

@@ -2,12 +2,16 @@
 #include "Kikan/Engine.h"
 
 namespace Kikan {
-    Button::Button(std::string name, glm::vec2 pos, glm::vec2 dim) : IInteractable(std::move(name)) {
+    Button::Button(std::string name, glm::vec2 pos, glm::vec2 dim, std::string text) : IInteractable(std::move(name)) {
         this->pos = pos;
         this->dim = dim;
         _focus_border = Engine::Kikan()->getUI()->getHeight() / 200.f;
         _disabled_color = glm::vec4(.4,.4,.4,1);
         adjust_colors();
+
+        _text = std::move(text);
+        _font_size = dim.y * .8;
+        _text_offset = glm::vec2(0, -dim.y * .1);
     }
 
     void Button::render(glm::vec2 parentPos) {
@@ -41,6 +45,9 @@ namespace Kikan {
                 color,
                 renderLayer + _layer_offset,
                 &_opt);
+
+        if(!_text.empty())
+            renderer->renderText(_text, pos + parentPos + _text_offset, _font_size, renderLayer + _layer_offset + _font_layer_offset, _font_options, &_text_opt);
 
         if(focused){
             float thickness = _focus_border;
@@ -123,5 +130,37 @@ namespace Kikan {
 
     void Button::destroy() {
         delete this;
+    }
+
+    void Button::setText(std::string text) {
+        _text = std::move(text);
+    }
+
+    std::string Button::getText() {
+        return _text;
+    }
+
+    void Button::setFontOptions(Font::Options options) {
+        _font_options = options;
+    }
+
+    Font::Options Button::getFontOptions() {
+        return _font_options;
+    }
+
+    void Button::setFontSize(float size) {
+        _font_size = size;
+    }
+
+    float Button::getFontSize() const {
+        return _font_size;
+    }
+
+    void Button::setTextOffset(glm::vec2 offset) {
+        _text_offset = offset;
+    }
+
+    glm::vec2 Button::getTextOffset() {
+        return _text_offset;
     }
 }

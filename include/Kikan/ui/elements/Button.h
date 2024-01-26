@@ -6,7 +6,7 @@
 namespace Kikan {
     class Button : public IInteractable {
     public:
-        Button(std::string name, glm::vec2 pos, glm::vec2 dim);
+        Button(std::string name, glm::vec2 pos, glm::vec2 dim, std::string text = "");
 
         void setColor(glm::vec4 color);
         void setHoverColor(glm::vec4 color);
@@ -19,6 +19,15 @@ namespace Kikan {
 
         void setLayerOffset(float offset);
         float getLayerOffset();
+
+        void setText(std::string text);
+        std::string getText();
+        void setFontOptions(Font::Options options);
+        Font::Options getFontOptions();
+        void setFontSize(float size);
+        float getFontSize() const;
+        void setTextOffset(glm::vec2 offset);
+        glm::vec2 getTextOffset();
 
         void render(glm::vec2 parentPos) override;
 
@@ -34,6 +43,12 @@ namespace Kikan {
         float _layer_offset = -0.01;
 
         float _focus_border;
+
+        std::string _text;
+        Font::Options _font_options;
+        float _font_size;
+        glm::vec2 _text_offset;
+        float _font_layer_offset = -0.001f;
 
         void adjust_colors();
     };
