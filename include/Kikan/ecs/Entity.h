@@ -38,7 +38,7 @@ namespace Kikan {
         template<class T>
         T* getComponent(){
             unsigned int sig = TypeRegistry::getSignature<T>();
-            if(_components.count(sig))
+            if(_components.size() > 0 && _components.count(sig))
                 return (T*)_components[TypeRegistry::getSignature<T>()];
 
             return nullptr;
