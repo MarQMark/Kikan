@@ -12,6 +12,8 @@ namespace Kikan {
         _text = std::move(text);
         _font_size = dim.y * .8;
         _text_offset = glm::vec2(0, -dim.y * .1);
+        _font_options.font = ((StdRenderer*)Engine::Kikan()->getRenderer())->getFont();
+        _font_options.color = glm::vec4(1);
     }
 
     void Button::render(glm::vec2 parentPos) {
