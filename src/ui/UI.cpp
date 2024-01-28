@@ -56,56 +56,14 @@ namespace Kikan {
         bool leftClick = input->mousePressed(Mouse::BUTTON_LEFT);
 
         if(_root->enabled)
-            rec_update(_root, leftClick);
+            update_interactable(leftClick);
+            //rec_update(_root, leftClick);
 
         _prev_left_click = leftClick;
     }
 
     bool isInside(glm::vec2 p, glm::vec2 pos, glm::vec2 dim){
         return (p.x > pos.x && p.x < pos.x + dim.x && p.y < pos.y && p.y > pos.y - dim.y);
-    }
-
-    void UI::rec_update(UINode *node, bool leftClick) {
-        for(auto* element : node->elements){
-            if(!element->enabled)
-                continue;
-
-            auto* interactable = dynamic_cast<IInteractable*>(element);
-            if(!interactable)
-                continue;
-
-            if(!interactable->interactable)
-                continue;
-
-            if(_focused == interactable && _enter_pressed)
-                continue;
-
-            if(isInside(_ui_mouse, interactable->pos, interactable->dim)){
-
-                if(leftClick && _prev_left_click) {
-                    interactable->changeState(IInteractable::State::HELD);
-                }
-                else if(leftClick) {
-                    interactable->changeState(IInteractable::State::PRESSED);
-                    focus_set(interactable, node);
-                }
-                else if(_prev_left_click){
-                    interactable->changeState(IInteractable::State::RELEASED);
-                }
-                else{
-                    interactable->changeState(IInteractable::State::HOVERED);
-                }
-
-            }
-            else{
-                interactable->changeState(IInteractable::State::NONE);
-            }
-        }
-
-        for(auto* n : node->nodes){
-            if(n->enabled)
-                rec_update(n, leftClick);
-        }
     }
 
     glm::mat4x4 UI::getMVP() {
@@ -360,5 +318,57 @@ namespace Kikan {
         if(node->parent)
             pos += getPos(node->parent);
         return pos;
+    }
+
+    void UI::get_interactable(UINode* node, std::vector<IInteractable *> &interactables) {
+        for(auto* element : node->elements){
+            if(!element->enabled)
+                continue;
+
+            auto* interactable = dynamic_cast<IInteractable*>(element);
+            if(!interactable)
+                continue;
+
+            if(!interactable->interactable)
+                continue;
+
+            if(_focused == interactable && _enter_pressed)
+                continue;
+
+            interactables.push_back(interactable);
+        }
+
+        for(auto* n : node->nodes){
+            if(n->enabled)
+                get_interactable(n, interactables);
+        }
+    }
+
+    void UI::update_interactable(bool leftClick) {
+        std::vector<IInteractable*> interactables;
+        get_interactable(_root, interactables);
+
+        for(auto* interactable : interactables){
+            if(isInside(_ui_mouse, interactable->pos, interactable->dim)){
+
+                if(leftClick && _prev_left_click) {
+                    interactable->changeState(IInteractable::State::HELD);
+                }
+                else if(leftClick) {
+                    interactable->changeState(IInteractable::State::PRESSED);
+                    focus_set(interactable, getNode(interactable));
+                }
+                else if(_prev_left_click){
+                    interactable->changeState(IInteractable::State::RELEASED);
+                }
+                else{
+                    interactable->changeState(IInteractable::State::HOVERED);
+                }
+
+            }
+            else{
+                interactable->changeState(IInteractable::State::NONE);
+            }
+        }
     }
 }

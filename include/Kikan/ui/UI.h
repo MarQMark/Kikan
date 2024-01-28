@@ -110,6 +110,8 @@ namespace Kikan {
         UINode* get_node(IUIElement* element, UINode* node);
 
         void rec_update(UINode* node, bool leftClick);
+        void get_interactable(UINode* node, std::vector<IInteractable*>& interactables);
+        void update_interactable(bool leftClick);
     };
 }
 
