@@ -58,7 +58,7 @@ namespace Kikan{
         render_text(sub, pos + parentPos + _text_offset, color);
         render_outline();
 
-        if(!focused || _blink_time > _blink_max_time)
+        if(focused && _blink_time > _blink_max_time)
             render_cursor();
 
         if(_cursor != _select_cursor)
