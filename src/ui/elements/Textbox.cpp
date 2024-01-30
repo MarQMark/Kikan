@@ -676,7 +676,7 @@ namespace Kikan{
         if(!rightDir)
             start -= 1;
 
-        if(start >= 0 && start < _text.size()){
+        if(start >= 0 && start < (int32_t)_text.size()){
             if(_text[start] != ' ')
                 startWord = true;
         }
@@ -736,6 +736,9 @@ namespace Kikan{
 
         if(!textTooLong)
             return _tooltip.size();
+
+        // This should never happen
+        return 0;
     }
 
     void Textbox::setTooltipColor(glm::vec4 color) {

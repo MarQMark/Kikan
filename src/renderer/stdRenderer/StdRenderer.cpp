@@ -387,7 +387,7 @@ namespace Kikan {
 
     void StdRenderer::destroy() {
         // TODO: Fix memory leak
-        delete this;
+        //delete this;
     }
 
     Font *StdRenderer::getFont(const std::string &name) {

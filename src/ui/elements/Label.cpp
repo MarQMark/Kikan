@@ -110,8 +110,8 @@ namespace Kikan{
             _txt_coords[i] = txtCoords[i];
     }
 
-    void Label::getTextureCoords(glm::vec2 *txtCoords) {
-        txtCoords = _txt_coords;
+    glm::vec2* Label::getTextureCoords() {
+        return _txt_coords;
     }
 
     void Label::setTextureLayerOffset(float offset) {

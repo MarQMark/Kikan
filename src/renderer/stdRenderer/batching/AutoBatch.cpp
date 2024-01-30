@@ -20,7 +20,7 @@ namespace Kikan {
     int AutoBatch::addVertices(std::vector<IVertex *> &vertices, int start, int stop) {
         int n = add_vertices(vertices, start, stop);
 
-        for (int i = 0; i < (n != 0 ? n : vertices.size()); ++i)
+        for (unsigned int i = 0; i < (n != 0 ? n : vertices.size()); ++i)
             _indices.push_back(_next_index++);
 
         return n;
