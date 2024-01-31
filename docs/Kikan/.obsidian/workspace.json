@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ECS/Signatures.md",
+                "file": "UI/UI.md",
                 "mode": "source",
                 "source": false
               }
@@ -25,13 +25,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Core/Logging.md",
+                "file": "UI/UI.md",
+                "mode": "preview",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "07eafdc0be36f205",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ECS/Signatures.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -97,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "ECS/Signatures.md",
+                "file": "UI/UI.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "ECS/Signatures.md",
+                "file": "UI/UI.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -137,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "ECS/Signatures.md"
+                "file": "UI/UI.md"
               }
             }
           }
@@ -158,16 +171,25 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "92d1f7ec2f47beaa",
+  "active": "e421562fefcbceee",
   "lastOpenFiles": [
-    "ECS/ECS.md",
-    "ECS/Signatures.md",
+    "UI/components/Textbox.md",
+    "UI/UI.md",
     "Kikan.md",
+    "Core/Logging.md",
+    "UI/components/IUIElement.md",
+    "UI/components/Button.md",
+    "UI/components/Label.md",
+    "UI/components/IInteractable.md",
+    "UI/components/UINode.md",
+    "UI/components",
+    "ECS/Signatures.md",
+    "ECS/ECS.md",
+    "UI",
+    "Renderer/Renderer.md",
     "ECS",
     "General/Todo.md",
-    "Core/Logging.md",
     "General/Code Style.md",
-    "Renderer/Renderer.md",
     "Renderer",
     "Core",
     "General",

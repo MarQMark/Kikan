@@ -7,5 +7,6 @@ General Info:
 Kikan Parts:
 - Core:
 	- [[Logging]]
-- [[Renderer]]: 
-- [[ECS]]:
+- [[Renderer]]:
+- [[ECS]]
+- [[UI]]
