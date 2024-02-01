@@ -39,7 +39,6 @@ namespace Kikan {
         auto renderer = (StdRenderer*)Engine::Kikan()->getRenderer();
         auto* input = Engine::Kikan()->getInput();
 
-        focus_update(input);
 
         if(!_custom_mvp)
             setDimensions((float)renderer->getWidth() / (float)renderer->getHeight() * _height, _height);
@@ -55,9 +54,13 @@ namespace Kikan {
 
         bool leftClick = input->mousePressed(Mouse::BUTTON_LEFT);
 
+        std::vector<IInteractable*> interactables;
+        get_interactable(_root, interactables);
+
         if(_root->enabled)
-            update_interactable(leftClick);
-            //rec_update(_root, leftClick);
+            update_interactable(leftClick, interactables);
+
+        focus_update(input, interactables);
 
         _prev_left_click = leftClick;
     }
@@ -192,13 +195,13 @@ namespace Kikan {
         delete node;
     }
 
-    void UI::focus_update(Input *input) {
+    void UI::focus_update(Input *input, std::vector<IInteractable*>& interactables) {
         if(_focused){
             if(!_focused_node){
                 kikanPrintE("[ERROR] UI interactable selected but no node. This should not happen\n");
             }
             else if(!is_node_enabled(_focused_node)){
-                focus_first(_root);
+                focus_first(interactables);
             }
             else if(_focused->interactable){
                 if(input->keyPressed(Key::ENTER) && _enter_pressed){
@@ -213,73 +216,43 @@ namespace Kikan {
             }
         }
 
-        if(_next_pressed && !input->keyPressed(Key::TAB)){
+        if(input->keyXPressed(Key::TAB)){
             if(!_focused_node)
                 _focused_node = _root;
             if(!_focused)
-                focus_first(_root);
-            else
-                focus_next(_focused_node);
+                focus_first(interactables);
+            else{
+                unsigned int i = 0;
+                bool inList = false;
+                for (; i < interactables.size(); ++i) {
+                    if(interactables[i] == _focused){
+                        inList = true;
+                        break;
+                    }
+                }
+
+                if(input->keyPressed(Key::LEFT_SHIFT) || input->keyPressed(Key::RIGHT_SHIFT))
+                    i == 0 ? i = interactables.size() - 1 : i--;
+                else
+                    i = (i + 1) % interactables.size();
+
+                if(!inList)
+                    focus_first(interactables);
+                else
+                    focus_set(interactables[i], getNode(interactables[i]));
+            }
         }
 
         _enter_pressed = input->keyPressed(Key::ENTER);
-        _next_pressed = input->keyPressed(Key::TAB);
     }
 
-    bool UI::focus_first(UINode* node) {
-        if(!node || !node->enabled)
-            return false;
-
-        for (auto* e : node->elements) {
-            auto* interactable = dynamic_cast<IInteractable*>(e);
-            if(interactable && interactable->enabled){
-                focus_set(interactable, node);
-                return true;
-            }
+    void UI::focus_first(std::vector<IInteractable*>& interactables) {
+        if(interactables.empty()){
+            focus_set(nullptr, nullptr);
+            return;
         }
 
-        for(auto* n : node->nodes){
-            if(focus_first(n))
-                return true;
-        }
-
-        return false;
-    }
-
-    void UI::focus_next(UINode *node) {
-        if(node == _focused_node){
-            if(!is_node_enabled(node)){
-                focus_first(_root);
-                return;
-            }
-
-            int index = -1;
-            for (uint32_t i = 0; i < node->elements.size(); ++i) {
-                if(_focused == node->elements[i]){
-                    index = i;
-                }
-            }
-
-            if(index == -1){
-                focus_set(nullptr, nullptr);
-                return;
-            }
-
-            for (uint32_t i = index + 1; i < node->elements.size(); ++i) {
-                auto* interactable = dynamic_cast<IInteractable*>(node->elements[i]);
-                if(interactable && interactable->enabled){
-                    focus_set(interactable, node);
-                    return;
-                }
-            }
-        }
-
-        for(auto* n : node->nodes){
-            if(focus_first(n))
-                return;
-        }
-
-        focus_first(_root);
+        focus_set(interactables[0], getNode(interactables[0]));
     }
 
     void UI::focus_set(IInteractable *interactable, UINode* node) {
@@ -332,9 +305,6 @@ namespace Kikan {
             if(!interactable->interactable)
                 continue;
 
-            if(_focused == interactable && _enter_pressed)
-                continue;
-
             interactables.push_back(interactable);
         }
 
@@ -344,11 +314,13 @@ namespace Kikan {
         }
     }
 
-    void UI::update_interactable(bool leftClick) {
-        std::vector<IInteractable*> interactables;
-        get_interactable(_root, interactables);
-
+    void UI::update_interactable(bool leftClick, std::vector<IInteractable*>& interactables) {
         for(auto* interactable : interactables){
+
+            // Prevent being able to interact with twice (keyboard && mouse)
+            if(_focused == interactable && _enter_pressed)
+                continue;
+
             if(isInside(_ui_mouse, interactable->pos, interactable->dim)){
 
                 if(leftClick && _prev_left_click) {

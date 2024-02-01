@@ -81,8 +81,6 @@ namespace Kikan {
 
         void update();
     private:
-        //std::vector<IInteractable*> _interactables;
-        //std::vector<IUIElement*> _ui_elements;
         UINode* _root{};
         std::map<std::string, UINode*> _nodes;
         std::map<std::string, IUIElement*> _elements;
@@ -99,19 +97,16 @@ namespace Kikan {
         bool _prev_left_click = false;
 
         bool _enter_pressed = false;
-        bool _next_pressed = false;
-        void focus_update(Input* input);
-        bool focus_first(UINode* node);
-        void focus_next(UINode* node);
+        void focus_update(Input* input, std::vector<IInteractable*>& interactables);
+        void focus_first(std::vector<IInteractable*>& interactables);
         void focus_set(IInteractable* interactable, UINode* node);
 
         bool is_node_enabled(UINode* node);
 
         UINode* get_node(IUIElement* element, UINode* node);
 
-        void rec_update(UINode* node, bool leftClick);
         void get_interactable(UINode* node, std::vector<IInteractable*>& interactables);
-        void update_interactable(bool leftClick);
+        void update_interactable(bool leftClick, std::vector<IInteractable*>& interactables);
     };
 }
 
