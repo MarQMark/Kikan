@@ -1,22 +1,43 @@
 #ifndef KIKAN_ENGINE_H
 #define KIKAN_ENGINE_H
 
+#include "Features.h"
+
 #include <chrono>
 #include "vector"
-#include "Kikan/renderer/stdRenderer/StdRenderer.h"
+
 #include "Kikan/util/Time.h"
+
+#if KIKAN_RENDERER
+#include "Kikan/renderer/stdRenderer/StdRenderer.h"
+#endif
+#if KIKAN_ECS
 #include "Kikan/ecs/ECS.h"
+#endif
+#if KIKAN_INPUT
 #include "Kikan/input/Input.h"
+#endif
+#if KIKAN_UI
 #include "Kikan/ui/UI.h"
+#endif
 
 namespace Kikan {
     class Engine {
     private:
         Engine(int width, int height){
+
+#if KIKAN_RENDERER
             _renderer = new StdRenderer(width, height);
+#endif
+#if KIKAN_INPUT
             _input = Input::create(((StdRenderer*)_renderer)->getWindow());
+#endif
+#if KIKAN_ECS
             _ecs = new ECS();
+#endif
+#if KIKAN_UI
             _ui = new UI();
+#endif
         }
 
         static Engine* s_instance;
@@ -29,19 +50,30 @@ namespace Kikan {
         }
 
         ~Engine(){
+#if KIKAN_INPUT
             delete _input;
+#endif
+#if KIKAN_RENDERER
             _renderer->destroy();
+#endif
         }
 
         bool shouldRun() const;
 
         void update();
 
-
+#if KIKAN_RENDERER
         Renderer* getRenderer();
+#endif
+#if KIKAN_ECS
         ECS* getECS();
+#endif
+#if KIKAN_INPUT
         Input* getInput();
+#endif
+#if KIKAN_UI
         UI* getUI();
+#endif
 
         Time time;
 
@@ -67,10 +99,18 @@ namespace Kikan {
         std::string _title = std::string();
         uint32_t _fps = 60;
 
+#if KIKAN_RENDERER
         Renderer* _renderer;
+#endif
+#if KIKAN_ECS
         ECS* _ecs;
+#endif
+#if KIKAN_INPUT
         Input* _input;
+#endif
+#if KIKAN_UI
         UI* _ui;
+#endif
 
         void update_fps();
         void limit_fps();

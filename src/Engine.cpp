@@ -49,39 +49,53 @@ namespace Kikan {
         update_fps();
         update_title();
 
+#if KIKAN_RENDERER
         if(glfwWindowShouldClose(((StdRenderer*)_renderer)->getWindow())){
             _should_run = false;
             return;
         }
+#endif
 
         if(preUpdate) preUpdate(this);
 
+#if KIKAN_INPUT
         _input->update();
+#endif
 
+#if KIKAN_ECS
         // UPDATE
         _ecs->update(_dt);
+#endif
 
         if(postUpdate) postUpdate(this);
         if(preRender) preRender(this);
 
+#if KIKAN_UI
         // update UI
         _ui->update();
+#endif
 
+#if KIKAN_RENDERER
         // RENDER
         _renderer->render(_dt);
+#endif
 
         if(postRender != nullptr) postRender(this);
 
         limit_fps();
     }
 
+#if KIKAN_RENDERER
     Renderer *Engine::getRenderer() {
         return _renderer;
     }
+#endif
 
+#if KIKAN_INPUT
     Input *Engine::getInput() {
         return _input;
     }
+#endif
 
     void Engine::setTitle(std::string &title) {
         _title = title;
@@ -92,6 +106,7 @@ namespace Kikan {
     }
 
     void Engine::update_title() {
+#if KIKAN_RENDERER
         if(_title.empty()){
             std::stringstream ss;
             ss << "KIKAN - FPS: " << time.fps;
@@ -100,15 +115,20 @@ namespace Kikan {
         else {
             glfwSetWindowTitle(((StdRenderer*)_renderer)->getWindow(), _title.c_str());
         }
+#endif
     }
 
+#if KIKAN_ECS
     ECS *Engine::getECS() {
         return _ecs;
     }
+#endif
 
+#if KIKAN_UI
     UI *Engine::getUI() {
         return _ui;
     }
+#endif
 
     void Engine::setTargetFPS(uint32_t fps) {
         _fps = fps;
