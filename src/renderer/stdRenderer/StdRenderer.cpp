@@ -19,32 +19,40 @@ namespace Kikan {
     }
 
     void StdRenderer::setup_openGl() {
-        /* Initialize the library */
-        if (!glfwInit())
-            std::cout << "ERROR: Could not initialize GLFW" << std::endl;
 
-        /* Create a windowed mode _window and its OpenGL context */
-        _window = glfwCreateWindow(_width, _height, "Kikan", nullptr, nullptr);
-        if (!_window) {
-            glfwTerminate();
-            std::cout << "ERROR: Could create Window" << std::endl;
+        if(!_deferred){
+            /* Initialize the library */
+            if (!glfwInit())
+                std::cout << "ERROR: Could not initialize GLFW" << std::endl;
+
+            /* Create a windowed mode _window and its OpenGL context */
+            _window = glfwCreateWindow(_width, _height, "Kikan", nullptr, nullptr);
+            if (!_window) {
+                glfwTerminate();
+                std::cout << "ERROR: Could create Window" << std::endl;
+            }
+
+            /* Make the _window's context current */
+            glfwMakeContextCurrent(_window);
+
+            //disable VSYNC
+            glfwSwapInterval(0);
+
+            glEnable(GL_DEPTH_TEST);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glEnable(GL_BLEND);
+
+            //set window resize event
+            glfwSetWindowSizeCallback(_window, window_size_callback);
+
+            if (glewInit() != GLEW_OK)
+                std::cout << "ERROR: Could not initialize GLEW" << std::endl;
+        }
+        else{
+            glGenFramebuffers(1, &_deferred_fbo);
+            _deferred_txt = new Texture2D(_width, _height, nullptr);
         }
 
-        /* Make the _window's context current */
-        glfwMakeContextCurrent(_window);
-
-        //disable VSYNC
-        glfwSwapInterval(0);
-
-        glEnable(GL_DEPTH_TEST);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
-
-        //set window resize event
-        glfwSetWindowSizeCallback(_window, window_size_callback);
-
-        if (glewInit() != GLEW_OK)
-            std::cout << "ERROR: Could not initialize GLEW" << std::endl;
 
         //load default shader
         _shaders["default"] = new Shader(StdShaders::sVS, StdShaders::sFS);
@@ -69,6 +77,13 @@ namespace Kikan {
     }
 
     void StdRenderer::render(double dt) {
+        if(_deferred){
+            glBindFramebuffer(GL_FRAMEBUFFER, _deferred_fbo);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _deferred_txt->get(), 0);
+            glViewport(0, 0, _width, _height);
+        }
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (preRender) preRender(_o_pre_render, this, dt);
@@ -86,11 +101,13 @@ namespace Kikan {
         if (postRender) postRender(_o_post_render, this, dt);
         if (_override_render) _override_render->postRender(this, dt);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(_window);
-
-        /* Poll for and process events */
-        glfwPollEvents();
+        if(_deferred) {
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+        else{
+            glfwSwapBuffers(_window);
+            glfwPollEvents();
+        }
     }
 
     void StdRenderer::renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer, Options* opt) {
@@ -360,20 +377,38 @@ namespace Kikan {
 
 
     void StdRenderer::setWidth(int width) {
-        glfwSetWindowSize(_window, width, _height);
+        _width = width;
+
+        if(!_deferred)
+            glfwSetWindowSize(_window, width, _height);
+        else{
+            delete _deferred_txt;
+            _deferred_txt = new Texture2D(_width, _height, nullptr);
+        }
     }
 
     int StdRenderer::getWidth() {
-        glfwGetWindowSize(_window, &_width, &_height);
+        if(!_deferred)
+            glfwGetWindowSize(_window, &_width, &_height);
+
         return _width;
     }
 
     void StdRenderer::setHeight(int height) {
-        glfwSetWindowSize(_window, _width, height);
+        _height = height;
+
+        if(!_deferred)
+            glfwSetWindowSize(_window, _width, height);
+        else{
+            delete _deferred_txt;
+            _deferred_txt = new Texture2D(_width, _height, nullptr);
+        }
     }
 
     int StdRenderer::getHeight() {
-        glfwGetWindowSize(_window, &_width, &_height);
+        if(!_deferred)
+            glfwGetWindowSize(_window, &_width, &_height);
+
         return _height;
     }
 
@@ -388,6 +423,11 @@ namespace Kikan {
     void StdRenderer::destroy() {
         // TODO: Fix memory leak
         //delete this;
+
+        if(_deferred){
+            glDeleteBuffers(1, &_deferred_fbo);
+            delete _deferred_txt;
+        }
     }
 
     Font *StdRenderer::getFont(const std::string &name) {

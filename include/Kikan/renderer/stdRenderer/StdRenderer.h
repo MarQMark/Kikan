@@ -34,6 +34,7 @@ class StdRenderer : public Renderer {
         struct InitParams {
             int width = 1280;
             int height = 720;
+            bool deferred = false;
         };
 
         explicit StdRenderer(void* params){
@@ -47,10 +48,10 @@ class StdRenderer : public Renderer {
 
             _width = initParams->width;
             _height = initParams->height;
+            _deferred = initParams->deferred;
 
             if(defaultParams)
                 delete initParams;
-
 
             setup_openGl();
         }
@@ -159,6 +160,10 @@ class StdRenderer : public Renderer {
         void* _o_pre_render = nullptr;
         void* _o_post_render = nullptr;
         Override* _override_render = nullptr;
+
+        bool _deferred = false;
+        GLuint _deferred_fbo = 0;
+        Texture2D* _deferred_txt = {};
 
         void setup_openGl();
         static uint64_t auto_batch_id(uint32_t signature, uint16_t prio, float textureID);
