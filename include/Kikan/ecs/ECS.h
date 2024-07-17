@@ -7,7 +7,11 @@
 namespace Kikan {
     class ECS {
     public:
-        ECS(const std::string& name = "default");
+        struct InitParams {
+            std::string name = "default";
+        };
+
+        ECS(void* params);
         ~ECS();
 
         void update(double dt);

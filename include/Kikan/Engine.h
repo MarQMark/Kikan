@@ -23,27 +23,72 @@
 
 namespace Kikan {
     class Engine {
+    public:
+        struct InitParams {
+            InitParams(){
+                pRenderer = nullptr;
+                pRendererParams = nullptr;
+                pECS = nullptr;
+                pECSParams = nullptr;
+                pInput = nullptr;
+                pInputParams = nullptr;
+                pUI = nullptr;
+                pUIParams = nullptr;
+            }
+
+            void* pRenderer;
+            void* pRendererParams;
+            void* pECS;
+            void* pECSParams;
+            void* pInput;
+            void* pInputParams;
+            void* pUI;
+            void* pUIParams;
+        };
+
     private:
-        Engine(int width, int height){
+        Engine(struct InitParams& params){
 
 #if KIKAN_RENDERER
-            _renderer = new StdRenderer(width, height);
+            if(params.pRenderer)
+                _renderer = (Renderer*)params.pRenderer;
+            else{
+                _renderer = new StdRenderer(params.pRendererParams);
+
+                if(!params.pInput){
+                    auto inputParams = new Input::InitParams;
+                    inputParams->window = ((StdRenderer*)_renderer)->getWindow();
+                    params.pInputParams = inputParams;
+                }
+            }
 #endif
 #if KIKAN_INPUT
-            _input = Input::create(((StdRenderer*)_renderer)->getWindow());
+            if(params.pInput)
+                _input = (Input*)params.pInput;
+            else
+                _input = Input::create(params.pInputParams);
 #endif
 #if KIKAN_ECS
-            _ecs = new ECS();
+            if(params.pECS)
+                _ecs = (ECS*)params.pECS;
+            else
+                _ecs = new ECS(params.pECSParams);
 #endif
 #if KIKAN_UI
-            _ui = new UI();
+            if(params.pUI)
+                _ui = (UI*)params.pUI;
+            else
+                _ui = new UI(params.pUIParams);
 #endif
         }
 
         static Engine* s_instance;
     public:
-        static void init(int width = 1280, int height = 720){
-            s_instance = new Engine(width, height);
+
+
+
+        static void init(struct InitParams params = InitParams()){
+            s_instance = new Engine(params);
         }
         static Engine* Kikan() {
             return s_instance;

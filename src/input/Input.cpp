@@ -2,35 +2,42 @@
 #include "Kikan/core/Logging.h"
 
 namespace Kikan {
-     Input *Input::create(GLFWwindow* window) {
-        auto* input = new Input(window);
+     Input *Input::create(void* params) {
+         auto initParams = (struct InitParams*)params;
+         if(!params){
+             kikanPrintE("[ERROR] Input InitParams are null\n");
+             return nullptr;
+         }
 
-        glfwSetWindowUserPointer(window, input);
+         auto* input = new Input(initParams->window);
 
-        // setup Mouse Button callback
-        auto mouse_btn = [](GLFWwindow* w, int b, int a, int m){
-            static_cast<Input*>(glfwGetWindowUserPointer(w))->mouse_btn_callback( b, a, m);
-        };
-        glfwSetMouseButtonCallback(window, mouse_btn);
+         glfwSetWindowUserPointer(initParams->window, input);
 
-        // setup Mouse Position callback
-        auto mouse_pos = [](GLFWwindow* w, double x, double y){
-            static_cast<Input*>(glfwGetWindowUserPointer(w))->mouse_pos_callback(x, y);
-        };
-        glfwSetCursorPosCallback(window, mouse_pos);
+         // setup Mouse Button callback
+         auto mouse_btn = [](GLFWwindow* w, int b, int a, int m){
+             static_cast<Input*>(glfwGetWindowUserPointer(w))->mouse_btn_callback( b, a, m);
+         };
+         glfwSetMouseButtonCallback(initParams->window, mouse_btn);
 
-        // setup Key callback
-        auto key = [](GLFWwindow* w, int k, int s, int a, int m){
-            static_cast<Input*>(glfwGetWindowUserPointer(w))->key_callback( k, s, a, m);
-        };
-        glfwSetKeyCallback(window, key);
+         // setup Mouse Position callback
+         auto mouse_pos = [](GLFWwindow* w, double x, double y){
+             static_cast<Input*>(glfwGetWindowUserPointer(w))->mouse_pos_callback(x, y);
+         };
+         glfwSetCursorPosCallback(initParams->window, mouse_pos);
 
-        auto text = [](GLFWwindow* w, unsigned int c){
-            static_cast<Input*>(glfwGetWindowUserPointer(w))->char_callback(c);
-        };
-        glfwSetCharCallback(window, text);
+         // setup Key callback
+         auto key = [](GLFWwindow* w, int k, int s, int a, int m){
+             static_cast<Input*>(glfwGetWindowUserPointer(w))->key_callback( k, s, a, m);
+         };
+         glfwSetKeyCallback(initParams->window, key);
 
-        return input;
+         auto text = [](GLFWwindow* w, unsigned int c){
+             static_cast<Input*>(glfwGetWindowUserPointer(w))->char_callback(c);
+         };
+         glfwSetCharCallback(initParams->window, text);
+
+         delete initParams;
+         return input;
     }
 
     Input::Input(GLFWwindow* window) {

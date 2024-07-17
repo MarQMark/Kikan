@@ -168,7 +168,11 @@ namespace Kikan {
 
     class Input {
     public:
-        static Input* create(GLFWwindow* window);
+        struct InitParams{
+            GLFWwindow* window;
+        };
+
+        static Input* create(void* params);
         ~Input();
 
         void update();

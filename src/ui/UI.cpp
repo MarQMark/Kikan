@@ -3,7 +3,18 @@
 #include "Kikan/Engine.h"
 
 namespace Kikan {
-    UI::UI() {
+    UI::UI(void* params) {
+        auto initParams = (struct InitParams*)params;
+
+        bool defaultParams = false;
+        if(!initParams) {
+            defaultParams = true;
+            initParams = new InitParams;
+        }
+
+        if(defaultParams)
+            delete initParams;
+
         _root = new UINode("root");
         _nodes[_root->getName()] = _root;
         _width = 720;

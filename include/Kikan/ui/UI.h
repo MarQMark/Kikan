@@ -11,7 +11,10 @@
 namespace Kikan {
     class UI {
     public:
-        UI();
+        struct InitParams{
+        };
+
+        explicit UI(void* params);
         ~UI();
 
         float renderLayer = -0.5;

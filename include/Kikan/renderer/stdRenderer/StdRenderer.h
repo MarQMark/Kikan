@@ -31,7 +31,27 @@ class StdRenderer : public Renderer {
             bool autoFree = false;
         };
 
-        StdRenderer(int width, int height) : _width(width), _height(height) {
+        struct InitParams {
+            int width = 1280;
+            int height = 720;
+        };
+
+        explicit StdRenderer(void* params){
+            auto initParams = (struct InitParams*)params;
+
+            bool defaultParams = false;
+            if(!initParams) {
+                defaultParams = true;
+                initParams = new InitParams;
+            }
+
+            _width = initParams->width;
+            _height = initParams->height;
+
+            if(defaultParams)
+                delete initParams;
+
+
             setup_openGl();
         }
 

@@ -3,11 +3,22 @@
 #include "Kikan/ecs/Util.h"
 
 namespace Kikan {
-    ECS::ECS(const std::string& name) {
-        auto* defaultScene = new Scene(name);
+    ECS::ECS(void* params) {
+        auto initParams = (struct InitParams*)params;
+
+        bool defaultParams = false;
+        if(!initParams) {
+            defaultParams = true;
+            initParams = new InitParams;
+        }
+
+        auto* defaultScene = new Scene(initParams->name);
         _currScene = defaultScene;
         addScene(defaultScene);
         _scenes["default"] = defaultScene;
+
+        if(defaultParams)
+            delete initParams;
     }
 
     ECS::~ECS() {
