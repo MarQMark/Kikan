@@ -164,6 +164,7 @@ class StdRenderer : public Renderer {
         bool _deferred = false;
         GLuint _deferred_fbo = 0;
         Texture2D* _deferred_txt = {};
+        Texture2D* getDeferredTxt();
 
         void setup_openGl();
         static uint64_t auto_batch_id(uint32_t signature, uint16_t prio, float textureID);

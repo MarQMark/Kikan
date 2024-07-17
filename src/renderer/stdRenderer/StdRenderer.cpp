@@ -446,4 +446,8 @@ namespace Kikan {
     uint16_t StdRenderer::getRenderPrio(float layer) {
         return (uint16_t)(layer * -100.f + 32768);
     }
+
+    Texture2D *StdRenderer::getDeferredTxt() {
+        return _deferred_txt;
+    }
 }
