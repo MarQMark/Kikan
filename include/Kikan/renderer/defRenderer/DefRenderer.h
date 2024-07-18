@@ -44,7 +44,7 @@ namespace Kikan{
 
     private:
 
-        IStdRenderer* _renderer;
+        IStdRenderer* _renderer = {};
     };
 }
 

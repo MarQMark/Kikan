@@ -18,7 +18,7 @@ namespace Kikan {
 
     GLFWwindow *DefRenderer::getWindow() {
         if(_renderer)
-            _renderer->getWindow();
+            return _renderer->getWindow();
 
         return nullptr;
     }
@@ -30,7 +30,7 @@ namespace Kikan {
 
     int DefRenderer::getWidth() {
         if(_renderer)
-            _renderer->getWidth();
+            return _renderer->getWidth();
 
         return 0;
     }
@@ -42,7 +42,7 @@ namespace Kikan {
 
     int DefRenderer::getHeight() {
         if(_renderer)
-            _renderer->getHeight();
+            return _renderer->getHeight();
 
         return 0;
     }
@@ -80,7 +80,7 @@ namespace Kikan {
 
     uint16_t DefRenderer::getRenderPrio(float layer) {
         if(_renderer)
-            _renderer->getRenderPrio(layer);
+            return _renderer->getRenderPrio(layer);
 
         return 0;
     }
@@ -92,7 +92,7 @@ namespace Kikan {
 
     ManuelBatch *DefRenderer::getBatch(unsigned int key) {
         if(_renderer)
-            _renderer->getBatch(key);
+            return _renderer->getBatch(key);
 
         return nullptr;
     }
@@ -114,7 +114,7 @@ namespace Kikan {
 
     Shader *DefRenderer::shader(const std::string &name) {
         if(_renderer)
-            _renderer->shader(name);
+            return _renderer->shader(name);
 
         return nullptr;
     }
@@ -126,7 +126,7 @@ namespace Kikan {
 
     Font *DefRenderer::getFont(const std::string &name) {
         if(_renderer)
-            _renderer->getFont(name);
+            return _renderer->getFont(name);
 
         return nullptr;
     }
