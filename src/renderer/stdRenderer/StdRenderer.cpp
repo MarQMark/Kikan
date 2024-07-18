@@ -102,7 +102,7 @@ namespace Kikan {
         if (_override_render) _override_render->postRender(this, dt);
 
         if(_deferred) {
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
         else{
             glfwSwapBuffers(_window);

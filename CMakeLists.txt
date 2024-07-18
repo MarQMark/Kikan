@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 project(Kikan)
 
 set(CMAKE_CXX_FLAGS_RELEASE  "-O3")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -Wno-unused-parameter -fPIC")
 
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 ")
@@ -43,7 +43,9 @@ add_subdirectory("external/glfw")
 
 add_subdirectory("include")
 
-add_subdirectory("src/renderer")
+add_subdirectory("src/renderer/stdRenderer")
+add_subdirectory("src/renderer/defRenderer")
+
 add_subdirectory("src/ecs")
 add_subdirectory("src/ui")
 add_subdirectory("src")

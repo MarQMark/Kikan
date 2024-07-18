@@ -122,6 +122,8 @@ class StdRenderer : public IStdRenderer {
         Font* getFont(const std::string& name = "default") override;
         void addFont(Font* font, const std::string& name = "default") override;
 
+        Texture2D* getDeferredTxt();
+
         static void queryErrors(const std::string& tag);
     private:
         ~StdRenderer(){
@@ -149,7 +151,6 @@ class StdRenderer : public IStdRenderer {
         bool _deferred = false;
         GLuint _deferred_fbo = 0;
         Texture2D* _deferred_txt = {};
-        Texture2D* getDeferredTxt();
 
         void setup_openGl();
         static uint64_t auto_batch_id(uint32_t signature, uint16_t prio, float textureID);
