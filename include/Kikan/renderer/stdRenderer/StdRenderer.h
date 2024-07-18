@@ -6,7 +6,7 @@
 #include <cstring>
 #include "glm/glm.hpp"
 #include "Shader.h"
-#include "Kikan/renderer/Renderer.h"
+#include "Kikan/renderer/IStdRenderer.h"
 #include "Kikan/renderer/stdRenderer/batching/AutoBatch.h"
 #include "Kikan/renderer/stdRenderer/batching/ManuelBatch.h"
 #include "Kikan/renderer/stdRenderer/vertices/DefaultVertex.h"
@@ -14,23 +14,8 @@
 #include "Font.h"
 
 namespace Kikan {
-class StdRenderer : public Renderer {
+class StdRenderer : public IStdRenderer {
     public:
-        class Override{
-        public:
-            virtual void preRender(StdRenderer* renderer, double dt) = 0;
-            virtual void postRender(StdRenderer* renderer, double dt) = 0;
-        };
-
-        struct Options{
-            void(*preRender)(AutoBatch*, void*) = nullptr;
-            void(*postRender)(AutoBatch*, void*) = nullptr;
-            void* preRenderData = nullptr;
-            void* postRenderData = nullptr;
-
-            bool autoFree = false;
-        };
-
         struct InitParams {
             int width = 1280;
             int height = 720;
@@ -58,18 +43,18 @@ class StdRenderer : public Renderer {
 
         void destroy() override;
 
-        GLFWwindow* getWindow();
-        void setWidth(int width);
-        int getWidth();
-        void setHeight(int height);
-        int getHeight();
+        GLFWwindow* getWindow() override;
+        void setWidth(int width) override;
+        int getWidth() override;
+        void setHeight(int height) override;
+        int getHeight() override;
 
         glm::mat4x4 mvp{};
 
         /*
         *  Uses Auto-batching with DefaultVertex.
         */
-        void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer, Options* opt = nullptr);
+        void renderTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color, float layer, Options* opt = nullptr) override;
 
         /*
         *  Uses Auto-batching with DefaultVertex.
@@ -80,7 +65,7 @@ class StdRenderer : public Renderer {
         *      |        |
         *      4 ------ 3
         */
-        void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer, Options* opt = nullptr);
+        void renderQuad(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec2 p4, glm::vec4 color, float layer, Options* opt = nullptr) override;
 
         /*
         *  Uses Auto-batching with DefaultVertex.
@@ -89,7 +74,7 @@ class StdRenderer : public Renderer {
         *  This means Polygons cannot intersect with themselves, cannot have holes and
         *  three or more vertices cannot form a line
         */
-        void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer, Options* opt = nullptr);
+        void renderPolygon(std::vector<glm::vec2>& points, glm::vec4 color, float layer, Options* opt = nullptr) override;
 
         /*
         * Uses Auto-batching with DefaultVertex.
@@ -103,14 +88,14 @@ class StdRenderer : public Renderer {
         *      |        |
         *      4 ------ 3
         */
-        void renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0, Options* opt = nullptr);
+        void renderTexture2D(glm::vec2 p[4], glm::vec2 texCoords[4], GLuint textureId, glm::vec4 color = glm::vec4(0), float layer = 0, Options* opt = nullptr) override;
 
         /*
         * Uses Auto-batching with DefaultVertex.
         *
         * If not font is specified the default font is used
         */
-        void renderText(std::string text, glm::vec2 pos, float height, float layer = 0, Font::Options options = {}, Options* opt = nullptr);
+        void renderText(std::string text, glm::vec2 pos, float height, float layer = 0, Font::Options options = {}, Options* opt = nullptr) override;
 
         /*
         *  Each Auto-Batch gets an unique ID: 2 Bytes Priority + 4 Bytes Vertex Signature + 2 Bytes Texture ID
@@ -121,21 +106,21 @@ class StdRenderer : public Renderer {
         template <class T>
         void autoBatch(std::vector<IVertex*> vertices, uint16_t prio = 0, std::vector<GLuint>* indices = nullptr, Options* opt = nullptr);
 
-        uint16_t getRenderPrio(float layer);
+        uint16_t getRenderPrio(float layer) override;
 
-        void addBatch(ManuelBatch* batch, unsigned int key);
-        ManuelBatch* getBatch(unsigned int key);
+        void addBatch(ManuelBatch* batch, unsigned int key) override;
+        ManuelBatch* getBatch(unsigned int key) override;
 
         void render(double dt) override;
-        void addPreRender(void (*func)(void* o, StdRenderer* renderer, double dt), void* o);
-        void addPostRender(void (*func)(void* o, StdRenderer* renderer, double dt), void* o);
-        void overrideRender(Override* ovr);
+        void addPreRender(void (*func)(void* o, IStdRenderer* renderer, double dt), void* o) override;
+        void addPostRender(void (*func)(void* o, IStdRenderer* renderer, double dt), void* o) override;
+        void overrideRender(Override* ovr) override;
 
-        Shader* shader(const std::string& name = "default");
-        void shader(Shader* shader, const std::string& name = "default");
+        Shader* shader(const std::string& name = "default") override;
+        void shader(Shader* shader, const std::string& name = "default") override;
 
-        Font* getFont(const std::string& name = "default");
-        void addFont(Font* font, const std::string& name = "default");
+        Font* getFont(const std::string& name = "default") override;
+        void addFont(Font* font, const std::string& name = "default") override;
 
         static void queryErrors(const std::string& tag);
     private:
@@ -155,8 +140,8 @@ class StdRenderer : public Renderer {
 
         std::map<std::string, Font*> _fonts;
 
-        void (*preRender)(void* o, StdRenderer* renderer, double dt) = nullptr;
-        void (*postRender)(void* o, StdRenderer* renderer, double dt) = nullptr;
+        void (*preRender)(void* o, IStdRenderer* renderer, double dt) = nullptr;
+        void (*postRender)(void* o, IStdRenderer* renderer, double dt) = nullptr;
         void* _o_pre_render = nullptr;
         void* _o_post_render = nullptr;
         Override* _override_render = nullptr;

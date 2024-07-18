@@ -4,7 +4,8 @@
 #include "Features.h"
 
 #include <chrono>
-#include "vector"
+#include <string>
+#include <vector>
 
 #include "Kikan/util/Time.h"
 
@@ -55,11 +56,14 @@ namespace Kikan {
             else{
                 _renderer = new StdRenderer(params.pRendererParams);
 
+#if KIKAN_INPUT
                 if(!params.pInput){
                     auto inputParams = new Input::InitParams;
                     inputParams->window = ((StdRenderer*)_renderer)->getWindow();
                     params.pInputParams = inputParams;
                 }
+#endif
+
             }
 #endif
 #if KIKAN_INPUT

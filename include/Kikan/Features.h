@@ -18,4 +18,8 @@
 #define KIKAN_UI 0
 #endif
 
+#if !KIKAN_INPUT
+#define KIKAN_UI 0
+#endif
+
 #endif //KIKAN_FEATURES_H

@@ -357,12 +357,12 @@ namespace Kikan {
         }
     }
 
-    void StdRenderer::addPreRender(void (*func)(void *, StdRenderer *, double), void *o) {
+    void StdRenderer::addPreRender(void (*func)(void *, IStdRenderer *, double), void *o) {
         preRender = func;
         _o_pre_render = o;
     }
 
-    void StdRenderer::addPostRender(void (*func)(void *, StdRenderer *, double), void *o) {
+    void StdRenderer::addPostRender(void (*func)(void *, IStdRenderer *, double), void *o) {
         postRender = func;
         _o_post_render = o;
     }

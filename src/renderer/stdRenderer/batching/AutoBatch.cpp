@@ -9,7 +9,6 @@ namespace Kikan {
     AutoBatch::AutoBatch(VertexBufferLayout *vbl, GLuint vertexSize, float textureID) : _textureID(textureID) {
         _vertex_space.size = vertexSize;
         _vbl = vbl;
-
         _pre_render = defaultPreRender;
     }
 
