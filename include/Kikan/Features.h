@@ -5,7 +5,7 @@
 
 #define KIKAN_ECS 1
 
-#define KIKAN_INPUT 0
+#define KIKAN_INPUT 1
 
 #define KIKAN_UI 1
 

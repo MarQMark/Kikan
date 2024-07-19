@@ -206,7 +206,7 @@ namespace Kikan {
         delete node;
     }
 
-    void UI::focus_update(Input *input, std::vector<IInteractable*>& interactables) {
+    void UI::focus_update(IStdInput *input, std::vector<IInteractable*>& interactables) {
         if(_focused){
             if(!_focused_node){
                 kikanPrintE("[ERROR] UI interactable selected but no node. This should not happen\n");

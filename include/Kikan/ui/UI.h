@@ -6,7 +6,7 @@
 
 #include "Kikan/ui/elements/IInteractable.h"
 #include "Kikan/ui/elements/UINode.h"
-#include "Kikan/input/Input.h"
+#include "Kikan/input/IStdInput.h"
 
 namespace Kikan {
     class UI {
@@ -100,7 +100,7 @@ namespace Kikan {
         bool _prev_left_click = false;
 
         bool _enter_pressed = false;
-        void focus_update(Input* input, std::vector<IInteractable*>& interactables);
+        void focus_update(IStdInput* input, std::vector<IInteractable*>& interactables);
         void focus_first(std::vector<IInteractable*>& interactables);
         void focus_set(IInteractable* interactable, UINode* node);
 

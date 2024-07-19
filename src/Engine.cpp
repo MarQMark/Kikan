@@ -93,7 +93,7 @@ namespace Kikan {
 #endif
 
 #if KIKAN_INPUT
-    Input *Engine::getInput() {
+    IStdInput *Engine::getInput() {
         return _input;
     }
 #endif

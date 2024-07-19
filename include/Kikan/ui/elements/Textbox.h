@@ -2,7 +2,6 @@
 #define KIKAN_TEXTBOX_H
 
 #include "IInteractable.h"
-#include "Kikan/input/Input.h"
 
 namespace Kikan {
     class Textbox : public IInteractable{

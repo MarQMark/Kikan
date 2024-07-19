@@ -46,6 +46,9 @@ add_subdirectory("include")
 add_subdirectory("src/renderer/stdRenderer")
 add_subdirectory("src/renderer/defRenderer")
 
+add_subdirectory("src/input/defInput")
+add_subdirectory("src/input/stdInput")
+
 add_subdirectory("src/ecs")
 add_subdirectory("src/ui")
 add_subdirectory("src")

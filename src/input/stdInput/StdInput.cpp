@@ -1,49 +1,44 @@
-#include "Kikan/input/Input.h"
+#include "Kikan/input/stdInput/StdInput.h"
 #include "Kikan/core/Logging.h"
 
 namespace Kikan {
-     Input *Input::create(void* params) {
-         auto initParams = (struct InitParams*)params;
-         if(!params){
-             kikanPrintE("[ERROR] Input InitParams are null\n");
-             return nullptr;
-         }
 
-         auto* input = new Input(initParams->window);
+    StdInput::StdInput(void* params) {
+        auto initParams = (struct InitParams*)params;
+        if(!params){
+            kikanPrintE("[ERROR] Input InitParams are null\n");
+            return;
+        }
 
-         glfwSetWindowUserPointer(initParams->window, input);
+        _window = initParams->window;
 
-         // setup Mouse Button callback
-         auto mouse_btn = [](GLFWwindow* w, int b, int a, int m){
-             static_cast<Input*>(glfwGetWindowUserPointer(w))->mouse_btn_callback( b, a, m);
-         };
-         glfwSetMouseButtonCallback(initParams->window, mouse_btn);
+        glfwSetWindowUserPointer(_window, this);
 
-         // setup Mouse Position callback
-         auto mouse_pos = [](GLFWwindow* w, double x, double y){
-             static_cast<Input*>(glfwGetWindowUserPointer(w))->mouse_pos_callback(x, y);
-         };
-         glfwSetCursorPosCallback(initParams->window, mouse_pos);
+        // setup Mouse Button callback
+        auto mouse_btn = [](GLFWwindow* w, int b, int a, int m){
+            static_cast<StdInput*>(glfwGetWindowUserPointer(w))->mouse_btn_callback( b, a, m);
+        };
+        glfwSetMouseButtonCallback(_window, mouse_btn);
 
-         // setup Key callback
-         auto key = [](GLFWwindow* w, int k, int s, int a, int m){
-             static_cast<Input*>(glfwGetWindowUserPointer(w))->key_callback( k, s, a, m);
-         };
-         glfwSetKeyCallback(initParams->window, key);
+        // setup Mouse Position callback
+        auto mouse_pos = [](GLFWwindow* w, double x, double y){
+            static_cast<StdInput*>(glfwGetWindowUserPointer(w))->mouse_pos_callback(x, y);
+        };
+        glfwSetCursorPosCallback(_window, mouse_pos);
 
-         auto text = [](GLFWwindow* w, unsigned int c){
-             static_cast<Input*>(glfwGetWindowUserPointer(w))->char_callback(c);
-         };
-         glfwSetCharCallback(initParams->window, text);
+        // setup Key callback
+        auto key = [](GLFWwindow* w, int k, int s, int a, int m){
+            static_cast<StdInput*>(glfwGetWindowUserPointer(w))->key_callback( k, s, a, m);
+        };
+        glfwSetKeyCallback(_window, key);
 
-         delete initParams;
-         return input;
-    }
+        auto text = [](GLFWwindow* w, unsigned int c){
+            static_cast<StdInput*>(glfwGetWindowUserPointer(w))->char_callback(c);
+        };
+        glfwSetCharCallback(_window, text);
 
-    Input::Input(GLFWwindow* window) {
-        _window = window;
 
-         // init maps
+        // init maps
         for (int i = -1; i < Key::LAST; ++i) {
             _keys[(Key)i] = KeyState::NONE;
             _queue_keys[(Key)i] = KeyState::NONE;
@@ -54,48 +49,48 @@ namespace Kikan {
         }
     }
 
-    Input::~Input() {
+    StdInput::~StdInput() {
         for(auto p : _text_queues)
             delete p.second;
     }
 
-    void Input::mouse_btn_callback(int btn, int action, int mods) {
+    void StdInput::mouse_btn_callback(int btn, int action, int mods) {
         _m_keys[btn] = (action == GLFW_PRESS);
     }
 
-    void Input::mouse_pos_callback(double x, double y) {
+    void StdInput::mouse_pos_callback(double x, double y) {
         _mouse_x = x;
         _mouse_y = y;
     }
 
-    void Input::key_callback(int key, int scancode, int action, int mods) {
+    void StdInput::key_callback(int key, int scancode, int action, int mods) {
         _immediate_keys[(Key)key] = glfw_to_keystate(action);
         _queue_keys[(Key)key] = action;
     }
 
-    void Input::char_callback(unsigned int codepoint) {
+    void StdInput::char_callback(unsigned int codepoint) {
         for(auto p : _text_queues)
             p.second->push(codepoint);
     }
 
-    double Input::mouseX() const {
+    double StdInput::mouseX() const {
         return _mouse_x;
     }
 
-    double Input::mouseY() const {
+    double StdInput::mouseY() const {
         return _mouse_y;
     }
 
-    void Input::mouseP(glm::vec2 &pos) const {
+    void StdInput::mouseP(glm::vec2 &pos) const {
         pos.x = (float)_mouse_x;
         pos.y = (float)_mouse_y;
     }
 
-    bool Input::mousePressed(Mouse m) {
+    bool StdInput::mousePressed(Mouse m) {
         return _m_keys[m];
     }
 
-    void Input::update() {
+    void StdInput::update() {
         for(auto pair : _keys){
             Key k = pair.first;
             switch (pair.second) {
@@ -133,47 +128,47 @@ namespace Kikan {
         }
     }
 
-    bool Input::keyPressed(Key k) {
+    bool StdInput::keyPressed(Key k) {
         return (_keys[k] == KeyState::PRESSED) || (_keys[k] == KeyState::PRESSING || (_keys[k] == KeyState::HOLDING));
     }
 
-    bool Input::keyXPressed(Key k) {
+    bool StdInput::keyXPressed(Key k) {
         return _keys[k] == KeyState::PRESSED;
     }
 
-    bool Input::keyPressing(Key k) {
+    bool StdInput::keyPressing(Key k) {
         return (_keys[k] == KeyState::PRESSED) || (_keys[k] == KeyState::PRESSING);
     }
 
-    bool Input::keyXPressing(Key k) {
+    bool StdInput::keyXPressing(Key k) {
         return _keys[k] == KeyState::PRESSING;
     }
 
-    bool Input::keyHolding(Key k) {
+    bool StdInput::keyHolding(Key k) {
         return _keys[k] == KeyState::HOLDING;
     }
 
-    bool Input::keyReleased(Key k) {
+    bool StdInput::keyReleased(Key k) {
         return _keys[k] == KeyState::RELEASED;
     }
 
-    bool Input::keyNone(Key k) {
+    bool StdInput::keyNone(Key k) {
         return _keys[k] == KeyState::NONE;
     }
 
-    bool Input::isKey(Key k, KeyState state) {
+    bool StdInput::isKey(Key k, KeyState state) {
         return _keys[k] == state;
     }
 
-    KeyState Input::keyState(Key k) {
+    KeyState StdInput::keyState(Key k) {
         return _keys[k];
     }
 
-    KeyState Input::iKeyState(Key k) {
+    KeyState StdInput::iKeyState(Key k) {
         return _immediate_keys[k];
     }
 
-    KeyState Input::glfw_to_keystate(int action) {
+    KeyState StdInput::glfw_to_keystate(int action) {
         switch (action) {
             case GLFW_RELEASE:
                 return KeyState::RELEASED;
@@ -186,11 +181,11 @@ namespace Kikan {
         }
     }
 
-    Key Input::lastKey() {
+    Key StdInput::lastKey() {
         return _last_key;
     }
 
-    const char* Input::getClipboard() {
+    const char* StdInput::getClipboard() {
         return glfwGetClipboardString(_window);
     }
 
@@ -199,30 +194,30 @@ namespace Kikan {
      * While string is in clipboard can cause lag
      *
     */
-    void Input::setClipboard(char *content) {
+    void StdInput::setClipboard(char *content) {
         glfwSetClipboardString(_window, content);
     }
 
-    uint32_t Input::registerTextQueue() {
+    uint32_t StdInput::registerTextQueue() {
         uint32_t id = _next_queue_id;
         _next_queue_id++;
         _text_queues[id] = new std::queue<uint32_t>;
         return id;
     }
 
-    void Input::unregisterTextQueue(uint32_t id) {
+    void StdInput::unregisterTextQueue(uint32_t id) {
         delete _text_queues[id];
         _text_queues[id] = nullptr;
     }
 
-    uint32_t Input::getTextQueue(uint32_t id) {
+    uint32_t StdInput::getTextQueue(uint32_t id) {
         if(isTextQueueEmpty(id))
             return 0;
 
         return _text_queues[id]->front();
     }
 
-    uint32_t Input::popTextQueue(uint32_t id) {
+    uint32_t StdInput::popTextQueue(uint32_t id) {
         if(isTextQueueEmpty(id))
             return 0;
 
@@ -231,14 +226,12 @@ namespace Kikan {
         return c;
     }
 
-    bool Input::isTextQueueEmpty(uint32_t id) {
+    bool StdInput::isTextQueueEmpty(uint32_t id) {
         return _text_queues[id]->empty();
     }
 
-    void Input::clearTextQueue(uint32_t id) {
+    void StdInput::clearTextQueue(uint32_t id) {
         while(!isTextQueueEmpty(id))
             popTextQueue(id);
     }
-
-
 }

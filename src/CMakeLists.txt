@@ -4,8 +4,6 @@ project("Kikan")
 set(SOURCE_FILES
         Engine.cpp
         core/Logging.cpp
-
-        input/Input.cpp
 )
 
 add_library(Kikan ${SOURCE_FILES})
