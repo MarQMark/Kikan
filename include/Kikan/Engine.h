@@ -16,10 +16,12 @@
 #include "Kikan/ecs/ECS.h"
 #endif
 #if KIKAN_INPUT
-#include "Kikan/input/Input.h"
+#include "Kikan/input/IStdInput.h"
+#include "Kikan/input/stdInput/StdInput.h"
 #endif
 #if KIKAN_UI
 #include "Kikan/ui/UI.h"
+
 #endif
 
 namespace Kikan {
@@ -58,7 +60,7 @@ namespace Kikan {
 
 #if KIKAN_INPUT
                 if(!params.pInput){
-                    auto inputParams = new Input::InitParams;
+                    auto inputParams = new StdInput::InitParams;
                     inputParams->window = ((StdRenderer*)_renderer)->getWindow();
                     params.pInputParams = inputParams;
                 }
@@ -68,9 +70,9 @@ namespace Kikan {
 #endif
 #if KIKAN_INPUT
             if(params.pInput)
-                _input = (Input*)params.pInput;
+                _input = (IStdInput*)params.pInput;
             else
-                _input = Input::create(params.pInputParams);
+                _input = new StdInput(params.pInputParams);
 #endif
 #if KIKAN_ECS
             if(params.pECS)
@@ -118,7 +120,7 @@ namespace Kikan {
         ECS* getECS();
 #endif
 #if KIKAN_INPUT
-        Input* getInput();
+        IStdInput* getInput();
 #endif
 #if KIKAN_UI
         UI* getUI();
@@ -155,7 +157,7 @@ namespace Kikan {
         ECS* _ecs;
 #endif
 #if KIKAN_INPUT
-        Input* _input;
+        IStdInput* _input;
 #endif
 #if KIKAN_UI
         UI* _ui;
