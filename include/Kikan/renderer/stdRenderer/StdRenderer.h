@@ -124,6 +124,9 @@ class StdRenderer : public IStdRenderer {
 
         Texture2D* getDeferredTxt();
 
+        bool shouldClose() override;
+        void setTitle(const char* title) override;
+
         static void queryErrors(const std::string& tag);
     private:
         ~StdRenderer(){

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "Kikan/Engine.h"
+#include "Kikan/core/Logging.h"
 
 namespace Kikan {
     Engine* Engine::s_instance = nullptr;
@@ -50,7 +51,7 @@ namespace Kikan {
         update_title();
 
 #if KIKAN_RENDERER
-        if(glfwWindowShouldClose(((StdRenderer*)_renderer)->getWindow())){
+        if(((IStdRenderer*)_renderer)->shouldClose()){
             _should_run = false;
             return;
         }
@@ -110,10 +111,10 @@ namespace Kikan {
         if(_title.empty()){
             std::stringstream ss;
             ss << "KIKAN - FPS: " << time.fps;
-            glfwSetWindowTitle(((StdRenderer*)_renderer)->getWindow(), ss.str().c_str());
+            ((IStdRenderer*)_renderer)->setTitle(ss.str().c_str());
         }
         else {
-            glfwSetWindowTitle(((StdRenderer*)_renderer)->getWindow(), _title.c_str());
+            ((IStdRenderer*)_renderer)->setTitle(_title.c_str());
         }
 #endif
     }

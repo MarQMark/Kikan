@@ -450,4 +450,12 @@ namespace Kikan {
     Texture2D *StdRenderer::getDeferredTxt() {
         return _deferred_txt;
     }
+
+    bool StdRenderer::shouldClose() {
+        return glfwWindowShouldClose(_window);
+    }
+
+    void StdRenderer::setTitle(const char *title) {
+        glfwSetWindowTitle(_window, title);
+    }
 }

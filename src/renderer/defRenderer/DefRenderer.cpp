@@ -135,4 +135,16 @@ namespace Kikan {
         if(_renderer)
             _renderer->addFont(font, name);
     }
+
+    bool DefRenderer::shouldClose() {
+        if(_renderer)
+            return _renderer->shouldClose();
+
+        return false;
+    }
+
+    void DefRenderer::setTitle(const char *title) {
+        if(_renderer)
+            _renderer->setTitle(title);
+    }
 }

@@ -59,6 +59,9 @@ namespace Kikan {
 
         virtual Font* getFont(const std::string& name = "default") = 0;
         virtual void addFont(Font* font, const std::string& name = "default") = 0;
+
+        virtual bool shouldClose() = 0;
+        virtual void setTitle(const char* title) = 0;
     };
 }
 

@@ -42,6 +42,8 @@ namespace Kikan{
         Font* getFont(const std::string& name = "default") override;
         void addFont(Font* font, const std::string& name = "default") override;
 
+        bool shouldClose() override;
+        void setTitle(const char* title) override;
     private:
 
         IStdRenderer* _renderer = {};
