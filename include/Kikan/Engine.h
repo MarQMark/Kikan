@@ -50,41 +50,41 @@ namespace Kikan {
         };
 
     private:
-        Engine(struct InitParams& params){
+        Engine(struct InitParams* params){
 
 #if KIKAN_RENDERER
-            if(params.pRenderer)
-                _renderer = (Renderer*)params.pRenderer;
+            if(params->pRenderer)
+                _renderer = (Renderer*)params->pRenderer;
             else{
-                _renderer = new StdRenderer(params.pRendererParams);
+                _renderer = new StdRenderer(params->pRendererParams);
 
 #if KIKAN_INPUT
-                if(!params.pInput){
+                if(!params->pInput && !params->pInputParams){
                     auto inputParams = new StdInput::InitParams;
                     inputParams->window = ((StdRenderer*)_renderer)->getWindow();
-                    params.pInputParams = inputParams;
+                    params->pInputParams = inputParams;
                 }
 #endif
 
             }
 #endif
 #if KIKAN_INPUT
-            if(params.pInput)
-                _input = (IStdInput*)params.pInput;
+            if(params->pInput)
+                _input = (IStdInput*)params->pInput;
             else
-                _input = new StdInput(params.pInputParams);
+                _input = new StdInput(params->pInputParams);
 #endif
 #if KIKAN_ECS
-            if(params.pECS)
-                _ecs = (ECS*)params.pECS;
+            if(params->pECS)
+                _ecs = (ECS*)params->pECS;
             else
-                _ecs = new ECS(params.pECSParams);
+                _ecs = new ECS(params->pECSParams);
 #endif
 #if KIKAN_UI
-            if(params.pUI)
-                _ui = (UI*)params.pUI;
+            if(params->pUI)
+                _ui = (UI*)params->pUI;
             else
-                _ui = new UI(params.pUIParams);
+                _ui = new UI(params->pUIParams);
 #endif
         }
 
@@ -93,8 +93,14 @@ namespace Kikan {
 
 
 
-        static void init(struct InitParams params = InitParams()){
-            s_instance = new Engine(params);
+        static void init(struct InitParams* params = nullptr){
+            if(!params){
+                struct InitParams tmp = InitParams();
+                s_instance = new Engine(&tmp);
+            }
+            else{
+                s_instance = new Engine(params);
+            }
         }
         static Engine* Kikan() {
             return s_instance;

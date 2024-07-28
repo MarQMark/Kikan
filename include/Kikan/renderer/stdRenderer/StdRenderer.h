@@ -128,6 +128,7 @@ class StdRenderer : public IStdRenderer {
         void setTitle(const char* title) override;
 
         static void queryErrors(const std::string& tag);
+
     private:
         ~StdRenderer(){
             glfwTerminate();

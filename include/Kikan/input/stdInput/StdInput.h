@@ -9,7 +9,7 @@ namespace Kikan {
     class StdInput : public IStdInput{
     public:
         struct InitParams{
-            GLFWwindow* window;
+            GLFWwindow* window{};
         };
 
         explicit StdInput(void* params);

@@ -9,7 +9,6 @@
 #include "Kikan/renderer/stdRenderer/RenderCallbacks.h"
 #include "Kikan/core/Logging.h"
 
-
 namespace Kikan {
 
 #define signature(x) VertexRegistry::getSignature<x>()
@@ -79,8 +78,8 @@ namespace Kikan {
     void StdRenderer::render(double dt) {
         if(_deferred){
             glBindFramebuffer(GL_FRAMEBUFFER, _deferred_fbo);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _deferred_txt->get(), 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glViewport(0, 0, _width, _height);
         }
 
@@ -452,10 +451,16 @@ namespace Kikan {
     }
 
     bool StdRenderer::shouldClose() {
+        if(_deferred)
+            return false;
+
         return glfwWindowShouldClose(_window);
     }
 
     void StdRenderer::setTitle(const char *title) {
+        if(_deferred)
+            return;
+
         glfwSetWindowTitle(_window, title);
     }
 }
