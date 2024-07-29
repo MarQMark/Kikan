@@ -12,7 +12,11 @@ target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
 #link Kikan
 target_link_libraries(example Kikan)
 # Link Kikan Renderer
-target_link_libraries(Kikan KikanRenderer)
+target_link_libraries(Kikan KikanStdRenderer)
+target_link_libraries(Kikan KikanDefRenderer)
+# Link Kikan Input
+target_link_libraries(Kikan KikanDefInput)
+target_link_libraries(Kikan KikanStdInput)
 # Link Kikan ECS
 target_link_libraries(Kikan KikanECS)
 # Link Kikan UI
