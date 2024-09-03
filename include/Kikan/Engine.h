@@ -2,6 +2,7 @@
 #define KIKAN_ENGINE_H
 
 #include "Features.h"
+#include "Version.h"
 
 #include <chrono>
 #include <string>
@@ -51,6 +52,8 @@ namespace Kikan {
 
     private:
         Engine(struct InitParams* params){
+
+            kikanPrintV("Kikan Version %d.%d.%d\n", KIKAN_VER_MAJOR, KIKAN_VER_MINOR, KIKAN_VER_PATCH);
 
 #if KIKAN_RENDERER
             if(params->pRenderer)

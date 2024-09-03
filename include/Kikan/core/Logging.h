@@ -39,7 +39,7 @@ namespace Kikan {
             Logging();
             ~Logging() = default;
 
-            Level _level = Level::ERROR;
+            Level _level = Level::VERBOSE;
 
             void print_private(Level level, const char* format, va_list arg);
         };

@@ -1,0 +1,12 @@
+// 0.1.0
+
+#ifndef KIKAN_VERSION_H
+#define KIKAN_VERSION_H
+
+#define KIKAN_VER_MAJOR 0
+#define KIKAN_VER_MINOR 1
+#define KIKAN_VER_PATCH 0
+
+#define KIKAN_VER_STR "0.1.0"
+
+#endif //KIKAN_VERSION_H
