@@ -28,7 +28,7 @@ namespace Kikan {
         };
 
         void changeState(State state){
-            if(_prev_state == state)
+            if(_state == state && _prev_state == state)
                 return;
 
             _prev_state = _state;
